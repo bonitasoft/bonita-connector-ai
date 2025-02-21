@@ -1,27 +1,32 @@
 package org.bonitasoft.connectors;
 
-import java.util.logging.Logger;
-
+import dev.langchain4j.model.openai.OpenAiChatModel;
 import org.bonitasoft.engine.connector.AbstractConnector;
 import org.bonitasoft.engine.connector.ConnectorException;
 import org.bonitasoft.engine.connector.ConnectorValidationException;
+
+import java.util.logging.Logger;
 
 public class AiConnector extends AbstractConnector {
 
     private static final Logger LOGGER = Logger.getLogger(AiConnector.class.getName());
 
-    static final String DEFAULT_INPUT = "defaultInput";
-    static final String DEFAULT_OUTPUT = "defaultOutput";
+    static final String URL = "url";
+    static final String API_KEY = "apiKey";
+    static final String USER_PROMPT = "userPrompt";
+    static final String MODEL_NAME = "modelName";
+
+    static final String OUTPUT = "output";
 
     /**
      * Perform validation on the inputs defined on the connector definition (src/main/resources/bonita-connector-ai.def)
-     * You should: 
+     * You should:
      * - validate that mandatory inputs are presents
      * - validate that the content of the inputs is coherent with your use case (e.g: validate that a date is / isn't in the past ...)
      */
     @Override
     public void validateInputParameters() throws ConnectorValidationException {
-        checkMandatoryStringInput(DEFAULT_INPUT);
+        checkMandatoryStringInput(USER_PROMPT);
     }
 
     protected void checkMandatoryStringInput(String inputName) throws ConnectorValidationException {
@@ -36,26 +41,59 @@ public class AiConnector extends AbstractConnector {
         }
     }
 
+    private <T> T getInputValue(String name) {
+        var value = getInputParameter(name);
+        return value == null ? null : (T) value;
+    }
+
+    private <T> T getInputValue(String name, T defaultValue) {
+        var value = getInputParameter(name);
+        return value == null ? defaultValue : (T) value;
+    }
+
     /**
-     * Core method: 
+     * Core method:
      * - Execute all the business logic of your connector using the inputs (connect to an external service, compute some values ...).
      * - Set the output of the connector execution. If outputs are not set, connector fails.
      */
     @Override
     protected void executeBusinessLogic() throws ConnectorException {
-        LOGGER.info(String.format("Default input: %s", getInputParameter(DEFAULT_INPUT)));
-        setOutputParameter(DEFAULT_OUTPUT, String.format("%s - output", getInputParameter(DEFAULT_INPUT)));
+        OpenAiChatModel chatModel = getChatModel();
+
+        String userPrompt = getInputValue(USER_PROMPT);
+        String aiResponse = chatModel.generate(userPrompt);
+
+        setOutputParameter(OUTPUT, aiResponse);
     }
-    
+
+    private OpenAiChatModel getChatModel() {
+
+        String apiKey = getInputValue(API_KEY, "changeMe");
+        String modelName = getInputValue(MODEL_NAME, "gpt-3.5-turbo");
+        var openaiBuilder = OpenAiChatModel.builder()
+                .apiKey(apiKey)
+                .modelName(modelName);
+
+        String url = getInputValue(URL);
+        if (url != null && !url.isEmpty()) {
+            openaiBuilder.baseUrl(url);
+        }
+
+        return openaiBuilder.build();
+    }
+
     /**
      * [Optional] Open a connection to remote server
      */
     @Override
-    public void connect() throws ConnectorException{}
+    public void connect() throws ConnectorException {
+
+    }
 
     /**
      * [Optional] Close connection to remote server
      */
     @Override
-    public void disconnect() throws ConnectorException{}
+    public void disconnect() throws ConnectorException {
+    }
 }
