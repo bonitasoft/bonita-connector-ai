@@ -50,7 +50,7 @@ class AIConnectorIT {
 
         connector.setInputParameters(Map.of(
                 AiConnector.URL, "http://localhost:8080",
-                AiConnector.USER_PROMPT, "Extract person names listed in the the following content : {document}",
+                AiConnector.USER_PROMPT, "Extract person names listed in the the provided content",
                 AiConnector.SOURCE_DOCUMENT_REF, docRef
         ));
         connector.connect();

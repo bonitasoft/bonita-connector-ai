@@ -93,6 +93,10 @@ public abstract class AbstractAiConnector extends AbstractConnector {
         return chatModelBuilder;
     }
 
+    protected OpenAiEmbeddingModelBuilder customizeEmbeddingModelBuilder(OpenAiEmbeddingModelBuilder embeddingModelBuilder) {
+        return embeddingModelBuilder;
+    }
+
     @Override
     public void connect() throws ConnectorException {
         String apiKey = getInputValue(API_KEY, "changeMe");
@@ -114,6 +118,7 @@ public abstract class AbstractAiConnector extends AbstractConnector {
         if (url != null && !url.isEmpty()) {
             embeddingModelBuilder.baseUrl(url);
         }
+        embeddingModelBuilder = customizeEmbeddingModelBuilder(embeddingModelBuilder);
         this.embeddingModel = embeddingModelBuilder.build();
 
         if (this.documentLoader == null) {
