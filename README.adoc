@@ -51,12 +51,14 @@ For more details on Bonita Connector please refer to {doc-url}/connector-archety
 
 === Configuration
 
-- url: The AI provider endpoint url
-- apiKey: The AI provider API key
-- modelName: The chat model to use (ex gpt-4o, gpt-4o-mini, ...)
-- userPrompt: The user prompt content to send to the AI provider
-// - systemPrompt: The system prompt content to send to the AI provider
-- sourceDocumentRef: The reference to the process document to load and add to the user prompt.
+- *url*: The AI provider endpoint url
+- *apiKey*: The AI provider API key
+- *modelName*: The chat model to use (ex gpt-4o, gpt-4o-mini, ...)
+- *userPrompt*: The user prompt content to send to the AI provider
+// - *systemPrompt*: The system prompt content to send to the AI provider
+- *sourceDocumentRef*: The reference to the process document to load and add to the user prompt.
+
+AI result will be placed as a map entry for the key named *output*.
 
 == Developing
 // _**TODO**_: Here's a brief introduction about what a developer must do in order to start developing the project further:
