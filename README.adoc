@@ -66,6 +66,7 @@ Prerequisite:
 - Java ( **jdk {java-version}** or higher)
 - Maven (optional if you chose to use https://github.com/takari/maven-wrapper[maven wrapper script] as archetype option)
 - A Git client (optional but highly recommended)
+- Docker and docker compose for integration tests
 
 === Building
 // _**TODO**_: If your project needs some additional steps for the developer to build the project after some code changes, state them here:
@@ -85,9 +86,11 @@ The build should produce a jar archive under the `target/` folder named `bonita-
 
 // _**TODO**_: Here again you should state what actually happens when the code above gets executed.
 
-The connector needs an AI endpoint up & running. A docker compose file is present at the root folder. This docker compose file start
-a https://localai.io/[localai] container that you can use as a local replacement of LLM providers. Just issue `docker compose up -d`
-Because, on first start localai needs to download lots of model, it can take quite some time.
+The connector needs an AI endpoint up & running. A docker compose file is present in the root folder which starts
+a https://localai.io/[localai] container that you can use as a local replacement of LLM providers.
+Just issue `docker compose up -d` and localai will be available at `http://localhost:8080`
+
+NOTE: Because, on first start localai needs to download lots of model, it can take quite some time. You can check the logs with `docker compose logs -f localai` for more info on startup.
 
 Once localai is ready, you can run integration tests using standard maven command and activating a dedicated maven profile (ITs)
 
