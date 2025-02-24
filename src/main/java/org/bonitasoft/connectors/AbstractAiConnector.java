@@ -1,11 +1,8 @@
 package org.bonitasoft.connectors;
 
 import dev.langchain4j.model.chat.ChatLanguageModel;
-import dev.langchain4j.model.embedding.EmbeddingModel;
 import dev.langchain4j.model.openai.OpenAiChatModel;
 import dev.langchain4j.model.openai.OpenAiChatModelName;
-import dev.langchain4j.model.openai.OpenAiEmbeddingModel;
-import dev.langchain4j.model.openai.OpenAiEmbeddingModel.OpenAiEmbeddingModelBuilder;
 import org.bonitasoft.connectors.document.loader.BonitaDocumentLoader;
 import org.bonitasoft.connectors.document.loader.DocumentLoader;
 import org.bonitasoft.engine.connector.AbstractConnector;
@@ -24,17 +21,8 @@ public abstract class AbstractAiConnector extends AbstractConnector {
     static final String OUTPUT = "output";
 
     private ChatLanguageModel chatModel;
-    private EmbeddingModel embeddingModel;
 
     private DocumentLoader documentLoader;
-
-    public ChatLanguageModel getChatModel() {
-        return chatModel;
-    }
-
-    public EmbeddingModel getEmbeddingModel() {
-        return embeddingModel;
-    }
 
     /**
      * Perform validation on the inputs defined on the connector definition (src/main/resources/bonita-connector-ai.def)
@@ -108,13 +96,6 @@ public abstract class AbstractAiConnector extends AbstractConnector {
         chatModelBuilder.modelName(modelName);
         chatModelBuilder = customizeChatModelBuilder(chatModelBuilder);
         this.chatModel = chatModelBuilder.build();
-
-        OpenAiEmbeddingModelBuilder embeddingModelBuilder = OpenAiEmbeddingModel.builder()
-                .apiKey(apiKey);
-        if (url != null && !url.isEmpty()) {
-            embeddingModelBuilder.baseUrl(url);
-        }
-        this.embeddingModel = embeddingModelBuilder.build();
 
         if (this.documentLoader == null) {
             this.documentLoader = new BonitaDocumentLoader(getAPIAccessor().getProcessAPI(), getExecutionContext());

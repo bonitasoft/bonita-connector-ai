@@ -17,10 +17,13 @@ import static org.mockito.Mockito.when;
 class AIConnectorIT {
 
     AiConnector connector;
+    DocumentLoader documentLoader;
 
     @BeforeEach
     void setUp() {
         connector = new AiConnector();
+        documentLoader = mock(DocumentLoader.class);
+        connector.setDocumentLoader(documentLoader);
     }
 
     @Test
@@ -30,6 +33,7 @@ class AIConnectorIT {
                 AiConnector.USER_PROMPT, "Can you tell me a joke ?",
                 AiConnector.URL, "http://localhost:8080"
         ));
+        connector.connect();
 
         // When
         Map<String, Object> outputs = connector.execute();
@@ -42,11 +46,8 @@ class AIConnectorIT {
     void should_use_doc_as_embedding() throws ConnectorException, IOException {
         // Given
         String docRef = "doc123456";
-
-        DocumentLoader documentLoader = mock(DocumentLoader.class);
         byte[] docData = Files.readAllBytes(Path.of("src/test/resources/test.pdf"));
         when(documentLoader.load(docRef)).thenReturn(docData);
-        connector.setDocumentLoader(documentLoader);
 
         connector.setInputParameters(Map.of(
                 AiConnector.URL, "http://localhost:8080",

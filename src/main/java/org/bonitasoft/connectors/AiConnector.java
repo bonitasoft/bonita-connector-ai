@@ -24,24 +24,10 @@ public class AiConnector extends AbstractAiConnector {
      */
     @Override
     protected String doExecute(ChatLanguageModel chatModel, String userPrompt, byte[] lastDocument) throws ConnectorException {
+
         if (lastDocument != null && lastDocument.length > 0) {
             var doc = aiDocumentReader.read(lastDocument);
             if (!doc.getContent().isBlank()) {
-
-//                EmbeddingStore<TextSegment> embeddingStore = new InMemoryEmbeddingStore<>();
-//                EmbeddingStoreIngestor ingestor = EmbeddingStoreIngestor.builder()
-//                        .documentSplitter(DocumentSplitters.recursive(500, 0))
-//                        .embeddingModel(getEmbeddingModel())
-//                        .embeddingStore(embeddingStore)
-//                        .build();
-//                ingestor.ingest(Document.from(doc.getContent()));
-//                ConversationalRetrievalChain chain = ConversationalRetrievalChain.builder()
-//                        .chatLanguageModel(chatModel)
-//                        .contentRetriever(EmbeddingStoreContentRetriever.from(embeddingStore))
-//                        .build();
-//
-//                return chain.execute(userPrompt);
-
                 var augmentedPrompt = userPrompt.replace("{document}", doc.getContent());
                 return chatModel.generate(augmentedPrompt);
             }
