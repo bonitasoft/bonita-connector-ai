@@ -30,7 +30,7 @@ The connector is still under development and current state is just a draft versi
 
 // _**TODO**_: What's all the bells and whistles this project can perform?
 
-* Take a user prompt and send it to the AI provider return the AI response
+* Take a user prompt and send it to the AI provider then return the AI response
 * Enrich user prompt with the content of the last document of the process before requesting the AI provider
 
 == Getting started
@@ -56,7 +56,7 @@ For more details on Bonita Connector please refer to {doc-url}/connector-archety
 - *modelName*: The chat model to use (ex gpt-4o, gpt-4o-mini, ...)
 - *userPrompt*: The user prompt content to send to the AI provider
 // - *systemPrompt*: The system prompt content to send to the AI provider
-- *sourceDocumentRef*: The reference to the process document to load and add to the user prompt.
+- *sourceDocumentRef*: The reference to the process document to load and add to the user prompt. If not null, the connector will try to read the specified document and replace a placeholder named `{document}` in the user prompt with its content.
 
 AI result will be placed as a map entry for the key named *output*.
 
