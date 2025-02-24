@@ -1,5 +1,6 @@
 package org.bonitasoft.connectors;
 
+import org.bonitasoft.connectors.document.loader.DocumentLoader;
 import org.bonitasoft.engine.connector.ConnectorException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -10,6 +11,8 @@ import java.nio.file.Path;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 class AIConnectorIT {
 
@@ -38,20 +41,26 @@ class AIConnectorIT {
     @Test
     void should_use_doc_as_embedding() throws ConnectorException, IOException {
         // Given
+        String docRef = "doc123456";
+
+        DocumentLoader documentLoader = mock(DocumentLoader.class);
+        byte[] docData = Files.readAllBytes(Path.of("src/test/resources/test.pdf"));
+        when(documentLoader.load(docRef)).thenReturn(docData);
+        connector.setDocumentLoader(documentLoader);
+
         connector.setInputParameters(Map.of(
-                AiConnector.URL, "http://localhost:8080"
+                AiConnector.URL, "http://localhost:8080",
+                AiConnector.USER_PROMPT, "Extract person names listed in the the following content : {document}",
+                AiConnector.SOURCE_DOCUMENT_REF, docRef
         ));
         connector.connect();
-        byte[] docData = Files.readAllBytes(Path.of("src/test/resources/test.pdf"));
 
         // When
-        String output = connector.doExecute(
-                connector.getChatModel(),
-                "Extract person names listed in the the following content : {document}",
-                docData
-        );
+        var result = connector.execute();
 
         // Then
-        assertThat(output).isNotEmpty();
+        assertThat(result.get(AiConnector.OUTPUT)).isInstanceOf(String.class);
+        var aiResponse = (String) result.get(AiConnector.OUTPUT);
+        assertThat(aiResponse).isNotEmpty();
     }
 }

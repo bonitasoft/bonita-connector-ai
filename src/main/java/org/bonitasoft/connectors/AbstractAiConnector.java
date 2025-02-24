@@ -6,9 +6,8 @@ import dev.langchain4j.model.openai.OpenAiChatModel;
 import dev.langchain4j.model.openai.OpenAiChatModelName;
 import dev.langchain4j.model.openai.OpenAiEmbeddingModel;
 import dev.langchain4j.model.openai.OpenAiEmbeddingModel.OpenAiEmbeddingModelBuilder;
-import org.bonitasoft.engine.api.ProcessAPI;
-import org.bonitasoft.engine.bpm.document.Document;
-import org.bonitasoft.engine.bpm.document.DocumentNotFoundException;
+import org.bonitasoft.connectors.document.loader.BonitaDocumentLoader;
+import org.bonitasoft.connectors.document.loader.DocumentLoader;
 import org.bonitasoft.engine.connector.AbstractConnector;
 import org.bonitasoft.engine.connector.ConnectorException;
 import org.bonitasoft.engine.connector.ConnectorValidationException;
@@ -17,18 +16,17 @@ public abstract class AbstractAiConnector extends AbstractConnector {
 
     static final String URL = "url";
     static final String API_KEY = "apiKey";
-
+    static final String MODEL_NAME = "modelName";
     static final String USER_PROMPT = "userPrompt";
     static final String SYSTEM_PROMPT = "systemPrompt";
-
-    static final String MODEL_NAME = "modelName";
-
     static final String SOURCE_DOCUMENT_REF = "sourceDocumentRef";
 
     static final String OUTPUT = "output";
 
     private ChatLanguageModel chatModel;
     private EmbeddingModel embeddingModel;
+
+    private DocumentLoader documentLoader;
 
     public ChatLanguageModel getChatModel() {
         return chatModel;
@@ -82,12 +80,10 @@ public abstract class AbstractAiConnector extends AbstractConnector {
      */
     @Override
     protected void executeBusinessLogic() throws ConnectorException {
-
-
         String userPrompt = getInputValue(USER_PROMPT);
-        var lastDocument = getProcessLastDocumentContent();
+        String docRef = getInputValue(SOURCE_DOCUMENT_REF);
+        var lastDocument = documentLoader.load(docRef);
         String aiResponse = doExecute(chatModel, userPrompt, lastDocument);
-
         setOutputParameter(OUTPUT, aiResponse);
     }
 
@@ -97,25 +93,10 @@ public abstract class AbstractAiConnector extends AbstractConnector {
         return chatModelBuilder;
     }
 
-    protected byte[] getProcessLastDocumentContent() {
-        String docRef = getInputValue(SOURCE_DOCUMENT_REF);
-        if (docRef == null || docRef.isEmpty()) {
-            return new byte[0];
-        }
-        ProcessAPI processAPI = getAPIAccessor().getProcessAPI();
-        try {
-            long processInstanceId = getExecutionContext().getProcessInstanceId();
-            Document document = processAPI.getLastDocument(processInstanceId, docRef);
-            return processAPI.getDocumentContent(document.getContentStorageId());
-        } catch (final DocumentNotFoundException e) {
-            throw new AiConnectorException("Document not found for ref: " + docRef, e);
-        }
-    }
-
     @Override
     public void connect() throws ConnectorException {
-
         String apiKey = getInputValue(API_KEY, "changeMe");
+
         OpenAiChatModel.OpenAiChatModelBuilder chatModelBuilder = OpenAiChatModel.builder()
                 .apiKey(apiKey);
 
@@ -123,21 +104,24 @@ public abstract class AbstractAiConnector extends AbstractConnector {
         if (url != null && !url.isEmpty()) {
             chatModelBuilder.baseUrl(url);
         }
-
         String modelName = getInputValue(MODEL_NAME, OpenAiChatModelName.GPT_4_O.toString());
         chatModelBuilder.modelName(modelName);
-
         chatModelBuilder = customizeChatModelBuilder(chatModelBuilder);
-
         this.chatModel = chatModelBuilder.build();
 
         OpenAiEmbeddingModelBuilder embeddingModelBuilder = OpenAiEmbeddingModel.builder()
                 .apiKey(apiKey);
-
         if (url != null && !url.isEmpty()) {
             embeddingModelBuilder.baseUrl(url);
         }
-
         this.embeddingModel = embeddingModelBuilder.build();
+
+        if (this.documentLoader == null) {
+            this.documentLoader = new BonitaDocumentLoader(getAPIAccessor().getProcessAPI(), getExecutionContext());
+        }
+    }
+
+    public void setDocumentLoader(DocumentLoader documentLoader) {
+        this.documentLoader = documentLoader;
     }
 }

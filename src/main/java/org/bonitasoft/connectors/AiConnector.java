@@ -2,8 +2,8 @@ package org.bonitasoft.connectors;
 
 import dev.langchain4j.model.chat.ChatLanguageModel;
 import dev.langchain4j.model.openai.OpenAiChatModel.OpenAiChatModelBuilder;
-import org.bonitasoft.connectors.document.AiDocumentReader;
-import org.bonitasoft.connectors.document.TikaAiDocumentReader;
+import org.bonitasoft.connectors.document.reader.AiDocumentReader;
+import org.bonitasoft.connectors.document.reader.TikaAiDocumentReader;
 import org.bonitasoft.engine.connector.ConnectorException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

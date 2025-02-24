@@ -1,4 +1,4 @@
-package org.bonitasoft.connectors.document;
+package org.bonitasoft.connectors.document.reader;
 
 import org.apache.tika.metadata.Metadata;
 import org.apache.tika.parser.AutoDetectParser;

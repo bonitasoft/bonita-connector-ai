@@ -1,4 +1,4 @@
-package org.bonitasoft.connectors.document;
+package org.bonitasoft.connectors.document.reader;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
