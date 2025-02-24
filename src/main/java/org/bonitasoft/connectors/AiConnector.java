@@ -1,99 +1,71 @@
 package org.bonitasoft.connectors;
 
-import dev.langchain4j.model.openai.OpenAiChatModel;
-import org.bonitasoft.engine.connector.AbstractConnector;
+import dev.langchain4j.model.chat.ChatLanguageModel;
+import dev.langchain4j.model.openai.OpenAiChatModel.OpenAiChatModelBuilder;
+import org.bonitasoft.connectors.document.AiDocumentReader;
+import org.bonitasoft.connectors.document.TikaAiDocumentReader;
 import org.bonitasoft.engine.connector.ConnectorException;
-import org.bonitasoft.engine.connector.ConnectorValidationException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.util.logging.Logger;
+import java.time.Duration;
 
-public class AiConnector extends AbstractConnector {
+public class AiConnector extends AbstractAiConnector {
 
-    private static final Logger LOGGER = Logger.getLogger(AiConnector.class.getName());
+    private static final Logger log = LoggerFactory.getLogger(AiConnector.class.getName());
 
-    static final String URL = "url";
-    static final String API_KEY = "apiKey";
-    static final String USER_PROMPT = "userPrompt";
-    static final String MODEL_NAME = "modelName";
-
-    static final String OUTPUT = "output";
+    private AiDocumentReader aiDocumentReader = new TikaAiDocumentReader();
 
     /**
-     * Perform validation on the inputs defined on the connector definition (src/main/resources/bonita-connector-ai.def)
-     * You should:
-     * - validate that mandatory inputs are presents
-     * - validate that the content of the inputs is coherent with your use case (e.g: validate that a date is / isn't in the past ...)
+     * @param chatModel
+     * @param userPrompt
+     * @return
+     * @throws ConnectorException
      */
     @Override
-    public void validateInputParameters() throws ConnectorValidationException {
-        checkMandatoryStringInput(USER_PROMPT);
-    }
+    protected String doExecute(ChatLanguageModel chatModel, String userPrompt, byte[] lastDocument) throws ConnectorException {
+        if (lastDocument != null && lastDocument.length > 0) {
+            var doc = aiDocumentReader.read(lastDocument);
+            if (!doc.getContent().isBlank()) {
 
-    protected void checkMandatoryStringInput(String inputName) throws ConnectorValidationException {
-        try {
-            String value = (String) getInputParameter(inputName);
-            if (value == null || value.isEmpty()) {
-                throw new ConnectorValidationException(this,
-                        String.format("Mandatory parameter '%s' is missing.", inputName));
+//                EmbeddingStore<TextSegment> embeddingStore = new InMemoryEmbeddingStore<>();
+//                EmbeddingStoreIngestor ingestor = EmbeddingStoreIngestor.builder()
+//                        .documentSplitter(DocumentSplitters.recursive(500, 0))
+//                        .embeddingModel(getEmbeddingModel())
+//                        .embeddingStore(embeddingStore)
+//                        .build();
+//                ingestor.ingest(Document.from(doc.getContent()));
+//                ConversationalRetrievalChain chain = ConversationalRetrievalChain.builder()
+//                        .chatLanguageModel(chatModel)
+//                        .contentRetriever(EmbeddingStoreContentRetriever.from(embeddingStore))
+//                        .build();
+//
+//                return chain.execute(userPrompt);
+
+                var augmentedPrompt = userPrompt.replace("{document}", doc.getContent());
+                return chatModel.generate(augmentedPrompt);
             }
-        } catch (ClassCastException e) {
-            throw new ConnectorValidationException(this, String.format("'%s' parameter must be a String", inputName));
-        }
-    }
-
-    private <T> T getInputValue(String name) {
-        var value = getInputParameter(name);
-        return value == null ? null : (T) value;
-    }
-
-    private <T> T getInputValue(String name, T defaultValue) {
-        var value = getInputParameter(name);
-        return value == null ? defaultValue : (T) value;
-    }
-
-    /**
-     * Core method:
-     * - Execute all the business logic of your connector using the inputs (connect to an external service, compute some values ...).
-     * - Set the output of the connector execution. If outputs are not set, connector fails.
-     */
-    @Override
-    protected void executeBusinessLogic() throws ConnectorException {
-        OpenAiChatModel chatModel = getChatModel();
-
-        String userPrompt = getInputValue(USER_PROMPT);
-        String aiResponse = chatModel.generate(userPrompt);
-
-        setOutputParameter(OUTPUT, aiResponse);
-    }
-
-    private OpenAiChatModel getChatModel() {
-
-        String apiKey = getInputValue(API_KEY, "changeMe");
-        String modelName = getInputValue(MODEL_NAME, "gpt-3.5-turbo");
-        var openaiBuilder = OpenAiChatModel.builder()
-                .apiKey(apiKey)
-                .modelName(modelName);
-
-        String url = getInputValue(URL);
-        if (url != null && !url.isEmpty()) {
-            openaiBuilder.baseUrl(url);
         }
 
-        return openaiBuilder.build();
+        log.debug("user prompt: {}", userPrompt);
+        return chatModel.generate(userPrompt);
     }
 
-    /**
-     * [Optional] Open a connection to remote server
-     */
     @Override
-    public void connect() throws ConnectorException {
-
+    protected OpenAiChatModelBuilder customizeChatModelBuilder(OpenAiChatModelBuilder chatModelBuilder) {
+        if (log.isDebugEnabled()) {
+            chatModelBuilder
+                    .logRequests(true)
+                    .logResponses(true)
+            ;
+        }
+        return chatModelBuilder
+                .timeout(Duration.ofMinutes(5))
+                .temperature(0.0)
+                ;
     }
 
-    /**
-     * [Optional] Close connection to remote server
-     */
-    @Override
-    public void disconnect() throws ConnectorException {
+    void setDocumentReader(AiDocumentReader aiDocumentReader) {
+        this.aiDocumentReader = aiDocumentReader;
     }
 }

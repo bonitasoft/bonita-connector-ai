@@ -1,16 +1,19 @@
 package org.bonitasoft.connectors;
 
+import dev.langchain4j.model.chat.ChatLanguageModel;
+import org.assertj.core.api.Assertions;
 import org.bonitasoft.engine.connector.ConnectorException;
 import org.bonitasoft.engine.connector.ConnectorValidationException;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
 
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.*;
 
 class AiConnectorTest {
 
@@ -48,20 +51,16 @@ class AiConnectorTest {
         );
     }
 
-    @Disabled
     @Test
-    void should_create_output_for_valid_input() throws ConnectorException {
+    void document_content_should_be_added_to_user_prompt() throws ConnectorException {
         // Given
-        Map<String, Object> parameters = new HashMap<>();
-        parameters.put(AiConnector.USER_PROMPT, "valid");
-        parameters.put(AiConnector.URL, "http://localhost:8080/bidon");
-        connector.setInputParameters(parameters);
-
+        ChatLanguageModel chatModel = mock(ChatLanguageModel.class);
+        ArgumentCaptor<String> promptCaptor = ArgumentCaptor.forClass(String.class);
+        String docContent = "This is the doc content.";
         // When
-        Map<String, Object> outputs = connector.execute();
-
+        connector.doExecute(chatModel, "Summarize the following content: {document}", docContent.getBytes(StandardCharsets.UTF_8));
         // Then
-        assertThat(outputs).containsKey("output");
+        verify(chatModel, times(1)).generate(promptCaptor.capture());
+        Assertions.assertThat(promptCaptor.getValue()).endsWith(docContent + System.lineSeparator());
     }
-
 }

@@ -6,11 +6,13 @@
     <category icon="connector.png" id="AI"/> <!-- The category of this definition, used in the Studio (e.g: http, script ...) -->
 
     <!-- Connector inputs -->
-    <input mandatory="true" name="url" type="java.lang.String"/>
-    <input mandatory="true" name="apiKey" type="java.lang.String"/>
+    <input mandatory="false" name="url" type="java.lang.String"/>
+    <input mandatory="false" name="apiKey" type="java.lang.String"/>
 
+    <input mandatory="true" name="systemPrompt" type="java.lang.String"/>
     <input mandatory="true" name="userPrompt" type="java.lang.String"/>
-    <input mandatory="true" name="modelName" type="java.lang.String"/>
+    <input mandatory="false" name="modelName" type="java.lang.String"/>
+    <input mandatory="false" name="sourceDocumentRef" type="java.lang.String"/>
 
     <!-- Connector outputs -->
     <output name="output" type="java.lang.String"/>
@@ -25,7 +27,9 @@
     <page id="defaultPage">
         <widget xsi:type="definition:Text" id="urlWidget" inputName="url"/>
         <widget xsi:type="definition:Text" id="apiKeyWidget" inputName="apiKey"/>
+        <widget xsi:type="definition:Text" id="systemPromptWidget" inputName="systemPrompt"/>
         <widget xsi:type="definition:Text" id="userPromptWidget" inputName="userPrompt"/>
         <widget xsi:type="definition:Text" id="modelNameWidget" inputName="modelName"/>
+        <widget xsi:type="definition:Text" id="sourceDocumentRefWidget" inputName="sourceDocumentRef"/>
     </page>
 </definition:ConnectorDefinition>

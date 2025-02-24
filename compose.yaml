@@ -1,0 +1,22 @@
+services:
+
+  localai:
+    image: localai/localai:latest-aio-cpu
+    ports:
+      - '8080:8080'
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:8080/readyz" ]
+      interval: 1m
+      timeout: 20m
+      retries: 5
+    environment:
+      PROFILE: "cpu"
+      #      MODELS: >-
+      #       https://raw.githubusercontent.com/mudler/LocalAI/refs/heads/master/aio/cpu/embeddings.yaml, https://raw.githubusercontent.com/mudler/LocalAI/refs/heads/master/aio/cpu/text-to-text.yaml
+      # DEBUG: true
+    volumes:
+      - localai-data:/build/models:cached
+
+volumes:
+  localai-data:
+    driver: local
