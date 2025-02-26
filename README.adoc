@@ -53,9 +53,9 @@ For more details on Bonita Connector please refer to {doc-url}/connector-archety
 
 - *url*: The AI provider endpoint url
 - *apiKey*: The AI provider API key
-- *modelName*: The chat model to use (ex gpt-4o, gpt-4o-mini, ...)
+- *chatModelName*: The chat model to use (ex gpt-4o, gpt-4o-mini, llama3, ...)
 - *userPrompt*: The user prompt content to send to the AI provider
-// - *systemPrompt*: The system prompt content to send to the AI provider
+- *systemPrompt*: The system prompt content to send to the AI provider
 - *sourceDocumentRef*: The reference to the process document to load and add to the user prompt. If not null, the connector will try to read the specified document and replace a placeholder named `{document}` in the user prompt with its content.
 
 AI result will be placed as a map entry for the key named *output*.
@@ -89,12 +89,13 @@ The build should produce a jar archive under the `target/` folder named `bonita-
 // _**TODO**_: Here again you should state what actually happens when the code above gets executed.
 
 The connector needs an AI endpoint up & running. A docker compose file is present in the root folder which starts
-a https://localai.io/[localai] container that you can use as a local replacement of LLM providers.
-Just issue `docker compose up -d` and localai will be available at `http://localhost:8080`
+a https://localai.io/[ollama] container that you can use as a local replacement of OpenAI provider.
 
-NOTE: Because, on first start localai needs to download lots of model, it can take quite some time. You can check the logs with `docker compose logs -f localai` for more info on startup.
+Just issue `docker compose up -d` and ollama API will be available at `http://localhost:8080/v1`
 
-Once localai is ready, you can run integration tests using standard maven command and activating a dedicated maven profile (ITs)
+NOTE: To download model use the following command `docker compose exec ollama bash -c 'ollama pull <model name>'`.  You can check the logs with `docker compose logs -f ollama` for more info.
+
+Once ollama is ready, you can run integration tests using standard maven command and activating a dedicated maven profile (ITs)
 
 `./mvnw verify -PITs`
 

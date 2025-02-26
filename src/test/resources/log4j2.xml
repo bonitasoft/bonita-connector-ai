@@ -11,10 +11,11 @@
     </Appenders>
 
     <Loggers>
-        <Root level="error">
+        <Root level="ERROR">
             <AppenderRef ref="console"/>
         </Root>
-        <Logger name="org.bonitasoft.connectors" level="debug"/>
+        <Logger name="org.bonitasoft.connectors" level="INFO"/>
+        <Logger name="org.bonitasoft.connectors.AiConnector" level="DEBUG"/>
     </Loggers>
 
 </Configuration>

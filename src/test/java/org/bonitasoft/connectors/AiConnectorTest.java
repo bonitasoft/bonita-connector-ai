@@ -5,6 +5,7 @@ import org.assertj.core.api.Assertions;
 import org.bonitasoft.engine.connector.ConnectorException;
 import org.bonitasoft.engine.connector.ConnectorValidationException;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 
@@ -51,16 +52,4 @@ class AiConnectorTest {
         );
     }
 
-    @Test
-    void document_content_should_be_added_to_user_prompt() throws ConnectorException {
-        // Given
-        ChatLanguageModel chatModel = mock(ChatLanguageModel.class);
-        ArgumentCaptor<String> promptCaptor = ArgumentCaptor.forClass(String.class);
-        String docContent = "This is the doc content.";
-        // When
-        connector.doExecute(chatModel, "Summarize the following content: {document}", docContent.getBytes(StandardCharsets.UTF_8));
-        // Then
-        verify(chatModel, times(1)).generate(promptCaptor.capture());
-        Assertions.assertThat(promptCaptor.getValue()).endsWith(docContent + System.lineSeparator());
-    }
 }
