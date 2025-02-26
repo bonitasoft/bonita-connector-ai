@@ -9,9 +9,9 @@
     <input mandatory="false" name="url" type="java.lang.String"/>
     <input mandatory="false" name="apiKey" type="java.lang.String"/>
 
-    <input mandatory="true" name="systemPrompt" type="java.lang.String"/>
     <input mandatory="true" name="userPrompt" type="java.lang.String"/>
-    <input mandatory="false" name="modelName" type="java.lang.String"/>
+    <input mandatory="false" name="systemPrompt" type="java.lang.String"/>
+    <input mandatory="false" name="chatModelName" type="java.lang.String"/>
     <input mandatory="false" name="sourceDocumentRef" type="java.lang.String"/>
 
     <!-- Connector outputs -->
@@ -29,7 +29,7 @@
         <widget xsi:type="definition:Text" id="apiKeyWidget" inputName="apiKey"/>
         <widget xsi:type="definition:Text" id="systemPromptWidget" inputName="systemPrompt"/>
         <widget xsi:type="definition:Text" id="userPromptWidget" inputName="userPrompt"/>
-        <widget xsi:type="definition:Text" id="modelNameWidget" inputName="modelName"/>
+        <widget xsi:type="definition:Text" id="chatModelNameWidget" inputName="chatModelName"/>
         <widget xsi:type="definition:Text" id="sourceDocumentRefWidget" inputName="sourceDocumentRef"/>
     </page>
 </definition:ConnectorDefinition>

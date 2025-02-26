@@ -3,26 +3,43 @@ package org.bonitasoft.connectors;
 import dev.langchain4j.model.chat.ChatLanguageModel;
 import dev.langchain4j.model.openai.OpenAiChatModel;
 import dev.langchain4j.model.openai.OpenAiChatModelName;
+import dev.langchain4j.service.AiServices;
+import lombok.Getter;
+import lombok.Setter;
 import org.bonitasoft.connectors.document.loader.BonitaDocumentLoader;
 import org.bonitasoft.connectors.document.loader.DocumentLoader;
 import org.bonitasoft.engine.connector.AbstractConnector;
 import org.bonitasoft.engine.connector.ConnectorException;
 import org.bonitasoft.engine.connector.ConnectorValidationException;
 
+import java.util.Optional;
+import java.util.concurrent.atomic.AtomicBoolean;
+
+@Getter
+@Setter
 public abstract class AbstractAiConnector extends AbstractConnector {
 
     static final String URL = "url";
     static final String API_KEY = "apiKey";
-    static final String MODEL_NAME = "modelName";
+    static final String CHAT_MODEL_NAME = "chatModelName";
     static final String USER_PROMPT = "userPrompt";
     static final String SYSTEM_PROMPT = "systemPrompt";
     static final String SOURCE_DOCUMENT_REF = "sourceDocumentRef";
-
     static final String OUTPUT = "output";
 
-    private ChatLanguageModel chatModel;
+    private String endpointUrl;
+    private String apiKey;
+    private String chatModelName;
+    private String userPrompt;
+    private String systemPrompt;
+    private String sourceDocumentRef;
 
     private DocumentLoader documentLoader;
+
+    private ChatLanguageModel chatModel;
+    private Assistant assistant;
+
+    private AtomicBoolean initialized = new AtomicBoolean(false);
 
     /**
      * Perform validation on the inputs defined on the connector definition (src/main/resources/bonita-connector-ai.def)
@@ -37,11 +54,9 @@ public abstract class AbstractAiConnector extends AbstractConnector {
 
     protected <T> void checkMandatoryStringInput(String inputName, Class<T> type) throws ConnectorValidationException {
         try {
-            T value = type.cast(getInputParameter(inputName));
-            if (value == null) {
-                throw new ConnectorValidationException(this,
-                        String.format("Mandatory parameter '%s' is missing.", inputName));
-            }
+            T value = getInputValue(inputName, type).orElseThrow(() ->
+                    new ConnectorValidationException(this, String.format("Mandatory parameter '%s' is missing.", inputName))
+            );
             if (value instanceof String sValue && sValue.isEmpty()) {
                 throw new ConnectorValidationException(this,
                         String.format("Mandatory parameter '%s' is missing.", inputName));
@@ -51,14 +66,13 @@ public abstract class AbstractAiConnector extends AbstractConnector {
         }
     }
 
-    protected <T> T getInputValue(String name) {
-        var value = getInputParameter(name);
-        return value == null ? null : (T) value;
+    protected <T> Optional<T> getInputValue(String name, Class<T> type) {
+        var value = type.cast(getInputParameter(name));
+        return Optional.ofNullable(value);
     }
 
-    protected <T> T getInputValue(String name, T defaultValue) {
-        var value = getInputParameter(name);
-        return value == null ? defaultValue : (T) value;
+    protected <T> T getInputValue(String name, Class<T> type, T defaultValue) {
+        return getInputValue(name, type).orElse(defaultValue);
     }
 
     /**
@@ -68,41 +82,49 @@ public abstract class AbstractAiConnector extends AbstractConnector {
      */
     @Override
     protected void executeBusinessLogic() throws ConnectorException {
-        String userPrompt = getInputValue(USER_PROMPT);
-        String docRef = getInputValue(SOURCE_DOCUMENT_REF);
-        var lastDocument = documentLoader.load(docRef);
-        String aiResponse = doExecute(chatModel, userPrompt, lastDocument);
+        this.initialize();
+        String aiResponse = doExecute();
         setOutputParameter(OUTPUT, aiResponse);
     }
 
-    protected abstract String doExecute(ChatLanguageModel chatModel, String userPrompt, byte[] lastDocument) throws ConnectorException;
+    protected abstract String doExecute() throws ConnectorException;
 
     protected OpenAiChatModel.OpenAiChatModelBuilder customizeChatModelBuilder(OpenAiChatModel.OpenAiChatModelBuilder chatModelBuilder) {
         return chatModelBuilder;
     }
 
-    @Override
-    public void connect() throws ConnectorException {
-        String apiKey = getInputValue(API_KEY, "changeMe");
 
-        OpenAiChatModel.OpenAiChatModelBuilder chatModelBuilder = OpenAiChatModel.builder()
-                .apiKey(apiKey);
+    public void initialize() {
+        if (!initialized.get()) {
 
-        String url = getInputValue(URL);
-        if (url != null && !url.isEmpty()) {
-            chatModelBuilder.baseUrl(url);
-        }
-        String modelName = getInputValue(MODEL_NAME, OpenAiChatModelName.GPT_4_O.toString());
-        chatModelBuilder.modelName(modelName);
-        chatModelBuilder = customizeChatModelBuilder(chatModelBuilder);
-        this.chatModel = chatModelBuilder.build();
+            this.endpointUrl = getInputValue(URL, String.class, null);
+            this.apiKey = getInputValue(API_KEY, String.class, "changeMe");
 
-        if (this.documentLoader == null) {
-            this.documentLoader = new BonitaDocumentLoader(getAPIAccessor().getProcessAPI(), getExecutionContext());
+            this.chatModelName = getInputValue(CHAT_MODEL_NAME, String.class, OpenAiChatModelName.GPT_4_O.toString());
+
+            this.systemPrompt = getInputValue(SYSTEM_PROMPT, String.class, null);
+            this.userPrompt = getInputValue(USER_PROMPT, String.class, "You are a polite assistant");
+
+            this.sourceDocumentRef = getInputValue(SOURCE_DOCUMENT_REF, String.class, null);
+            if (this.documentLoader == null) {
+                this.documentLoader = new BonitaDocumentLoader(getAPIAccessor().getProcessAPI(), getExecutionContext());
+            }
+
+            OpenAiChatModel.OpenAiChatModelBuilder chatModelBuilder = OpenAiChatModel.builder().apiKey(apiKey);
+            if (this.endpointUrl != null && !this.endpointUrl.isEmpty()) {
+                chatModelBuilder.baseUrl(this.endpointUrl);
+            }
+            chatModelBuilder.modelName(this.chatModelName);
+            chatModelBuilder = customizeChatModelBuilder(chatModelBuilder);
+            this.chatModel = chatModelBuilder.build();
+
+            this.assistant = AiServices.builder(Assistant.class)
+                    .chatLanguageModel(this.chatModel)
+                    .systemMessageProvider(chatMemoryId -> this.systemPrompt)
+                    .build();
+
+            this.initialized.set(true);
         }
     }
 
-    public void setDocumentLoader(DocumentLoader documentLoader) {
-        this.documentLoader = documentLoader;
-    }
 }

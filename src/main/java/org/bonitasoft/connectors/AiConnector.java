@@ -1,57 +1,58 @@
 package org.bonitasoft.connectors;
 
-import dev.langchain4j.model.chat.ChatLanguageModel;
+import dev.langchain4j.data.document.Document;
+import dev.langchain4j.data.document.parser.apache.tika.ApacheTikaDocumentParser;
 import dev.langchain4j.model.openai.OpenAiChatModel.OpenAiChatModelBuilder;
-import org.bonitasoft.connectors.document.reader.AiDocumentReader;
-import org.bonitasoft.connectors.document.reader.TikaAiDocumentReader;
+import org.apache.tika.metadata.Metadata;
+import org.apache.tika.parser.AutoDetectParser;
 import org.bonitasoft.engine.connector.ConnectorException;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.ByteArrayInputStream;
 import java.time.Duration;
 
 public class AiConnector extends AbstractAiConnector {
 
     private static final Logger log = LoggerFactory.getLogger(AiConnector.class.getName());
 
-    private AiDocumentReader aiDocumentReader = new TikaAiDocumentReader();
-
     /**
-     * @param chatModel
-     * @param userPrompt
      * @return
      * @throws ConnectorException
      */
     @Override
-    protected String doExecute(ChatLanguageModel chatModel, String userPrompt, byte[] lastDocument) throws ConnectorException {
+    protected String doExecute() throws ConnectorException {
 
-        if (lastDocument != null && lastDocument.length > 0) {
-            var doc = aiDocumentReader.read(lastDocument);
-            if (!doc.getContent().isBlank()) {
-                var augmentedPrompt = userPrompt.replace("{document}", doc.getContent());
-                return chatModel.generate(augmentedPrompt);
-            }
+        String prompt = getUserPrompt();
+
+        String ref = getSourceDocumentRef();
+        if (ref != null && !ref.isEmpty()) {
+            prompt = appendDocToPrompt(ref, prompt);
         }
 
-        log.debug("user prompt: {}", userPrompt);
-        return chatModel.generate(userPrompt);
+        return getAssistant().answer(prompt);
+    }
+
+    @NotNull
+    private String appendDocToPrompt(String ref, String prompt) throws ConnectorException {
+        byte[] docData = getDocumentLoader().load(ref);
+        var parser = new ApacheTikaDocumentParser(AutoDetectParser::new, null, Metadata::new, null);
+        try (var docStream = new ByteArrayInputStream(docData)) {
+            Document doc = parser.parse(docStream);
+            prompt += "\n----\n" + doc.text();
+        } catch (Exception e) {
+            throw new ConnectorException(e);
+        }
+        return prompt;
     }
 
     @Override
     protected OpenAiChatModelBuilder customizeChatModelBuilder(OpenAiChatModelBuilder chatModelBuilder) {
         if (log.isDebugEnabled()) {
-            chatModelBuilder
-                    .logRequests(true)
-                    .logResponses(true)
-            ;
+            chatModelBuilder.logRequests(true).logResponses(true);
         }
-        return chatModelBuilder
-                .timeout(Duration.ofMinutes(5))
-                .temperature(0.0)
-                ;
+        return chatModelBuilder.timeout(Duration.ofMinutes(5)).temperature(0.0);
     }
 
-    void setDocumentReader(AiDocumentReader aiDocumentReader) {
-        this.aiDocumentReader = aiDocumentReader;
-    }
 }
