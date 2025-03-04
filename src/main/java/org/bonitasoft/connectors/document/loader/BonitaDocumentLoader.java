@@ -1,6 +1,6 @@
 package org.bonitasoft.connectors.document.loader;
 
-import org.bonitasoft.connectors.AiConnectorException;
+import org.bonitasoft.connectors.openai.OpenAiConnectorException;
 import org.bonitasoft.engine.api.ProcessAPI;
 import org.bonitasoft.engine.bpm.document.Document;
 import org.bonitasoft.engine.bpm.document.DocumentNotFoundException;
@@ -26,7 +26,7 @@ public class BonitaDocumentLoader implements DocumentLoader {
             Document document = processAPI.getLastDocument(processInstanceId, docRef);
             return processAPI.getDocumentContent(document.getContentStorageId());
         } catch (final DocumentNotFoundException e) {
-            throw new AiConnectorException("Document not found for ref: " + docRef, e);
+            throw new OpenAiConnectorException("Document not found for ref: " + docRef, e);
         }
     }
 }

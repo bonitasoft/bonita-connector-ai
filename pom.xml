@@ -3,10 +3,29 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.bonitasoft.connectors</groupId>
-    <artifactId>bonita-connector-ai</artifactId>
+    <artifactId>bonita-connector-openai</artifactId>
     <version>1.0.0-SNAPSHOT</version>
-    <name>bonita-connector-ai</name>
+    <name>bonita::connector-openai</name>
     <packaging>jar</packaging>
+
+    <url>https://www.bonitasoft.com</url>
+
+    <developers>
+        <developer>
+            <id>bonitasoft</id>
+            <name>Bonitasoft</name>
+            <email>rd.user@bonitasoft.com</email>
+            <organization>Bonitasoft</organization>
+            <organizationUrl>https://www.bonitasoft.com</organizationUrl>
+        </developer>
+    </developers>
+
+    <licenses>
+        <license>
+            <name>GPL-v2.0</name>
+            <url>http://www.gnu.org/licenses/gpl-2.0.txt</url>
+        </license>
+    </licenses>
 
     <properties>
         <!-- Maven -->
@@ -20,7 +39,7 @@
         <connector-definition-version>1.0.0</connector-definition-version>
         <connector-impl-id>${connector-definition-id}-impl</connector-impl-id>
         <connector-impl-version>${project.version}</connector-impl-version>
-        <connector-main-class>org.bonitasoft.connectors.AiConnector</connector-main-class>
+        <connector-main-class>org.bonitasoft.connectors.openai.OpenAiConnector</connector-main-class>
 
         <!-- Bonita -->
         <bonita-runtime.version>10.2.0</bonita-runtime.version>
@@ -189,6 +208,24 @@
                         </execution>
                     </executions>
                 </plugin>
+                <plugin>
+                    <groupId>com.diffplug.spotless</groupId>
+                    <artifactId>spotless-maven-plugin</artifactId>
+                    <version>2.43.0</version>
+                    <configuration>
+                        <java>
+                            <palantirJavaFormat/>
+                        </java>
+                    </configuration>
+                    <executions>
+                        <execution>
+                            <phase>compile</phase>
+                            <goals>
+                                <goal>check</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
             </plugins>
         </pluginManagement>
         <plugins>
@@ -210,6 +247,10 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-assembly-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>com.diffplug.spotless</groupId>
+                <artifactId>spotless-maven-plugin</artifactId>
             </plugin>
         </plugins>
     </build>

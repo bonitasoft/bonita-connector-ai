@@ -1,8 +1,10 @@
-package org.bonitasoft.connectors;
+package org.bonitasoft.connectors.openai;
 
 import dev.langchain4j.data.document.Document;
 import dev.langchain4j.data.document.parser.apache.tika.ApacheTikaDocumentParser;
 import dev.langchain4j.model.openai.OpenAiChatModel.OpenAiChatModelBuilder;
+import java.io.ByteArrayInputStream;
+import java.time.Duration;
 import org.apache.tika.metadata.Metadata;
 import org.apache.tika.parser.AutoDetectParser;
 import org.bonitasoft.engine.connector.ConnectorException;
@@ -10,12 +12,9 @@ import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.ByteArrayInputStream;
-import java.time.Duration;
+public class OpenAiConnector extends AbstractOpenAiConnector {
 
-public class AiConnector extends AbstractAiConnector {
-
-    private static final Logger log = LoggerFactory.getLogger(AiConnector.class.getName());
+    private static final Logger log = LoggerFactory.getLogger(OpenAiConnector.class.getName());
 
     /**
      * @return
@@ -31,7 +30,7 @@ public class AiConnector extends AbstractAiConnector {
             prompt = appendDocToPrompt(ref, prompt);
         }
 
-        return getAssistant().answer(prompt);
+        return getOpenAiAssistant().answer(prompt);
     }
 
     @NotNull
@@ -54,5 +53,4 @@ public class AiConnector extends AbstractAiConnector {
         }
         return chatModelBuilder.timeout(Duration.ofMinutes(5)).temperature(0.0);
     }
-
 }
