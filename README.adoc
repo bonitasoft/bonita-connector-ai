@@ -1,6 +1,7 @@
 :doctype: book
 :toc: left
 :toclevels: 3
+:toc: macro
 :sectnums:
 :icons: font
 :source-highlighter: highlightjs
@@ -28,6 +29,7 @@ image:bonitasoft-community.png[Bonitasoft,link="https://www.bonitasoft.com",widt
 image:{uri-repo}/actions/workflows/build.yaml/badge.svg[Build,link="{uri-repo}/actions?query=build"]
 
 
+
 The project **bonita-connector-openai** is a Bonita Connector for **Bonita {short-bonita-version}**  **Community** version written in `java` language.
 
 // _**TODO**_: A brief description of your project, what it is used for and how does life get awesome when someone starts to use it.
@@ -38,6 +40,8 @@ This connector allow to interact with OpenAI chat models by sending prompt and r
 ====
 The connector is still under development and current state is just a draft version.
 ====
+
+toc::[]
 
 == Features
 
