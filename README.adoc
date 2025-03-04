@@ -13,7 +13,7 @@
 :short-bonita-version: 10.2
 :doc-url: https://documentation.bonitasoft.com/bonita/{short-bonita-version}
 :java-version: 17
-= bonita-connector-ai
+= bonita-connector-openai
 
 The project **bonita-connector-openai** is a Bonita Connector for **Bonita {short-bonita-version}**  **Community** version written in `java` language.
 
@@ -31,7 +31,7 @@ The connector is still under development and current state is just a draft versi
 // _**TODO**_: What's all the bells and whistles this project can perform?
 
 * Take a user prompt and send it to the AI provider then return the AI response
-* Enrich user prompt with the content of the last document of the process before requesting the AI provider
+* Enrich user prompt with the content of the last document of the process if a reference is provided before requesting the AI provider
 
 == Getting started
 
@@ -51,15 +51,15 @@ For more details on Bonita Connector please refer to {doc-url}/connector-archety
 
 === Configuration
 
-- *url*: The AI provider endpoint url
-- *apiKey*: The AI provider API key
-- *chatModelName*: The chat model to use (ex gpt-4o, gpt-4o-mini, llama3, ...)
+- *url*: The OpenAI endpoint url (optional)
+- *apiKey*: The AI provider API key (optional)
+- *chatModelName*: The chat model to use, ex: gpt-4o, gpt-4o-mini, llama3, ... (optional)
 - *userPrompt*: The user prompt content to send to the AI provider
-- *systemPrompt*: The system prompt content to send to the AI provider
+- *systemPrompt*: The system prompt content to send to the AI provider (optional)
 
-- *sourceDocumentRef*: The reference to the process document to load and add to the user prompt. If not null, the connector will try to read the specified document and replace a placeholder named `{document}` in the user prompt with its content.
+- *sourceDocumentRef*: The reference to the process document to load and add to the user prompt. If not null, the connector will try to read the specified document and replace a placeholder named `{document}` in the user prompt with its content. (optional)
 
-AI result will be placed as a map entry for the key named *output*.
+OpenAI response content will be placed as a map entry for the key named *output*.
 
 == Developing
 // _**TODO**_: Here's a brief introduction about what a developer must do in order to start developing the project further:
@@ -77,19 +77,19 @@ The project is a standard maven project. For more details about Apache Maven, pl
 
 [source,bash]
 ----
-git clone https://your.github.com/bonita-connector-ai.git
-cd bonita-connector-ai/
+git clone https://your.github.com/bonita-connector-openai.git
+cd bonita-connector-openai/
 ./mwnw package
 ----
 
-The build should produce a jar archive under the `target/` folder named `bonita-connector-ai-1.0.0-SNAPSHOT.jar`
+The build should produce a jar archive under the `target/` folder named `bonita-connector-openai-1.0.0-SNAPSHOT.jar`
 
 
 === Run integration tests
 
 // _**TODO**_: Here again you should state what actually happens when the code above gets executed.
 
-The connector needs an AI endpoint up & running. A docker compose file is present in the root folder which starts
+The connector needs an OpenAI endpoint up & running. A docker compose file is present in the root folder which starts
 a https://ollama.com/[https://localai.io/][ollama] container that you can use as a local replacement of OpenAI provider.
 
 Just issue `docker compose up -d` and ollama API will be available at `http://localhost:8080/v1`
@@ -127,9 +127,9 @@ Once ollama is ready, you can run integration tests using standard maven command
 // format like in a .json file, it's good to include a summary of most useful
 // links to humans using your project. You can include links like:
 
-. Project homepage: https://your.github.com/awesome-project/
-. Repository: https://github.com/your/awesome-project/
-. Issue tracker: https://github.com/your/awesome-project/issues
+. Project homepage: https://github.com/bonitasoft-labs/bonita-connector-openai
+. Repository: https://github.com/bonitasoft-labs/bonita-connector-openai
+. Issue tracker: https://github.com/bonitasoft-labs/bonita-connector-openai/issues
 // .. In case of sensitive bugs like security vulnerabilities, please contact
 //     my@email.com directly instead of using issue tracker. We value your effort
 //     to improve the security and privacy of this project!
