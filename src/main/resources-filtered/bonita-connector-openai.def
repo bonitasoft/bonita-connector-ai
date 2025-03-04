@@ -2,7 +2,7 @@
 <definition:ConnectorDefinition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:definition="http://www.bonitasoft.org/ns/connector/definition/6.1">
     <id>${connector-definition-id}</id> <!-- Id of the definition -->
     <version>${connector-definition-version}</version> <!-- Version of the definition -->
-    <icon>ai.png</icon> <!-- The icon used in the Studio for this definition -->
+    <icon>openai.png</icon> <!-- The icon used in the Studio for this definition -->
     <category icon="connector.png" id="AI"/> <!-- The category of this definition, used in the Studio (e.g: http, script ...) -->
 
     <!-- Connector inputs -->
