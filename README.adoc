@@ -50,12 +50,12 @@ The connector is still under development and current state is just a draft versi
 To use this connector, add it as a dependency to your Bonita process.
 For more details on Bonita Connector please refer to {doc-url}/connector-archetype[documentation]
 
-[source,xml]
+[source,xml,subs="attributes+"]
 ----
 <dependency>
     <groupId>org.bonitasoft.connectors</groupId>
     <artifactId>bonita-connector-openai</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>{project-version}</version>
 </dependency>
 ----
 
@@ -91,7 +91,7 @@ cd bonita-connector-openai/
 ./mwnw package
 ----
 
-The build should produce a jar archive under the `target/` folder named `bonita-connector-openai-1.0.0-SNAPSHOT.jar`
+The build should produce a jar archive under the `target/` folder named `bonita-connector-openai-{project-version}.jar`
 
 
 === Run integration tests
