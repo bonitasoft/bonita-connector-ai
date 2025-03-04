@@ -56,7 +56,6 @@ For more details on Bonita Connector please refer to {doc-url}/connector-archety
 - *chatModelName*: The chat model to use, ex: gpt-4o, gpt-4o-mini, llama3, ... (optional)
 - *userPrompt*: The user prompt content to send to the AI provider
 - *systemPrompt*: The system prompt content to send to the AI provider (optional)
-
 - *sourceDocumentRef*: The reference to the process document to load and add to the user prompt. If not null, the connector will try to read the specified document and replace a placeholder named `{document}` in the user prompt with its content. (optional)
 
 OpenAI response content will be placed as a map entry for the key named *output*.
