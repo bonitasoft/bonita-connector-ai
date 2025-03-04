@@ -1,9 +1,11 @@
-package org.bonitasoft.connectors;
+package org.bonitasoft.connectors.openai;
 
 import dev.langchain4j.model.chat.ChatLanguageModel;
 import dev.langchain4j.model.openai.OpenAiChatModel;
 import dev.langchain4j.model.openai.OpenAiChatModelName;
 import dev.langchain4j.service.AiServices;
+import java.util.Optional;
+import java.util.concurrent.atomic.AtomicBoolean;
 import lombok.Getter;
 import lombok.Setter;
 import org.bonitasoft.connectors.document.loader.BonitaDocumentLoader;
@@ -12,12 +14,9 @@ import org.bonitasoft.engine.connector.AbstractConnector;
 import org.bonitasoft.engine.connector.ConnectorException;
 import org.bonitasoft.engine.connector.ConnectorValidationException;
 
-import java.util.Optional;
-import java.util.concurrent.atomic.AtomicBoolean;
-
 @Getter
 @Setter
-public abstract class AbstractAiConnector extends AbstractConnector {
+public abstract class AbstractOpenAiConnector extends AbstractConnector {
 
     static final String URL = "url";
     static final String API_KEY = "apiKey";
@@ -37,15 +36,15 @@ public abstract class AbstractAiConnector extends AbstractConnector {
     private DocumentLoader documentLoader;
 
     private ChatLanguageModel chatModel;
-    private Assistant assistant;
+    private OpenAiAssistant openAiAssistant;
 
     private AtomicBoolean initialized = new AtomicBoolean(false);
 
     /**
-     * Perform validation on the inputs defined on the connector definition (src/main/resources/bonita-connector-ai.def)
-     * You should:
-     * - validate that mandatory inputs are presents
-     * - validate that the content of the inputs is coherent with your use case (e.g: validate that a date is / isn't in the past ...)
+     * Perform validation on the inputs defined on the connector definition
+     * (src/main/resources/bonita-connector-ai.def) You should: - validate that mandatory inputs are
+     * presents - validate that the content of the inputs is coherent with your use case (e.g:
+     * validate that a date is / isn't in the past ...)
      */
     @Override
     public void validateInputParameters() throws ConnectorValidationException {
@@ -54,12 +53,12 @@ public abstract class AbstractAiConnector extends AbstractConnector {
 
     protected <T> void checkMandatoryStringInput(String inputName, Class<T> type) throws ConnectorValidationException {
         try {
-            T value = getInputValue(inputName, type).orElseThrow(() ->
-                    new ConnectorValidationException(this, String.format("Mandatory parameter '%s' is missing.", inputName))
-            );
+            T value = getInputValue(inputName, type)
+                    .orElseThrow(() -> new ConnectorValidationException(
+                            this, String.format("Mandatory parameter '%s' is missing.", inputName)));
             if (value instanceof String sValue && sValue.isEmpty()) {
-                throw new ConnectorValidationException(this,
-                        String.format("Mandatory parameter '%s' is missing.", inputName));
+                throw new ConnectorValidationException(
+                        this, String.format("Mandatory parameter '%s' is missing.", inputName));
             }
         } catch (ClassCastException e) {
             throw new ConnectorValidationException(this, String.format("'%s' parameter must be a String", inputName));
@@ -76,9 +75,9 @@ public abstract class AbstractAiConnector extends AbstractConnector {
     }
 
     /**
-     * Core method:
-     * - Execute all the business logic of your connector using the inputs (connect to an external service, compute some values ...).
-     * - Set the output of the connector execution. If outputs are not set, connector fails.
+     * Core method: - Execute all the business logic of your connector using the inputs (connect to an
+     * external service, compute some values ...). - Set the output of the connector execution. If
+     * outputs are not set, connector fails.
      */
     @Override
     protected void executeBusinessLogic() throws ConnectorException {
@@ -89,10 +88,10 @@ public abstract class AbstractAiConnector extends AbstractConnector {
 
     protected abstract String doExecute() throws ConnectorException;
 
-    protected OpenAiChatModel.OpenAiChatModelBuilder customizeChatModelBuilder(OpenAiChatModel.OpenAiChatModelBuilder chatModelBuilder) {
+    protected OpenAiChatModel.OpenAiChatModelBuilder customizeChatModelBuilder(
+            OpenAiChatModel.OpenAiChatModelBuilder chatModelBuilder) {
         return chatModelBuilder;
     }
-
 
     public void initialize() {
         if (!initialized.get()) {
@@ -103,14 +102,15 @@ public abstract class AbstractAiConnector extends AbstractConnector {
             this.chatModelName = getInputValue(CHAT_MODEL_NAME, String.class, OpenAiChatModelName.GPT_4_O.toString());
 
             this.systemPrompt = getInputValue(SYSTEM_PROMPT, String.class, null);
-            this.userPrompt = getInputValue(USER_PROMPT, String.class, "You are a polite assistant");
+            this.userPrompt = getInputValue(USER_PROMPT, String.class, "You are a polite openAiAssistant");
 
             this.sourceDocumentRef = getInputValue(SOURCE_DOCUMENT_REF, String.class, null);
             if (this.documentLoader == null) {
                 this.documentLoader = new BonitaDocumentLoader(getAPIAccessor().getProcessAPI(), getExecutionContext());
             }
 
-            OpenAiChatModel.OpenAiChatModelBuilder chatModelBuilder = OpenAiChatModel.builder().apiKey(apiKey);
+            OpenAiChatModel.OpenAiChatModelBuilder chatModelBuilder =
+                    OpenAiChatModel.builder().apiKey(apiKey);
             if (this.endpointUrl != null && !this.endpointUrl.isEmpty()) {
                 chatModelBuilder.baseUrl(this.endpointUrl);
             }
@@ -118,7 +118,7 @@ public abstract class AbstractAiConnector extends AbstractConnector {
             chatModelBuilder = customizeChatModelBuilder(chatModelBuilder);
             this.chatModel = chatModelBuilder.build();
 
-            this.assistant = AiServices.builder(Assistant.class)
+            this.openAiAssistant = AiServices.builder(OpenAiAssistant.class)
                     .chatLanguageModel(this.chatModel)
                     .systemMessageProvider(chatMemoryId -> this.systemPrompt)
                     .build();
@@ -126,5 +126,4 @@ public abstract class AbstractAiConnector extends AbstractConnector {
             this.initialized.set(true);
         }
     }
-
 }
