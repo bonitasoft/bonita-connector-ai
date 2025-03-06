@@ -21,5 +21,16 @@ jobs:
           java-version: 17
           distribution: 'temurin'
           cache: 'maven'
+
+      - uses: bonitasoft/maven-settings-action@v1
+        with:
+          keeper-secret-config: ${{ secrets.KSM_CONFIG }}
+
       - name: Build and test
         run: ./mvnw -B -ntp verify
+
+      - name: Publish to Artifactory
+        if: github.event_name != 'pull_request'
+        env:
+          ALT_DEPLOYMENT_REPOSITORY: snapshots::${{ vars.SNAPSHOTS_REPOSITORY_URL }} 
+        run: ./mvnw --no-transfer-progress -B deploy -Prelease -DaltDeploymentRepository=${{env.ALT_DEPLOYMENT_REPOSITORY}}
