@@ -32,6 +32,6 @@
         <widget xsi:type="definition:Text" id="userPromptWidget" inputName="userPrompt"/>
         <widget xsi:type="definition:Text" id="chatModelNameWidget" inputName="chatModelName"/>
         <widget xsi:type="definition:Text" id="modelTemperatureWidget" inputName="modelTemperature"/>
-        <widget xsi:type="definition:Text" id="sourceDocumentRefWidget" inputName="sourceDocumentRef"/>
+        <widget xsi:type="definition:Text" id="sourceDocumentRefWidget" inputName="sourceDocumentRef" showDocuments="true" />
     </page>
 </definition:ConnectorDefinition>
