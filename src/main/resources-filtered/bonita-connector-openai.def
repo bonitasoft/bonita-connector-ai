@@ -3,7 +3,7 @@
     <id>${connector-definition-id}</id> <!-- Id of the definition -->
     <version>${connector-definition-version}</version> <!-- Version of the definition -->
     <icon>openai.png</icon> <!-- The icon used in the Studio for this definition -->
-    <category icon="connector.png" id="AI"/> <!-- The category of this definition, used in the Studio (e.g: http, script ...) -->
+    <category icon="openai.png" id="ai"/> <!-- The category of this definition, used in the Studio (e.g: http, script ...) -->
 
     <!-- Connector inputs -->
     <input mandatory="false" name="url" type="java.lang.String"/>
@@ -12,6 +12,7 @@
     <input mandatory="true" name="userPrompt" type="java.lang.String"/>
     <input mandatory="false" name="systemPrompt" type="java.lang.String"/>
     <input mandatory="false" name="chatModelName" type="java.lang.String"/>
+    <input mandatory="false" name="modelTemperature" type="java.lang.Double"/>
     <input mandatory="false" name="sourceDocumentRef" type="java.lang.String"/>
 
     <!-- Connector outputs -->
@@ -30,6 +31,7 @@
         <widget xsi:type="definition:Text" id="systemPromptWidget" inputName="systemPrompt"/>
         <widget xsi:type="definition:Text" id="userPromptWidget" inputName="userPrompt"/>
         <widget xsi:type="definition:Text" id="chatModelNameWidget" inputName="chatModelName"/>
+        <widget xsi:type="definition:Text" id="modelTemperatureWidget" inputName="modelTemperature"/>
         <widget xsi:type="definition:Text" id="sourceDocumentRefWidget" inputName="sourceDocumentRef" showDocuments="true" />
     </page>
 </definition:ConnectorDefinition>

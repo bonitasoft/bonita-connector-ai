@@ -5,7 +5,7 @@
     <groupId>org.bonitasoft.connectors</groupId>
     <artifactId>bonita-connector-openai</artifactId>
     <version>1.0.0-SNAPSHOT</version>
-    <name>bonita::connector-openai</name>
+    <name>Bonita OpenAI Connector</name>
     <packaging>jar</packaging>
 
     <url>https://www.bonitasoft.com</url>
@@ -60,16 +60,16 @@
         <connector-main-class>org.bonitasoft.connectors.openai.OpenAiConnector</connector-main-class>
 
         <!-- Bonita -->
-        <bonita-runtime.version>10.2.0</bonita-runtime.version>
+        <bonita-runtime.version>9.0.0</bonita-runtime.version>
 
         <!-- AI -->
-        <langchain4j.version>0.36.2</langchain4j.version>
+        <langchain4j.version>1.0.0-beta1</langchain4j.version>
 
         <!-- Tests -->
         <junit-jupiter-engine.version>5.10.0</junit-jupiter-engine.version>
         <assertj-core.version>3.24.2</assertj-core.version>
         <mockito-core.version>5.6.0</mockito-core.version>
-        <log4j.version>2.23.1</log4j.version>
+        <log4j.version>2.24.3</log4j.version>
 
         <!-- Maven plugins -->
         <maven-compiler-plugin.version>3.11.0</maven-compiler-plugin.version>
@@ -102,6 +102,53 @@
             <groupId>org.bonitasoft.engine</groupId>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-api</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <!--Force provided scope to avoid conflict with Bonita -->
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-annotations</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-core</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>commons-codec</groupId>
+            <artifactId>commons-codec</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jspecify</groupId>
+            <artifactId>jspecify</artifactId>
+            <version>1.0.0</version>
+            <scope>provided</scope>
+        </dependency>
 
         <dependency>
             <groupId>dev.langchain4j</groupId>
@@ -118,6 +165,7 @@
             <artifactId>langchain4j-document-parser-apache-tika</artifactId>
             <version>${langchain4j.version}</version>
         </dependency>
+
 
         <!-- misc -->
         <dependency>

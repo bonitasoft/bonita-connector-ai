@@ -23,6 +23,7 @@ public abstract class AbstractOpenAiConnector extends AbstractConnector {
     static final String CHAT_MODEL_NAME = "chatModelName";
     static final String USER_PROMPT = "userPrompt";
     static final String SYSTEM_PROMPT = "systemPrompt";
+    static final String MODEL_TEMPERATURE = "modelTemperature";
     static final String SOURCE_DOCUMENT_REF = "sourceDocumentRef";
     static final String OUTPUT = "output";
 

@@ -4,7 +4,6 @@ import dev.langchain4j.data.document.Document;
 import dev.langchain4j.data.document.parser.apache.tika.ApacheTikaDocumentParser;
 import dev.langchain4j.model.openai.OpenAiChatModel.OpenAiChatModelBuilder;
 import java.io.ByteArrayInputStream;
-import java.time.Duration;
 import org.apache.tika.metadata.Metadata;
 import org.apache.tika.parser.AutoDetectParser;
 import org.bonitasoft.engine.connector.ConnectorException;
@@ -51,6 +50,7 @@ public class OpenAiConnector extends AbstractOpenAiConnector {
         if (log.isDebugEnabled()) {
             chatModelBuilder.logRequests(true).logResponses(true);
         }
-        return chatModelBuilder.timeout(Duration.ofMinutes(5)).temperature(0.0);
+        getInputValue(MODEL_TEMPERATURE, Double.class).ifPresent(chatModelBuilder::temperature);
+        return chatModelBuilder;
     }
 }
