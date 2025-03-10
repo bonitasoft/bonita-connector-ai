@@ -100,7 +100,8 @@ public abstract class AbstractOpenAiConnector extends AbstractConnector {
             this.endpointUrl = getInputValue(URL, String.class, null);
             this.apiKey = getInputValue(API_KEY, String.class, "changeMe");
 
-            this.chatModelName = getInputValue(CHAT_MODEL_NAME, String.class, OpenAiChatModelName.GPT_4_O_MINI.toString());
+            this.chatModelName =
+                    getInputValue(CHAT_MODEL_NAME, String.class, OpenAiChatModelName.GPT_4_O_MINI.toString());
 
             this.systemPrompt = getInputValue(SYSTEM_PROMPT, String.class, "You are a polite Assistant");
             this.userPrompt = getInputValue(USER_PROMPT, String.class, "");
