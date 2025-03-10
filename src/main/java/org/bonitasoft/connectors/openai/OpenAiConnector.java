@@ -29,7 +29,7 @@ public class OpenAiConnector extends AbstractOpenAiConnector {
             prompt = appendDocToPrompt(ref, prompt);
         }
 
-        return getOpenAiAssistant().answer(prompt);
+        return getOpenAiAssistant().chat(prompt);
     }
 
     @NotNull

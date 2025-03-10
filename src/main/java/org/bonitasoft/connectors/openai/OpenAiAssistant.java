@@ -1,5 +1,5 @@
 package org.bonitasoft.connectors.openai;
 
 public interface OpenAiAssistant {
-    String answer(String query);
+    String chat(String userText);
 }
