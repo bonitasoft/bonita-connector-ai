@@ -33,9 +33,9 @@ class OpenAiConnectorIT {
     void should_create_output_for_valid_input() throws ConnectorException {
         // Given
         connector.setInputParameters(Map.of(
-                OpenAiConnector.URL, "http://localhost:8080/v1",
-                OpenAiConnector.CHAT_MODEL_NAME, "llama3.1:8b",
-                OpenAiConnector.USER_PROMPT, "Can you tell me a joke ?"));
+                OpenAiConfiguration.URL, "http://localhost:8080/v1",
+                OpenAiConfiguration.CHAT_MODEL_NAME, "llama3.1:8b",
+                OpenAiConfiguration.USER_PROMPT, "Can you tell me a joke ?"));
 
         // When
         Map<String, Object> outputs = connector.execute();
@@ -52,12 +52,12 @@ class OpenAiConnectorIT {
         when(documentLoader.load(docRef)).thenReturn(docData);
 
         connector.setInputParameters(Map.of(
-                OpenAiConnector.URL, "http://localhost:8001/v1",
-                OpenAiConnector.CHAT_MODEL_NAME, "llama3.1:8b",
-                OpenAiConnector.SYSTEM_PROMPT, "You are an expert in Agile software methodology and development.",
-                OpenAiConnector.USER_PROMPT,
+                OpenAiConfiguration.URL, "http://localhost:8001/v1",
+                OpenAiConfiguration.CHAT_MODEL_NAME, "llama3.1:8b",
+                OpenAiConfiguration.SYSTEM_PROMPT, "You are an expert in Agile software methodology and development.",
+                OpenAiConfiguration.USER_PROMPT,
                         "Extract person names listed in the following Manifesto for Agile Software Development",
-                OpenAiConnector.SOURCE_DOCUMENT_REF, docRef));
+                OpenAiConfiguration.SOURCE_DOCUMENT_REF, docRef));
 
         // When
         var result = connector.execute();

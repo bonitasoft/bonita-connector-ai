@@ -25,7 +25,7 @@ class OpenAiConnectorTest {
     @Test
     void should_throw_exception_if_mandatory_input_is_empty() {
         Map<String, Object> parameters = new HashMap<>();
-        parameters.put(OpenAiConnector.USER_PROMPT, "");
+        parameters.put(OpenAiConfiguration.USER_PROMPT, "");
         connector.setInputParameters(parameters);
         assertThrows(ConnectorValidationException.class, () -> connector.validateInputParameters());
     }
@@ -33,7 +33,7 @@ class OpenAiConnectorTest {
     @Test
     void should_throw_exception_if_mandatory_input_is_not_a_string() {
         Map<String, Object> parameters = new HashMap<>();
-        parameters.put(OpenAiConnector.USER_PROMPT, 38);
+        parameters.put(OpenAiConfiguration.USER_PROMPT, 38);
         connector.setInputParameters(parameters);
         assertThrows(ConnectorValidationException.class, () -> connector.validateInputParameters());
     }
