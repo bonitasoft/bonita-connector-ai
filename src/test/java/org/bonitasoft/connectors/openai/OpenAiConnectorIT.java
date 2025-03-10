@@ -53,7 +53,7 @@ class OpenAiConnectorIT {
 
         connector.setInputParameters(Map.of(
                 OpenAiConnector.URL, "http://localhost:8001/v1",
-                OpenAiConnector.CHAT_MODEL_NAME, "llama3.1",
+                OpenAiConnector.CHAT_MODEL_NAME, "llama3.1:8b",
                 OpenAiConnector.SYSTEM_PROMPT, "You are an expert in Agile software methodology and development.",
                 OpenAiConnector.USER_PROMPT,
                         "Extract person names listed in the following Manifesto for Agile Software Development",
