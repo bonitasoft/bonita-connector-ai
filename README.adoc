@@ -68,12 +68,46 @@ For more details on Bonita Connector please refer to {doc-url}/connector-archety
 
 === Configuration
 
-- *url*: The OpenAI endpoint url (optional)
-- *apiKey*: The AI provider API key (optional)
-- *chatModelName*: The chat model to use, ex: gpt-4o, gpt-4o-mini, llama3, ... (optional)
-- *userPrompt*: The user prompt content to send to the AI provider
-- *systemPrompt*: The system prompt content to send to the AI provider (optional)
-- *sourceDocumentRef*: The reference to the process document to load and add to the user prompt. If not null, the connector will try to read the specified document and append the user prompt with its content after a `\n----\n` separation. (optional)
+
+[caption=Configuration,options=autowidth]
+|===
+|Parameter name |Required |Description |Default value
+
+|*url*
+|false
+|The OpenAI endpoint url. This parameter allows to use an alternate endpoint for tests.
+|Default to the official OpenAI endpoint
+
+|*apiKey*
+|false
+|The OpenAI API key. Parameter is optional for testing purpose but obviously required with official OpenAI endpoint.
+| changeme
+
+|*chatModelName*
+|false
+|The model to use for chat like gpt-4, gpt-4o-mini, lama, ... See OpenAI documentation at https://platform.openai.com/docs/models/models for detailed information about models.
+|gpt-4o-mini
+
+|*systemPrompt*
+|false
+|The system prompt to pass to the OpenAI endpoint.  It helps to influence the behavior of the assistant and specify a default context. (ex: You are a personal finance advisor, providing guidance, etc.)
+|"You are a polite Assistant"
+
+|*userPrompt*
+|*true*
+|The user prompt content to send to the AI provider
+|
+
+|*sourceDocumentRef*
+|false
+|The reference to the process document to load and add to the user prompt. If not null, the connector will try to read the specified document and append the user prompt with its content after a `\n----\n` separation.
+|null
+
+|*modelTemperature*
+|false
+|The temperature to use for the model. Higher values will result in more creative responses. Must be between 0 and 1. Leave blank if the selected model does not support this parameter. If parameter is not present, the temperature will not be set in chat context.
+|
+|===
 
 OpenAI response content will be placed as a map entry for the key named *output*.
 
