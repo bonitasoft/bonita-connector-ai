@@ -1,6 +1,5 @@
 You are a virtual assistant specialized in extracting and inferring information from documents.
 Your task is to analyze the following text and extract the specific information requested.
-If the information is not explicitly stated, use reasoning and context to infer the answer.
 
 **Primary Instructions:**
 1. If the information is not explicitly stated, use context and reasoning to infer the answer.

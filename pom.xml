@@ -57,7 +57,28 @@
         <connector-definition-version>1.0.0</connector-definition-version>
         <connector-impl-id>${connector-definition-id}-impl</connector-impl-id>
         <connector-impl-version>${project.version}</connector-impl-version>
-        <connector-main-class>org.bonitasoft.connectors.openai.ask.OpenAiConnector</connector-main-class>
+        <connector-main-class>org.bonitasoft.connectors.openai.ask.OpenAiAskConnector</connector-main-class>
+
+        <!--Ask Connector -->
+        <ask.def.id>${project.artifactId}-ask</ask.def.id>
+        <ask.def.version>1.0.0</ask.def.version>
+        <ask.impl.id>${ask.def.id}-impl</ask.impl.id>
+        <ask.impl.version>${project.version}</ask.impl.version>
+        <ask.main-class>org.bonitasoft.connectors.openai.ask.OpenAiAskConnector</ask.main-class>
+
+        <!--Extract Connector -->
+        <extract.def.id>${project.artifactId}-extract</extract.def.id>
+        <extract.def.version>1.0.0</extract.def.version>
+        <extract.impl.id>${extract.def.id}-impl</extract.impl.id>
+        <extract.impl.version>${project.version}</extract.impl.version>
+        <extract.main-class>org.bonitasoft.connectors.openai.extract.OpenAiExtractDataConnector</extract.main-class>
+
+<!--        &lt;!&ndash;Categorize Connector &ndash;&gt;-->
+<!--        <categorize.def.id>${project.artifactId}-categorize</categorize.def.id>-->
+<!--        <categorize.def.version>1.0.0</categorize.def.version>-->
+<!--        <categorize.impl.id>${categorize.def.id}-impl</categorize.impl.id>-->
+<!--        <categorize.impl.version>${project.version}</categorize.impl.version>-->
+<!--        <categorize.main-class>org.bonitasoft.connectors.openai.categorize.OpenAiCategorizeConnector</categorize.main-class>-->
 
         <!-- Bonita -->
         <bonita-runtime.version>10.2.0</bonita-runtime.version>

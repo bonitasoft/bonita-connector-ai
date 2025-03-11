@@ -2,6 +2,5 @@
 {{document}}
 
 **Instructions:**
-1. Identify and extract the following information:
-   - {{fieldsToExtract}}
-2. Format the extracted information clearly and structured in JSON format and formatted according to this JSON schema: {{jsonSchema}}
+1. Identify and extract the information listed in the provide JSON schema.
+2. Format the extracted information clearly and structured in JSON format and formatted according to this JSON schema: {{jsonSchema}}.

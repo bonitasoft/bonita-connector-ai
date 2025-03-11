@@ -91,7 +91,7 @@ public abstract class AbstractOpenAiConnector extends AbstractConnector {
         // API Key
         chatModelBuilder.apiKey(openAiConfiguration.getApiKey());
         // Url override
-        openAiConfiguration.getEndpointUrl().ifPresent(chatModelBuilder::baseUrl);
+        openAiConfiguration.getUrl().ifPresent(chatModelBuilder::baseUrl);
         // Chat model name
         chatModelBuilder.modelName(openAiConfiguration.getChatModelName());
         // LLM req/res logs

@@ -39,10 +39,8 @@ public class OpenAiExtractDataConnector extends AbstractOpenAiConnector {
 
         OpenAiExtractor openAiExtractor = AiServices.create(OpenAiExtractor.class, chatModel);
         if (openAiConfiguration.getOutputJsonSchema().isPresent()) {
-            return monitor(() -> openAiExtractor.extract(
-                    docContent,
-                    fieldsToExtractForPrompt,
-                    openAiConfiguration.getOutputJsonSchema().get()));
+            return monitor(() -> openAiExtractor.extractWithJsonSchema(
+                    docContent, openAiConfiguration.getOutputJsonSchema().get()));
         }
         return monitor(() -> openAiExtractor.extract(docContent, fieldsToExtractForPrompt));
     }
@@ -66,9 +64,6 @@ public class OpenAiExtractDataConnector extends AbstractOpenAiConnector {
 
         @SystemMessage(fromResource = "prompt/extract/system.txt")
         @UserMessage(fromResource = "prompt/extract/user_with_json_schema.txt")
-        String extract(
-                @V("document") String document,
-                @V("fieldsToExtract") String fieldsToExtract,
-                @V("jsonSchema") String jsonSchema);
+        String extractWithJsonSchema(@V("document") String document, @V("jsonSchema") String jsonSchema);
     }
 }

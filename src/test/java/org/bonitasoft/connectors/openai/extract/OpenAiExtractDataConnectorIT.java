@@ -14,7 +14,7 @@ import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 import org.bonitasoft.connectors.openai.OpenAiConfiguration;
-import org.bonitasoft.connectors.openai.ask.OpenAiConnector;
+import org.bonitasoft.connectors.openai.ask.OpenAiAskConnector;
 import org.bonitasoft.engine.connector.ConnectorException;
 import org.bonitasoft.engine.connector.ConnectorValidationException;
 import org.junit.jupiter.api.BeforeEach;
@@ -71,8 +71,8 @@ class OpenAiExtractDataConnectorIT {
         var result = connector.execute();
 
         // Then
-        assertThat(result.get(OpenAiConnector.OUTPUT)).isInstanceOf(String.class);
-        var json = (String) result.get(OpenAiConnector.OUTPUT);
+        assertThat(result.get(OpenAiAskConnector.OUTPUT)).isInstanceOf(String.class);
+        var json = (String) result.get(OpenAiAskConnector.OUTPUT);
         assertThat(json).isNotEmpty();
         assertJsonContent(json);
     }
@@ -85,8 +85,6 @@ class OpenAiExtractDataConnectorIT {
                 .thenReturn(getClass().getResourceAsStream("/data/pdf_justificatifV1/justificatif_domicile_1.pdf"));
 
         connector.setInputParameters(Map.of(
-                OpenAiConfiguration.FIELDS_TO_EXTRACT,
-                "FirstName,LastName,FullName,FullAddress,RecentDate,IssuerName,IdentificationNumber",
                 OpenAiConfiguration.OUTPUT_JSON_SCHEMA,
                 Files.readString(Paths.get("src/test/resources/extract/schema.json"))));
 
@@ -99,28 +97,30 @@ class OpenAiExtractDataConnectorIT {
         var result = connector.execute();
 
         // Then
-        assertThat(result.get(OpenAiConnector.OUTPUT)).isInstanceOf(String.class);
-        var json = (String) result.get(OpenAiConnector.OUTPUT);
+        assertThat(result.get(OpenAiAskConnector.OUTPUT)).isInstanceOf(String.class);
+        var json = (String) result.get(OpenAiAskConnector.OUTPUT);
         assertThat(json).isNotEmpty();
         assertJsonContent(json);
     }
 
     private static void assertJsonContent(String json) throws JsonProcessingException {
         var user = new ObjectMapper().readValue(json, User.class);
-        assertThat(user.FirstName).isEqualTo("Jean");
-        assertThat(user.LastName).isEqualTo("Dupont");
-        assertThat(user.FullName).isEqualTo("Jean Dupont");
-        assertThat(user.FullAddress).isEqualTo("12 Rue de la Paix, 75002 Paris");
-        assertThat(user.IssuerName).isEqualTo("Orange");
-        assertThat(user.IdentificationNumber).isEqualTo("581325418");
+        assertThat(user.firstName).isEqualTo("Jean");
+        assertThat(user.lastName).isEqualTo("Dupont");
+        assertThat(user.fullName).isEqualTo("Jean Dupont");
+        assertThat(user.fullAddress).isEqualTo("12 Rue de la Paix, 75002 Paris");
+        assertThat(user.issuerName).isEqualTo("Orange");
+        assertThat(user.identificationNumber).isEqualTo("581325418");
+        assertThat(user.motherBirthday).isEqualTo("Absent");
     }
 
     record User(
-            String FirstName,
-            String LastName,
-            String FullName,
-            String FullAddress,
-            String RecentDate,
-            String IssuerName,
-            String IdentificationNumber) {}
+            String firstName,
+            String lastName,
+            String fullName,
+            String fullAddress,
+            String recentDate,
+            String issuerName,
+            String identificationNumber,
+            String motherBirthday) {}
 }

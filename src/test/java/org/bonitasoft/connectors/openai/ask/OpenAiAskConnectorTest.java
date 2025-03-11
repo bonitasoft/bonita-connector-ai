@@ -9,13 +9,13 @@ import org.bonitasoft.engine.connector.ConnectorValidationException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-class OpenAiConnectorTest {
+class OpenAiAskConnectorTest {
 
-    OpenAiConnector connector;
+    OpenAiAskConnector connector;
 
     @BeforeEach
     void setUp() {
-        connector = new OpenAiConnector();
+        connector = new OpenAiAskConnector();
     }
 
     @Test

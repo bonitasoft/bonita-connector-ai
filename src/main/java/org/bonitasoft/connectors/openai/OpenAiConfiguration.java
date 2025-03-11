@@ -28,20 +28,23 @@ public class OpenAiConfiguration {
 
     public static final String SOURCE_DOCUMENT_REF = "sourceDocumentRef";
 
-    private String endpointUrl;
+    private String url;
     private String apiKey;
     private String chatModelName;
+
     private Double modelTemperature;
     private Integer requestTimeout;
+
     private String systemPrompt;
     private String userPrompt;
-    private String outputJsonSchema;
-    private String fieldsToExtract;
 
     private String sourceDocumentRef;
 
-    public Optional<String> getEndpointUrl() {
-        return Optional.ofNullable(endpointUrl);
+    private String outputJsonSchema;
+    private String fieldsToExtract;
+
+    public Optional<String> getUrl() {
+        return Optional.ofNullable(url);
     }
 
     public Optional<Double> getModelTemperature() {
@@ -82,7 +85,7 @@ public class OpenAiConfiguration {
 
     public static OpenAiConfiguration from(Map<String, Object> parameters) throws ConnectorValidationException {
         var config = new OpenAiConfiguration();
-        config.endpointUrl = getInputValue(parameters, URL, String.class, null);
+        config.url = getInputValue(parameters, URL, String.class, null);
         config.apiKey = getInputValue(parameters, API_KEY, String.class, "changeMe");
 
         config.chatModelName =

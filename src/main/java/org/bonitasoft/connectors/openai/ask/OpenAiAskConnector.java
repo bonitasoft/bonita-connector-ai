@@ -11,7 +11,7 @@ import org.bonitasoft.engine.connector.ConnectorException;
 import org.bonitasoft.engine.connector.ConnectorValidationException;
 
 @Slf4j
-public class OpenAiConnector extends AbstractOpenAiConnector {
+public class OpenAiAskConnector extends AbstractOpenAiConnector {
 
     @Override
     public void validateInputParameters() throws ConnectorValidationException {
@@ -39,7 +39,6 @@ public class OpenAiConnector extends AbstractOpenAiConnector {
                 .build();
 
         var userPrompt = openAiConfiguration.getUserPrompt();
-        var requestbuilder = ChatRequest.builder();
         if (openAiConfiguration.getOutputJsonSchema().isPresent()) {
             userPrompt +=
                     """
@@ -65,7 +64,7 @@ public class OpenAiConnector extends AbstractOpenAiConnector {
                 .map(docContent -> template.apply(Map.of("document", docContent)))
                 .orElse(Prompt.from(openAiConfiguration.getUserPrompt()));
 
-        var chatRequest = requestbuilder.messages(prompt.toUserMessage()).build();
+        var chatRequest = ChatRequest.builder().messages(prompt.toUserMessage()).build();
 
         return monitor(() -> openAiAssistant.chat(chatRequest));
     }

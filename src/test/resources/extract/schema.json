@@ -3,34 +3,38 @@
   "title": "MySchema",
   "type": "object",
   "required": [
-    "FirstName",
-    "LastName",
-    "FullName",
-    "FullAddress",
-    "RecentDate",
-    "IssuerName",
-    "IdentificationNumber"
+    "firstName",
+    "lastName",
+    "fullName",
+    "fullAddress",
+    "recentDate",
+    "issuerName",
+    "identificationNumber",
+    "motherBirthday"
   ],
   "properties": {
-    "FirstName": {
+    "firstName": {
       "type": "string"
     },
-    "LastName": {
+    "lastName": {
       "type": "string"
     },
-    "FullName": {
+    "fullName": {
       "type": "string"
     },
-    "FullAddress": {
+    "fullAddress": {
       "type": "string"
     },
-    "RecentDate": {
+    "recentDate": {
       "type": "string"
     },
-    "IssuerName": {
+    "issuerName": {
       "type": "string"
     },
-    "IdentificationNumber": {
+    "identificationNumber": {
+      "type": "string"
+    },
+    "motherBirthday": {
       "type": "string"
     }
   }

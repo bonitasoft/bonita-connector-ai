@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.when;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import dev.langchain4j.data.document.DocumentSource;
 import dev.langchain4j.data.document.Metadata;
 import java.io.IOException;
@@ -20,9 +21,9 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
-class OpenAiConnectorIT {
+class OpenAiAskConnectorIT {
 
-    OpenAiConnector connector;
+    OpenAiAskConnector connector;
 
     @Mock
     DocumentSource bonitaDocumentSource;
@@ -32,7 +33,7 @@ class OpenAiConnectorIT {
     @BeforeEach
     void setUp() {
         lenient().when(bonitaDocumentSource.metadata()).thenReturn(new Metadata());
-        connector = new OpenAiConnector();
+        connector = new OpenAiAskConnector();
         connector.setBonitaDocumentSource(bonitaDocumentSource);
 
         parameters = new HashMap<>();
@@ -66,7 +67,7 @@ class OpenAiConnectorIT {
         Map<String, Object> outputs = connector.execute();
 
         // Then
-        assertThat(outputs).containsKey(OpenAiConnector.OUTPUT);
+        assertThat(outputs).containsKey(OpenAiAskConnector.OUTPUT);
     }
 
     @Test
@@ -107,8 +108,13 @@ class OpenAiConnectorIT {
         var result = connector.execute();
 
         // Then
-        assertThat(result.get(OpenAiConnector.OUTPUT)).isInstanceOf(String.class);
-        var aiResponse = (String) result.get(OpenAiConnector.OUTPUT);
-        assertThat(aiResponse).isNotEmpty().contains("2001");
+        assertThat(result.get(OpenAiAskConnector.OUTPUT)).isInstanceOf(String.class);
+        var json = (String) result.get(OpenAiAskConnector.OUTPUT);
+        assertThat(json).isNotEmpty().contains("2001");
+
+        YearOfDocument value = new ObjectMapper().readValue(json, YearOfDocument.class);
+        assertThat(value.year()).isEqualTo("2001");
     }
+
+    record YearOfDocument(String year) {}
 }
