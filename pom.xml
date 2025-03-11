@@ -57,7 +57,7 @@
         <connector-definition-version>1.0.0</connector-definition-version>
         <connector-impl-id>${connector-definition-id}-impl</connector-impl-id>
         <connector-impl-version>${project.version}</connector-impl-version>
-        <connector-main-class>org.bonitasoft.connectors.openai.OpenAiConnector</connector-main-class>
+        <connector-main-class>org.bonitasoft.connectors.openai.ask.OpenAiConnector</connector-main-class>
 
         <!-- Bonita -->
         <bonita-runtime.version>10.2.0</bonita-runtime.version>

@@ -1,9 +1,10 @@
-package org.bonitasoft.connectors.openai;
+package org.bonitasoft.connectors.openai.ask;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.HashMap;
 import java.util.Map;
+import org.bonitasoft.connectors.openai.OpenAiConfiguration;
 import org.bonitasoft.engine.connector.ConnectorValidationException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

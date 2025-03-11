@@ -15,7 +15,9 @@
             <AppenderRef ref="console"/>
         </Root>
         <Logger name="org.bonitasoft.connectors" level="INFO"/>
-        <Logger name="org.bonitasoft.connectors.openai.OpenAiConnector" level="DEBUG"/>
+        <Logger name="dev.langchain4j" level="DEBUG"/>
+        <Logger name="dev.ai4j.openai4j" level="DEBUG"/>
+        <Logger name="org.bonitasoft.connectors.openai" level="DEBUG"/>
     </Loggers>
 
 </Configuration>
