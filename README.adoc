@@ -203,7 +203,7 @@ The build should produce a jar archive under the `target/` folder named `bonita-
 // _**TODO**_: Here again you should state what actually happens when the code above gets executed.
 
 The connector needs an OpenAI endpoint up & running. A docker compose file is present in the root folder which starts
-a https://ollama.com/[https://localai.io/][ollama] container that you can use as a local replacement of OpenAI provider.
+a https://ollama.com/[ollama] container that you can use as a local replacement of OpenAI provider.
 
 Just issue `docker compose up -d` and ollama API will be available at `http://localhost:8080/v1`
 
