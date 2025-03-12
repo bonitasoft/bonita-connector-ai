@@ -89,7 +89,7 @@ public class OpenAiConfiguration {
         config.apiKey = getInputValue(parameters, API_KEY, String.class, "changeMe");
 
         config.chatModelName =
-                getInputValue(parameters, CHAT_MODEL_NAME, String.class, OpenAiChatModelName.GPT_4_O.toString());
+                getInputValue(parameters, CHAT_MODEL_NAME, String.class, OpenAiChatModelName.GPT_4_O_MINI.toString());
         config.systemPrompt = getInputValue(parameters, SYSTEM_PROMPT, String.class, "You are a polite Assistant");
         config.userPrompt = getInputValue(parameters, USER_PROMPT, String.class, "");
 

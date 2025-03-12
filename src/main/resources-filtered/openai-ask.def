@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<definition:ConnectorDefinition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                                xmlns:definition="http://www.bonitasoft.org/ns/connector/definition/6.1">
+<definition:ConnectorDefinition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:definition="http://www.bonitasoft.org/ns/connector/definition/6.1">
     <id>${ask.def.id}</id> <!-- Id of the definition -->
     <version>${ask.def.version}</version> <!-- Version of the definition -->
     <icon>openai.png</icon> <!-- The icon used in the Studio for this definition -->
-    <category icon="openai.png"
-              id="ai"/> <!-- The category of this definition, used in the Studio (e.g: http, script ...) -->
+    <category icon="openai.png" id="ai"/> <!-- The category of this definition, used in the Studio (e.g: http, script ...) -->
 
     <!-- Connector inputs -->
     <input name="url" type="java.lang.String"/>
@@ -45,9 +43,9 @@
     </page>
     <page id="advancedPage">
         <widget xsi:type="definition:Text" id="apiKeyWidget" inputName="apiKey"/>
-        <widget xsi:type="definition:Text" id="chatModelNameWidget" inputName="chatModelName"/>
         <widget xsi:type="definition:Text" id="urlWidget" inputName="url"/>
         <widget xsi:type="definition:Text" id="requestTimeoutWidget" inputName="requestTimeout"/>
+        <widget xsi:type="definition:Text" id="chatModelNameWidget" inputName="chatModelName"/>
         <widget xsi:type="definition:Text" id="modelTemperatureWidget" inputName="modelTemperature"/>
     </page>
 </definition:ConnectorDefinition>

@@ -4,7 +4,7 @@ set -eu
 
 if [ ! -z "${MODELS}" ]; then
   echo "Models list configured: $MODELS"
-
+  # ollama must be up to pull models
   /bin/ollama serve & sleep 5 ;
 
   IFS=',' read -r -a MODEL_LIST <<< "$MODELS"

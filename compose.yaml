@@ -3,9 +3,7 @@ services:
   ollama:
     image: ollama/ollama:latest
     environment:
-      SKIP_PULL: "true"
       MODELS: "llama3.1:8b"
-    # MODELS: "llama3.1:8b,mistral"
     ports:
       - "8080:11434"
     entrypoint: "/entrypoint.sh"
