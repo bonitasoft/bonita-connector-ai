@@ -1,0 +1,41 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "MySchema",
+  "type": "object",
+  "required": [
+    "firstName",
+    "lastName",
+    "fullName",
+    "fullAddress",
+    "recentDate",
+    "issuerName",
+    "identificationNumber",
+    "motherBirthday"
+  ],
+  "properties": {
+    "firstName": {
+      "type": "string"
+    },
+    "lastName": {
+      "type": "string"
+    },
+    "fullName": {
+      "type": "string"
+    },
+    "fullAddress": {
+      "type": "string"
+    },
+    "recentDate": {
+      "type": "string"
+    },
+    "issuerName": {
+      "type": "string"
+    },
+    "identificationNumber": {
+      "type": "string"
+    },
+    "motherBirthday": {
+      "type": "string"
+    }
+  }
+}

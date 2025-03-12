@@ -1,19 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <definition:ConnectorDefinition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:definition="http://www.bonitasoft.org/ns/connector/definition/6.1">
-    <id>${connector-definition-id}</id> <!-- Id of the definition -->
-    <version>${connector-definition-version}</version> <!-- Version of the definition -->
+    <id>${extract.def.id}</id> <!-- Id of the definition -->
+    <version>${extract.def.version}</version> <!-- Version of the definition -->
     <icon>openai.png</icon> <!-- The icon used in the Studio for this definition -->
     <category icon="openai.png" id="ai"/> <!-- The category of this definition, used in the Studio (e.g: http, script ...) -->
 
     <!-- Connector inputs -->
-    <input mandatory="false" name="url" type="java.lang.String"/>
-    <input mandatory="false" name="apiKey" type="java.lang.String"/>
+    <input name="url" type="java.lang.String"/>
+    <input name="apiKey" type="java.lang.String" defaultValue="changeMe"/>
 
-    <input mandatory="true" name="userPrompt" type="java.lang.String"/>
-    <input mandatory="false" name="systemPrompt" type="java.lang.String"/>
-    <input mandatory="false" name="chatModelName" type="java.lang.String"/>
-    <input mandatory="false" name="modelTemperature" type="java.lang.Double"/>
-    <input mandatory="false" name="sourceDocumentRef" type="java.lang.String"/>
+    <input name="chatModelName" type="java.lang.String"  defaultValue="gpt-4o-mini"/>
+
+    <input name="modelTemperature" type="java.lang.Double"/>
+    <input name="requestTimeout" type="java.lang.Integer"/>
+
+    <input name="sourceDocumentRef" type="java.lang.String"/>
+
+    <input name="outputJsonSchema" type="java.lang.String"/>
+    <input name="fieldsToExtract" type="java.lang.String"/>
 
     <!-- Connector outputs -->
     <output name="output" type="java.lang.String"/>
@@ -26,12 +30,15 @@
        - Page and widget descriptions can be defined in the properties files (optional)
     -->
     <page id="defaultPage">
-        <widget xsi:type="definition:Text" id="urlWidget" inputName="url"/>
+        <widget xsi:type="definition:Text" id="sourceDocumentRefWidget" inputName="sourceDocumentRef" showDocuments="true"/>
+        <widget xsi:type="definition:Text" id="fieldsToExtractWidget" inputName="fieldsToExtract"/>
+        <widget xsi:type="definition:TextArea" id="outputJsonSchemaWidget" inputName="outputJsonSchema"/>
+    </page>
+    <page id="advancedPage">
         <widget xsi:type="definition:Text" id="apiKeyWidget" inputName="apiKey"/>
-        <widget xsi:type="definition:Text" id="systemPromptWidget" inputName="systemPrompt"/>
-        <widget xsi:type="definition:Text" id="userPromptWidget" inputName="userPrompt"/>
+        <widget xsi:type="definition:Text" id="urlWidget" inputName="url"/>
+        <widget xsi:type="definition:Text" id="requestTimeoutWidget" inputName="requestTimeout"/>
         <widget xsi:type="definition:Text" id="chatModelNameWidget" inputName="chatModelName"/>
         <widget xsi:type="definition:Text" id="modelTemperatureWidget" inputName="modelTemperature"/>
-        <widget xsi:type="definition:Text" id="sourceDocumentRefWidget" inputName="sourceDocumentRef" showDocuments="true" />
     </page>
 </definition:ConnectorDefinition>

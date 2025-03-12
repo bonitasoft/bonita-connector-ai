@@ -2,5 +2,10 @@ services:
 
   ollama:
     image: ollama/ollama:latest
+    environment:
+      MODELS: "llama3.1:8b"
     ports:
-      - 8080:11434
+      - "8080:11434"
+    entrypoint: "/entrypoint.sh"
+    volumes:
+      - "./src/docker/ollama/entrypoint.sh:/entrypoint.sh"
