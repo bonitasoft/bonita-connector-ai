@@ -66,6 +66,7 @@ For more details on Bonita Connector please refer to {doc-url}/connector-archety
 </dependency>
 ----
 
+=== Configuration
 
 === Ask connector
 
