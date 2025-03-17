@@ -139,7 +139,7 @@ This connector allow extracting information from a bonita document. The result c
 
 |*fieldsToExtract*
 |false
-|The list of fields to extract from the given document. The list item must be separated by a comma like `firstName,lastName,address`.
+|The list of fields to extract from the given document. The connector expect a list of String (like `List.of("firstName","lastName","address")`.
 |null
 
 |*outputJsonSchema*
