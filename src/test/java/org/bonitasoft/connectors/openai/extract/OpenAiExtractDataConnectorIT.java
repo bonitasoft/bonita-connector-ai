@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.when;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dev.langchain4j.data.document.DocumentSource;
@@ -12,6 +13,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import org.bonitasoft.connectors.openai.OpenAiConfiguration;
 import org.bonitasoft.connectors.openai.ask.OpenAiAskConnector;
@@ -26,6 +28,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 class OpenAiExtractDataConnectorIT {
 
+    private static ObjectMapper objectMapper = new ObjectMapper().findAndRegisterModules();
     OpenAiExtractDataConnector connector;
 
     @Mock
@@ -60,7 +63,15 @@ class OpenAiExtractDataConnectorIT {
 
         parameters.put(
                 OpenAiConfiguration.FIELDS_TO_EXTRACT,
-                "FirstName,LastName,FullName,FullAddress,RecentDate,IssuerName,IdentificationNumber");
+                List.of(
+                        "firstName",
+                        "lastName",
+                        "fullName",
+                        "fullAddress",
+                        "recentDate",
+                        "issuerName",
+                        "identificationNumber",
+                        "motherBirthday"));
 
         // Lifecycle
         connector.setInputParameters(parameters);
@@ -104,7 +115,8 @@ class OpenAiExtractDataConnectorIT {
     }
 
     private static void assertJsonContent(String json) throws JsonProcessingException {
-        var user = new ObjectMapper().readValue(json, User.class);
+        objectMapper = new ObjectMapper();
+        var user = objectMapper.readValue(json, User.class);
         assertThat(user.firstName).isEqualTo("Jean");
         assertThat(user.lastName).isEqualTo("Dupont");
         assertThat(user.fullName).isEqualTo("Jean Dupont");
@@ -114,6 +126,7 @@ class OpenAiExtractDataConnectorIT {
         assertThat(user.motherBirthday).isEqualTo("Absent");
     }
 
+    @JsonIgnoreProperties(ignoreUnknown = true)
     record User(
             String firstName,
             String lastName,

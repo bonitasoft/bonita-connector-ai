@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-set -eu
+set -e
 
 if [ ! -z "${MODELS}" ]; then
   echo "Models list configured: $MODELS"

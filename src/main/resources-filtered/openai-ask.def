@@ -34,12 +34,8 @@
     <page id="defaultPage">
         <widget xsi:type="definition:TextArea" id="systemPromptWidget" inputName="systemPrompt"/>
         <widget xsi:type="definition:TextArea" id="userPromptWidget" inputName="userPrompt"/>
-        <widget xsi:type="definition:Text" id="sourceDocumentRefWidget" inputName="sourceDocumentRef" showDocuments="true"/>
-    </page>
-    <page id="outputPage">
-        <widget xsi:type="definition:Text" id="sourceDocumentRefWidget" inputName="sourceDocumentRef" showDocuments="true"/>
         <widget xsi:type="definition:TextArea" id="outputJsonSchemaWidget" inputName="outputJsonSchema"/>
-        <widget xsi:type="definition:Text" id="fieldsToExtractWidget" inputName="fieldsToExtract"/>
+        <widget xsi:type="definition:Text" id="sourceDocumentRefWidget" inputName="sourceDocumentRef" showDocuments="true"/>
     </page>
     <page id="advancedPage">
         <widget xsi:type="definition:Text" id="apiKeyWidget" inputName="apiKey"/>

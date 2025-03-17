@@ -17,7 +17,7 @@
     <input name="sourceDocumentRef" type="java.lang.String"/>
 
     <input name="outputJsonSchema" type="java.lang.String"/>
-    <input name="fieldsToExtract" type="java.lang.String"/>
+    <input name="fieldsToExtract" type="java.util.List"/>
 
     <!-- Connector outputs -->
     <output name="output" type="java.lang.String"/>
@@ -31,7 +31,7 @@
     -->
     <page id="defaultPage">
         <widget xsi:type="definition:Text" id="sourceDocumentRefWidget" inputName="sourceDocumentRef" showDocuments="true"/>
-        <widget xsi:type="definition:Text" id="fieldsToExtractWidget" inputName="fieldsToExtract"/>
+        <widget xsi:type="definition:List" id="fieldsToExtractWidget" inputName="fieldsToExtract"/>
         <widget xsi:type="definition:TextArea" id="outputJsonSchemaWidget" inputName="outputJsonSchema"/>
     </page>
     <page id="advancedPage">

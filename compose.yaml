@@ -2,8 +2,8 @@ services:
 
   ollama:
     image: ollama/ollama:latest
-    environment:
-      MODELS: "llama3.1:8b"
+#    environment:
+#      MODELS: "llama3.1:8b"
     ports:
       - "8080:11434"
     entrypoint: "/entrypoint.sh"
