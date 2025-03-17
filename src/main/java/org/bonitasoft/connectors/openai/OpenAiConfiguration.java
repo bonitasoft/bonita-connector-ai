@@ -83,6 +83,7 @@ public class OpenAiConfiguration {
                 getInputValue(parameters, CHAT_MODEL_NAME, String.class, OpenAiChatModelName.GPT_4_O_MINI.toString());
         config.systemPrompt = getInputValue(parameters, SYSTEM_PROMPT, String.class, "You are a polite Assistant");
         config.userPrompt = getInputValue(parameters, USER_PROMPT, String.class, "");
+        config.sourceDocumentRef = getInputValue(parameters, SOURCE_DOCUMENT_REF, String.class, null);
 
         config.modelTemperature = getInputValue(parameters, MODEL_TEMPERATURE, Double.class, null);
         config.requestTimeout = getInputValue(parameters, TIMEOUT_MS, Integer.class, null);
@@ -90,7 +91,6 @@ public class OpenAiConfiguration {
         config.outputJsonSchema = getInputValue(parameters, OUTPUT_JSON_SCHEMA, String.class, null);
         config.fieldsToExtract = getInputValue(parameters, FIELDS_TO_EXTRACT, List.class, null);
 
-        config.sourceDocumentRef = getInputValue(parameters, SOURCE_DOCUMENT_REF, String.class, null);
         return config;
     }
 }
