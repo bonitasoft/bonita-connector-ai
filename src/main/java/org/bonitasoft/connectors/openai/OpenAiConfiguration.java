@@ -1,6 +1,7 @@
 package org.bonitasoft.connectors.openai;
 
 import dev.langchain4j.model.openai.OpenAiChatModelName;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import lombok.Data;
@@ -11,37 +12,27 @@ public class OpenAiConfiguration {
 
     public static final String URL = "url";
     public static final String TIMEOUT_MS = "requestTimeoutMs";
-
     public static final String API_KEY = "apiKey";
-    /**
-     * System environment variable name
-     */
+    // System environment variable name
     public static final String OPENAI_API_KEY = "OPENAI_API_KEY";
-
     public static final String CHAT_MODEL_NAME = "chatModelName";
     public static final String SYSTEM_PROMPT = "systemPrompt";
     public static final String MODEL_TEMPERATURE = "modelTemperature";
     public static final String USER_PROMPT = "userPrompt";
-
     public static final String OUTPUT_JSON_SCHEMA = "outputJsonSchema";
     public static final String FIELDS_TO_EXTRACT = "fieldsToExtract";
-
     public static final String SOURCE_DOCUMENT_REF = "sourceDocumentRef";
 
     private String url;
     private String apiKey;
     private String chatModelName;
-
     private Double modelTemperature;
     private Integer requestTimeout;
-
     private String systemPrompt;
     private String userPrompt;
-
     private String sourceDocumentRef;
-
     private String outputJsonSchema;
-    private String fieldsToExtract;
+    private List<String> fieldsToExtract;
 
     public Optional<String> getUrl() {
         return Optional.ofNullable(url);
@@ -59,7 +50,7 @@ public class OpenAiConfiguration {
         return Optional.ofNullable(outputJsonSchema);
     }
 
-    public Optional<String> getFieldsToExtract() {
+    public Optional<List<String>> getFieldsToExtract() {
         return Optional.ofNullable(fieldsToExtract);
     }
 
@@ -97,7 +88,7 @@ public class OpenAiConfiguration {
         config.requestTimeout = getInputValue(parameters, TIMEOUT_MS, Integer.class, null);
 
         config.outputJsonSchema = getInputValue(parameters, OUTPUT_JSON_SCHEMA, String.class, null);
-        config.fieldsToExtract = getInputValue(parameters, FIELDS_TO_EXTRACT, String.class, null);
+        config.fieldsToExtract = getInputValue(parameters, FIELDS_TO_EXTRACT, List.class, null);
 
         config.sourceDocumentRef = getInputValue(parameters, SOURCE_DOCUMENT_REF, String.class, null);
         return config;

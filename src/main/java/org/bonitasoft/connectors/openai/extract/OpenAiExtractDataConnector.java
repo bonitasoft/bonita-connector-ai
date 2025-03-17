@@ -4,7 +4,6 @@ import dev.langchain4j.service.AiServices;
 import dev.langchain4j.service.SystemMessage;
 import dev.langchain4j.service.UserMessage;
 import dev.langchain4j.service.V;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.concurrent.Callable;
 import lombok.extern.slf4j.Slf4j;
@@ -30,11 +29,7 @@ public class OpenAiExtractDataConnector extends AbstractOpenAiConnector {
                 .orElse("");
 
         // JSON fields
-        var fieldsToExtract = openAiConfiguration
-                .getFieldsToExtract()
-                .map(fields -> fields.split(","))
-                .map(Arrays::asList)
-                .orElse(Collections.emptyList());
+        var fieldsToExtract = openAiConfiguration.getFieldsToExtract().orElse(Collections.emptyList());
         var fieldsToExtractForPrompt = String.join("\n   - ", fieldsToExtract);
 
         OpenAiExtractor openAiExtractor = AiServices.create(OpenAiExtractor.class, chatModel);

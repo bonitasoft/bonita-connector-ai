@@ -87,12 +87,12 @@ This connector allow extracting information from a bonita document. The result c
 
 |*sourceDocumentRef*
 |false
-|The reference to the process document to load and add to the user prompt. If not null, the connector will try to read the specified document and append the user prompt with its content after a `\n----\n` separation.
+|The reference to the process document to load and add to the user prompt. If not null, the connector will try to read the specified document and replace the variable {{document}} if present in the user prompt.
 |null
 
 |*outputJsonSchema*
 |false
-|The JSON schema that represent how to structure the JSON connector output. If a JSON schema is specified, the `fieldsToExtract` parameter is ignored.
+|The JSON schema that represent how to structure the JSON connector output.
 |null
 
 |*apiKey*

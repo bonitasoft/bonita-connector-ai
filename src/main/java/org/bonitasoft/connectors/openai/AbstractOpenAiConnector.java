@@ -127,7 +127,9 @@ public abstract class AbstractOpenAiConnector extends AbstractConnector {
         parameters.put(MODEL_TEMPERATURE, getInputParameter(MODEL_TEMPERATURE));
 
         parameters.put(OUTPUT_JSON_SCHEMA, getInputParameter(OUTPUT_JSON_SCHEMA));
+
         parameters.put(FIELDS_TO_EXTRACT, getInputParameter(FIELDS_TO_EXTRACT));
+
         parameters.put(SOURCE_DOCUMENT_REF, getInputParameter(SOURCE_DOCUMENT_REF));
         return parameters;
     }
