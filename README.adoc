@@ -108,7 +108,7 @@ This connector allow extracting information from a bonita document. The result c
 
 |*requestTimeout*
 |false
-|The request timeout for OpenAI calls.
+|The request timeout in milliseconds for OpenAI calls.
 |null
 
 |*chatModelName*
@@ -159,7 +159,7 @@ This connector allow extracting information from a bonita document. The result c
 
 |*requestTimeout*
 |false
-|The request timeout for OpenAI calls.
+|The request timeout in milliseconds for OpenAI calls.
 |null
 
 |*chatModelName*
