@@ -175,13 +175,6 @@
             <version>${langchain4j.version}</version>
         </dependency>
 
-        <!-- OCR -->
-        <dependency>
-            <groupId>org.bytedeco</groupId>
-            <artifactId>tesseract-platform</artifactId>
-            <version>5.5.0-1.5.11</version>
-        </dependency>
-
         <!-- misc -->
         <dependency>
             <groupId>org.projectlombok</groupId>

@@ -1,21 +1,42 @@
 package org.bonitasoft.connectors.openai.extract;
 
+import static org.bonitasoft.connectors.openai.extract.ExtractConfiguration.*;
+
 import java.util.List;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import org.bonitasoft.connectors.openai.AbstractOpenAiConnector;
+import org.bonitasoft.connectors.openai.OpenAiConnector;
 import org.bonitasoft.connectors.openai.OpenAiConnectorException;
 import org.bonitasoft.connectors.openai.doc.UserDocument;
 import org.bonitasoft.engine.connector.ConnectorException;
 import org.bonitasoft.engine.connector.ConnectorValidationException;
 
 @Slf4j
-public class OpenAiExtractDataConnector extends AbstractOpenAiConnector {
+@Getter
+@Setter
+public class OpenAiExtractDataConnector extends OpenAiConnector {
 
     private ExtractConfiguration extractConfiguration;
+    private ExtractChat chat;
 
     @Override
     protected void validateConfiguration() throws ConnectorValidationException {
-        extractConfiguration = ExtractConfiguration.from(getOutputParameters());
+        try {
+            extractConfiguration = ExtractConfiguration.builder()
+                    .sourceDocumentRef((String) getInputParameter(SOURCE_DOCUMENT_REF))
+                    .outputJsonSchema((String) getInputParameter(OUTPUT_JSON_SCHEMA))
+                    .fieldsToExtract((List<String>) getInputParameter(FIELDS_TO_EXTRACT))
+                    .build();
+        } catch (ClassCastException e) {
+            throw new ConnectorValidationException("Some input parameter is not of expected type : " + e.getMessage());
+        }
+        // TODO: validation
+    }
+
+    @Override
+    public void connect() throws ConnectorException {
+        chat = new OpenAiExtractChat(configuration);
     }
 
     /**
@@ -25,22 +46,16 @@ public class OpenAiExtractDataConnector extends AbstractOpenAiConnector {
     @Override
     protected Object doExecute() throws ConnectorException {
         // Try to read doc
-        if (extractConfiguration.getSourceDocumentRef().isEmpty()) {
-            throw new OpenAiConnectorException("Failed to load document to analyze.");
-        }
-        var docRef = extractConfiguration.getSourceDocumentRef().get();
-        UserDocument userDocument = getUserDocument(docRef);
+        UserDocument userDocument = extractConfiguration
+                .getSourceDocumentRef()
+                .map(this::getUserDocument)
+                .orElseThrow(() -> new OpenAiConnectorException("Failed to load document to analyze."));
 
-        ExtractChat chat = new OpenAiExtractChat(chatModel);
+        var output = extractConfiguration
+                .getOutputJsonSchema()
+                .map(jsonSchema -> chat.extract(userDocument, jsonSchema))
+                .or(() -> extractConfiguration.getFieldsToExtract().map(fields -> chat.extract(userDocument, fields)));
 
-        if (extractConfiguration.getOutputJsonSchema().isPresent()) {
-            String jsonSchema = extractConfiguration.getOutputJsonSchema().get();
-            return chat.extract(userDocument, jsonSchema);
-        }
-        if (extractConfiguration.getFieldsToExtract().isPresent()) {
-            List<String> fields = extractConfiguration.getFieldsToExtract().get();
-            return chat.extract(userDocument, fields);
-        }
-        throw new OpenAiConnectorException("Fields to extract or JSON schema is missing.");
+        return output.orElseThrow(() -> new OpenAiConnectorException("Fields to extract or JSON schema is missing."));
     }
 }

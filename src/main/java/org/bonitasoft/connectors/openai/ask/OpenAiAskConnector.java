@@ -1,20 +1,35 @@
 package org.bonitasoft.connectors.openai.ask;
 
+import static org.bonitasoft.connectors.openai.ask.AskConfiguration.*;
+
+import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import org.bonitasoft.connectors.openai.AbstractOpenAiConnector;
+import org.bonitasoft.connectors.openai.OpenAiConnector;
 import org.bonitasoft.connectors.openai.doc.UserDocument;
 import org.bonitasoft.engine.connector.ConnectorException;
 import org.bonitasoft.engine.connector.ConnectorValidationException;
 
 @Slf4j
-public class OpenAiAskConnector extends AbstractOpenAiConnector {
+@Getter
+@Setter
+public class OpenAiAskConnector extends OpenAiConnector {
 
     private AskConfiguration askConfiguration;
+    private AskChat chat;
 
     @Override
     protected void validateConfiguration() throws ConnectorValidationException {
-        this.askConfiguration = AskConfiguration.from(getInputParameters());
-
+        try {
+            this.askConfiguration = AskConfiguration.builder()
+                    .systemPrompt((String) getInputParameter(SYSTEM_PROMPT))
+                    .userPrompt((String) getInputParameter(USER_PROMPT))
+                    .sourceDocumentRef((String) getInputParameter(SOURCE_DOCUMENT_REF))
+                    .outputJsonSchema((String) getInputParameter(OUTPUT_JSON_SCHEMA))
+                    .build();
+        } catch (ClassCastException e) {
+            throw new ConnectorValidationException("Some input parameter is not of expected type : " + e.getMessage());
+        }
         // Specific validation
         if (askConfiguration.getUserPrompt() == null) {
             throw new ConnectorValidationException("UserPrompt is required");
@@ -24,6 +39,11 @@ public class OpenAiAskConnector extends AbstractOpenAiConnector {
         }
     }
 
+    @Override
+    public void connect() throws ConnectorException {
+        chat = new OpenAiAskChat(configuration);
+    }
+
     /**
      * @return
      * @throws ConnectorException
@@ -31,14 +51,13 @@ public class OpenAiAskConnector extends AbstractOpenAiConnector {
     @Override
     protected Object doExecute() throws ConnectorException {
 
-        // Try to read doc
+        // Try to read doc if any
         UserDocument userDocument = askConfiguration
                 .getSourceDocumentRef()
                 .map(this::getUserDocument)
                 .orElse(null);
 
-        AskChat askChat = new OpenAiAskChat(configuration);
-        return askChat.ask(
+        return chat.ask(
                 askConfiguration.getSystemPrompt(),
                 askConfiguration.getUserPrompt(),
                 askConfiguration.getOutputJsonSchema().orElse(null),

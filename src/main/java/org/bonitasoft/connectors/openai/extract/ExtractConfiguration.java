@@ -1,13 +1,9 @@
 package org.bonitasoft.connectors.openai.extract;
 
-import static org.bonitasoft.connectors.openai.OpenAiConfiguration.getInputValue;
-
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import lombok.Builder;
 import lombok.Data;
-import org.bonitasoft.engine.connector.ConnectorValidationException;
 
 @Data
 @Builder
@@ -31,13 +27,5 @@ public class ExtractConfiguration {
 
     public Optional<String> getSourceDocumentRef() {
         return Optional.ofNullable(sourceDocumentRef);
-    }
-
-    public static ExtractConfiguration from(Map<String, Object> parameters) throws ConnectorValidationException {
-        return ExtractConfiguration.builder()
-                .sourceDocumentRef(getInputValue(parameters, SOURCE_DOCUMENT_REF, String.class, null))
-                .outputJsonSchema(getInputValue(parameters, OUTPUT_JSON_SCHEMA, String.class, null))
-                .fieldsToExtract(getInputValue(parameters, FIELDS_TO_EXTRACT, List.class, null))
-                .build();
     }
 }

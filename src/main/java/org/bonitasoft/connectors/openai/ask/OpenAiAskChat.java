@@ -8,38 +8,25 @@ import dev.langchain4j.data.message.TextContent;
 import dev.langchain4j.data.message.UserMessage;
 import dev.langchain4j.model.chat.response.ChatResponse;
 import dev.langchain4j.model.openai.OpenAiChatModel;
-import java.time.Duration;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Base64;
 import lombok.extern.slf4j.Slf4j;
+import org.bonitasoft.connectors.openai.OpenAiChat;
 import org.bonitasoft.connectors.openai.OpenAiConfiguration;
 import org.bonitasoft.connectors.openai.doc.UserDocument;
 import org.bonitasoft.connectors.openai.doc.UserDocumentSource;
 
 @Slf4j
-public class OpenAiAskChat implements AskChat {
+public class OpenAiAskChat extends OpenAiChat implements AskChat {
 
     private final OpenAiChatModel chatModel;
 
     public OpenAiAskChat(OpenAiConfiguration configuration) {
-        var chatModelBuilder = OpenAiChatModel.builder();
-        // API Key
-        chatModelBuilder.apiKey(configuration.getApiKey());
-        // Url override
-        configuration.getBaseUrl().ifPresent(chatModelBuilder::baseUrl);
-        // Chat model name
-        chatModelBuilder.modelName(configuration.getChatModelName());
+        super(configuration);
+        var chatModelBuilder = getChatModelBuilder(configuration);
         // LLM req/res logs
         if (log.isDebugEnabled()) {
             chatModelBuilder.logRequests(true).logResponses(true);
-        }
-        // Temperature
-        configuration.getModelTemperature().ifPresent(chatModelBuilder::temperature);
-        // Req timeout
-        if (configuration.getRequestTimeout().isPresent()) {
-            chatModelBuilder.timeout(
-                    Duration.of(configuration.getRequestTimeout().get(), ChronoUnit.MILLIS));
         }
         this.chatModel = chatModelBuilder.build();
     }

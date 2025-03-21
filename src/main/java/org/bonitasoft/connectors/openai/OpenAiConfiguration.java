@@ -1,9 +1,6 @@
 package org.bonitasoft.connectors.openai;
 
-import dev.langchain4j.model.openai.OpenAiChatModel;
 import dev.langchain4j.model.openai.OpenAiChatModelName;
-import java.time.Duration;
-import java.time.temporal.ChronoUnit;
 import java.util.Map;
 import java.util.Optional;
 import lombok.Builder;
@@ -70,23 +67,6 @@ public class OpenAiConfiguration {
     public static <T> T getInputValue(Map<String, Object> parameters, String name, Class<T> type, T defaultValue)
             throws ConnectorValidationException {
         return getInputValue(parameters, name, type).orElse(defaultValue);
-    }
-
-    public OpenAiChatModel.OpenAiChatModelBuilder getChatModelBuilder() {
-        var chatModelBuilder = OpenAiChatModel.builder();
-        // API Key
-        chatModelBuilder.apiKey(this.getApiKey());
-        // Url override
-        this.getBaseUrl().ifPresent(chatModelBuilder::baseUrl);
-        // Chat model name
-        chatModelBuilder.modelName(this.getChatModelName());
-        // Temperature
-        this.getModelTemperature().ifPresent(chatModelBuilder::temperature);
-        // Req timeout
-        if (this.getRequestTimeout().isPresent()) {
-            chatModelBuilder.timeout(Duration.of(this.getRequestTimeout().get(), ChronoUnit.MILLIS));
-        }
-        return chatModelBuilder;
     }
 
     public static OpenAiConfiguration.OpenAiConfigurationBuilder builder() {

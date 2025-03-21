@@ -31,14 +31,8 @@ class OpenAiExtractChatIT {
                 .apiKey("changeMe")
                 .requestTimeout(3 * 60 * 1000)
                 .build();
-        var chatModelBuilder = configuration.getChatModelBuilder();
-        // LLM req/res logs
-        if (log.isDebugEnabled()) {
-            chatModelBuilder.logRequests(true).logResponses(true);
-        }
-        var chatModel = chatModelBuilder.build();
 
-        chat = new OpenAiExtractChat(chatModel);
+        chat = new OpenAiExtractChat(configuration);
     }
 
     @Test

@@ -15,13 +15,14 @@ import java.util.Base64;
 import java.util.List;
 import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
+import org.bonitasoft.connectors.openai.OpenAiChat;
+import org.bonitasoft.connectors.openai.OpenAiConfiguration;
 import org.bonitasoft.connectors.openai.doc.UserDocument;
 import org.bonitasoft.connectors.openai.doc.UserDocumentSource;
 import org.bonitasoft.connectors.utils.IOs;
-import org.bonitasoft.engine.connector.ConnectorException;
 
 @Slf4j
-public class OpenAiExtractChat implements ExtractChat {
+public class OpenAiExtractChat extends OpenAiChat implements ExtractChat {
 
     private final String systemPrompt;
     private final String userPrompt;
@@ -29,22 +30,28 @@ public class OpenAiExtractChat implements ExtractChat {
 
     private final OpenAiChatModel chatModel;
 
-    public OpenAiExtractChat(OpenAiChatModel chatModel) {
-        this.chatModel = chatModel;
+    public OpenAiExtractChat(OpenAiConfiguration configuration) {
+        super(configuration);
+        var chatModelBuilder = getChatModelBuilder(configuration);
+        // LLM req/res logs
+        if (log.isDebugEnabled()) {
+            chatModelBuilder.logRequests(true).logResponses(true);
+        }
+        this.chatModel = chatModelBuilder.build();
         systemPrompt = IOs.readAsString("/prompt/extract/system.txt");
         userPrompt = IOs.readAsString("/prompt/extract/user.txt");
         userPromptWthJsonSchema = IOs.readAsString("/prompt/extract/user_with_json_schema.txt");
     }
 
     @Override
-    public String extract(UserDocument document, List<String> fields) throws ConnectorException {
+    public String extract(UserDocument document, List<String> fields) {
         var fieldsToExtractForPrompt = String.join("\n   - ", fields);
         Prompt prompt = PromptTemplate.from(userPrompt).apply(Map.of("fieldsToExtract", fieldsToExtractForPrompt));
         return doExtract(document, prompt.text());
     }
 
     @Override
-    public String extract(UserDocument document, String jsonSchema) throws ConnectorException {
+    public String extract(UserDocument document, String jsonSchema) {
         Prompt prompt = PromptTemplate.from(userPromptWthJsonSchema).apply(Map.of("jsonSchema", jsonSchema));
         return doExtract(document, prompt.text());
     }

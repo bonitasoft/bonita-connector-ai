@@ -1,13 +1,8 @@
 package org.bonitasoft.connectors.openai;
 
 import static org.bonitasoft.connectors.openai.OpenAiConfiguration.*;
-import static org.bonitasoft.connectors.openai.ask.AskConfiguration.SYSTEM_PROMPT;
-import static org.bonitasoft.connectors.openai.ask.AskConfiguration.USER_PROMPT;
-import static org.bonitasoft.connectors.openai.extract.ExtractConfiguration.*;
 
-import dev.langchain4j.model.openai.OpenAiChatModel;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 import lombok.Getter;
 import lombok.Setter;
@@ -31,12 +26,11 @@ import org.bonitasoft.engine.connector.ConnectorValidationException;
 @Slf4j
 @Getter
 @Setter
-public abstract class AbstractOpenAiConnector extends AbstractConnector {
+public abstract class OpenAiConnector extends AbstractConnector {
 
     public static final String OUTPUT = "output";
 
     protected OpenAiConfiguration configuration;
-    protected OpenAiChatModel chatModel;
 
     /**
      * Perform validation on the inputs defined on the connector definition
@@ -48,23 +42,30 @@ public abstract class AbstractOpenAiConnector extends AbstractConnector {
     public void validateInputParameters() throws ConnectorValidationException {
         // Parse configuration from input parameters
         if (this.configuration == null) {
-            this.configuration = OpenAiConfiguration.from(getInputParameters());
+            try {
+                var builder = OpenAiConfiguration.builder();
+                builder.baseUrl((String) getInputParameter(URL));
+                var apiKey =
+                        Optional.ofNullable(System.getenv(OPENAI_API_KEY)).orElse((String) getInputParameter(API_KEY));
+                if (apiKey != null && !apiKey.isEmpty()) {
+                    builder.baseUrl(apiKey);
+                }
+                var chatModelName = (String) getInputParameter(CHAT_MODEL_NAME);
+                builder.chatModelName(chatModelName);
+                builder.requestTimeout((Integer) getInputParameter(TIMEOUT_MS));
+                builder.modelTemperature((Double) getInputParameter(MODEL_TEMPERATURE));
+
+                this.configuration = builder.build();
+            } catch (ClassCastException e) {
+                throw new ConnectorValidationException(
+                        "Provided input parameter is not of expected type : " + e.getMessage());
+            }
         }
         // delegate validation to concrete classes
         validateConfiguration();
     }
 
     protected abstract void validateConfiguration() throws ConnectorValidationException;
-
-    @Override
-    public void connect() throws ConnectorException {
-        var chatModelBuilder = configuration.getChatModelBuilder();
-        // LLM req/res logs
-        if (log.isDebugEnabled()) {
-            chatModelBuilder.logRequests(true).logResponses(true);
-        }
-        this.chatModel = chatModelBuilder.build();
-    }
 
     /**
      * Core method: - Execute all the business logic of your connector using the inputs (connect to an
@@ -79,26 +80,6 @@ public abstract class AbstractOpenAiConnector extends AbstractConnector {
     }
 
     protected abstract Object doExecute() throws ConnectorException;
-
-    protected Map<String, Object> getInputParameters() {
-        var parameters = new HashMap<String, Object>();
-        parameters.put(URL, getInputParameter(URL));
-        parameters.put(
-                API_KEY,
-                Optional.ofNullable(System.getenv(OPENAI_API_KEY)).orElse((String) getInputParameter(API_KEY)));
-        parameters.put(CHAT_MODEL_NAME, getInputParameter(CHAT_MODEL_NAME));
-        parameters.put(SYSTEM_PROMPT, getInputParameter(SYSTEM_PROMPT));
-        parameters.put(USER_PROMPT, getInputParameter(USER_PROMPT));
-        parameters.put(SOURCE_DOCUMENT_REF, getInputParameter(SOURCE_DOCUMENT_REF));
-
-        parameters.put(TIMEOUT_MS, getInputParameter(TIMEOUT_MS));
-        parameters.put(MODEL_TEMPERATURE, getInputParameter(MODEL_TEMPERATURE));
-
-        parameters.put(OUTPUT_JSON_SCHEMA, getInputParameter(OUTPUT_JSON_SCHEMA));
-        parameters.put(FIELDS_TO_EXTRACT, getInputParameter(FIELDS_TO_EXTRACT));
-
-        return parameters;
-    }
 
     protected UserDocument getUserDocument(String docRef) {
         long processInstanceId = getExecutionContext().getProcessInstanceId();
