@@ -1,27 +1,25 @@
 package org.bonitasoft.connectors.openai;
 
 import static org.bonitasoft.connectors.openai.OpenAiConfiguration.*;
+import static org.bonitasoft.connectors.openai.ask.AskConfiguration.SYSTEM_PROMPT;
+import static org.bonitasoft.connectors.openai.ask.AskConfiguration.USER_PROMPT;
+import static org.bonitasoft.connectors.openai.extract.ExtractConfiguration.*;
 
-import dev.langchain4j.data.document.DocumentLoader;
-import dev.langchain4j.data.document.DocumentSource;
-import dev.langchain4j.data.document.parser.apache.tika.ApacheTikaDocumentParser;
-import dev.langchain4j.model.chat.ChatLanguageModel;
 import dev.langchain4j.model.openai.OpenAiChatModel;
-import java.time.Duration;
-import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
-import java.util.concurrent.Callable;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.time.StopWatch;
-import org.bonitasoft.connectors.document.BonitaDocumentSource;
+import org.bonitasoft.connectors.openai.doc.BonitaDocumentSource;
+import org.bonitasoft.connectors.openai.doc.UserDocument;
+import org.bonitasoft.engine.api.ProcessAPI;
+import org.bonitasoft.engine.bpm.document.Document;
+import org.bonitasoft.engine.bpm.document.DocumentNotFoundException;
 import org.bonitasoft.engine.connector.AbstractConnector;
 import org.bonitasoft.engine.connector.ConnectorException;
 import org.bonitasoft.engine.connector.ConnectorValidationException;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * Connector lifecycle:
@@ -37,9 +35,8 @@ public abstract class AbstractOpenAiConnector extends AbstractConnector {
 
     public static final String OUTPUT = "output";
 
-    protected OpenAiConfiguration openAiConfiguration;
-    protected DocumentSource bonitaDocumentSource;
-    protected ChatLanguageModel chatModel;
+    protected OpenAiConfiguration configuration;
+    protected OpenAiChatModel chatModel;
 
     /**
      * Perform validation on the inputs defined on the connector definition
@@ -49,10 +46,24 @@ public abstract class AbstractOpenAiConnector extends AbstractConnector {
      */
     @Override
     public void validateInputParameters() throws ConnectorValidationException {
-        if (this.openAiConfiguration == null) {
-            this.openAiConfiguration = OpenAiConfiguration.from(getInputParameters());
+        // Parse configuration from input parameters
+        if (this.configuration == null) {
+            this.configuration = OpenAiConfiguration.from(getInputParameters());
         }
         // delegate validation to concrete classes
+        validateConfiguration();
+    }
+
+    protected abstract void validateConfiguration() throws ConnectorValidationException;
+
+    @Override
+    public void connect() throws ConnectorException {
+        var chatModelBuilder = configuration.getChatModelBuilder();
+        // LLM req/res logs
+        if (log.isDebugEnabled()) {
+            chatModelBuilder.logRequests(true).logResponses(true);
+        }
+        this.chatModel = chatModelBuilder.build();
     }
 
     /**
@@ -62,56 +73,14 @@ public abstract class AbstractOpenAiConnector extends AbstractConnector {
      */
     @Override
     protected void executeBusinessLogic() throws ConnectorException {
-        this.initialize();
         var aiResponse = doExecute();
-        log.debug("connector output: {}", aiResponse);
+        log.debug("Open AI connector output: {}", aiResponse);
         setOutputParameter(OUTPUT, aiResponse);
     }
 
     protected abstract Object doExecute() throws ConnectorException;
 
-    protected OpenAiChatModel.OpenAiChatModelBuilder customizeChatModelBuilder(
-            OpenAiChatModel.OpenAiChatModelBuilder chatModelBuilder) {
-        return chatModelBuilder;
-    }
-
-    void initialize() {
-
-        if (this.bonitaDocumentSource == null
-                && openAiConfiguration.getSourceDocumentRef().isPresent()) {
-            this.bonitaDocumentSource = new BonitaDocumentSource(
-                    getAPIAccessor().getProcessAPI(),
-                    getExecutionContext(),
-                    openAiConfiguration.getSourceDocumentRef().get());
-        }
-
-        var chatModelBuilder = OpenAiChatModel.builder();
-        // API Key
-        chatModelBuilder.apiKey(openAiConfiguration.getApiKey());
-        // Url override
-        openAiConfiguration.getUrl().ifPresent(chatModelBuilder::baseUrl);
-        // Chat model name
-        chatModelBuilder.modelName(openAiConfiguration.getChatModelName());
-        // LLM req/res logs
-        if (log.isDebugEnabled()) {
-            chatModelBuilder.logRequests(true).logResponses(true);
-        }
-        // Temperature
-        openAiConfiguration.getModelTemperature().ifPresent(chatModelBuilder::temperature);
-        // Req timeout
-        if (openAiConfiguration.getRequestTimeout().isPresent()) {
-            chatModelBuilder.timeout(
-                    Duration.of(openAiConfiguration.getRequestTimeout().get(), ChronoUnit.MILLIS));
-        }
-
-        // Chat customizations
-        chatModelBuilder = customizeChatModelBuilder(chatModelBuilder);
-
-        this.chatModel = chatModelBuilder.build();
-    }
-
-    @NotNull
-    private Map<String, Object> getInputParameters() {
+    protected Map<String, Object> getInputParameters() {
         var parameters = new HashMap<String, Object>();
         parameters.put(URL, getInputParameter(URL));
         parameters.put(
@@ -131,25 +100,23 @@ public abstract class AbstractOpenAiConnector extends AbstractConnector {
         return parameters;
     }
 
-    @NotNull
-    protected String getDocContent(String ref) {
+    protected UserDocument getUserDocument(String docRef) {
+        long processInstanceId = getExecutionContext().getProcessInstanceId();
+        ProcessAPI processAPI = getAPIAccessor().getProcessAPI();
         try {
-            var doc = DocumentLoader.load(bonitaDocumentSource, new ApacheTikaDocumentParser());
-            return doc.text();
-        } catch (Exception e) {
-            throw new OpenAiConnectorException("Failed to read document content for ref: " + ref, e);
-        }
-    }
-
-    protected String monitor(Callable<String> callable) {
-        StopWatch stopWatch = StopWatch.createStarted();
-        try {
-            return callable.call();
-        } catch (Exception e) {
-            throw new OpenAiConnectorException("Failed to request LLM", e);
-        } finally {
-            stopWatch.stop();
-            log.debug("OpenAI call duration: {}", stopWatch);
+            Document document = processAPI.getLastDocument(processInstanceId, docRef);
+            var metadata = new HashMap<String, Object>();
+            metadata.put(BonitaDocumentSource.Metadatas.FILE_NAME.name(), document.getContentFileName());
+            metadata.put(BonitaDocumentSource.Metadatas.AUTHOR.name(), document.getAuthor());
+            metadata.put(BonitaDocumentSource.Metadatas.MIME_TYPE.name(), document.getContentMimeType());
+            metadata.put(BonitaDocumentSource.Metadatas.DESCRIPTION.name(), document.getDescription());
+            metadata.put(
+                    BonitaDocumentSource.Metadatas.CREATION_DATE.name(),
+                    document.getCreationDate().toString());
+            var data = processAPI.getDocumentContent(document.getContentStorageId());
+            return new UserDocument(document.getContentMimeType(), data, metadata);
+        } catch (final DocumentNotFoundException e) {
+            throw new OpenAiConnectorException("Document not found for ref: " + docRef, e);
         }
     }
 }

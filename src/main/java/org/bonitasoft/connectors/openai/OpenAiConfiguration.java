@@ -1,13 +1,17 @@
 package org.bonitasoft.connectors.openai;
 
+import dev.langchain4j.model.openai.OpenAiChatModel;
 import dev.langchain4j.model.openai.OpenAiChatModelName;
-import java.util.List;
+import java.time.Duration;
+import java.time.temporal.ChronoUnit;
 import java.util.Map;
 import java.util.Optional;
+import lombok.Builder;
 import lombok.Data;
 import org.bonitasoft.engine.connector.ConnectorValidationException;
 
 @Data
+@Builder
 public class OpenAiConfiguration {
 
     public static final String URL = "url";
@@ -16,26 +20,21 @@ public class OpenAiConfiguration {
     // System environment variable name
     public static final String OPENAI_API_KEY = "OPENAI_API_KEY";
     public static final String CHAT_MODEL_NAME = "chatModelName";
-    public static final String SYSTEM_PROMPT = "systemPrompt";
     public static final String MODEL_TEMPERATURE = "modelTemperature";
-    public static final String USER_PROMPT = "userPrompt";
-    public static final String OUTPUT_JSON_SCHEMA = "outputJsonSchema";
-    public static final String FIELDS_TO_EXTRACT = "fieldsToExtract";
-    public static final String SOURCE_DOCUMENT_REF = "sourceDocumentRef";
 
-    private String url;
-    private String apiKey;
-    private String chatModelName;
+    private String baseUrl;
+
+    @Builder.Default
+    private String apiKey = "changeMe";
+
+    @Builder.Default
+    private String chatModelName = OpenAiChatModelName.GPT_4_O_MINI.toString();
+
     private Double modelTemperature;
     private Integer requestTimeout;
-    private String systemPrompt;
-    private String userPrompt;
-    private String sourceDocumentRef;
-    private String outputJsonSchema;
-    private List<String> fieldsToExtract;
 
-    public Optional<String> getUrl() {
-        return Optional.ofNullable(url);
+    public Optional<String> getBaseUrl() {
+        return Optional.ofNullable(baseUrl);
     }
 
     public Optional<Double> getModelTemperature() {
@@ -46,19 +45,18 @@ public class OpenAiConfiguration {
         return Optional.ofNullable(requestTimeout);
     }
 
-    public Optional<String> getOutputJsonSchema() {
-        return Optional.ofNullable(outputJsonSchema);
+    public static OpenAiConfiguration from(Map<String, Object> parameters) throws ConnectorValidationException {
+        return OpenAiConfiguration.builder()
+                .baseUrl(getInputValue(parameters, URL, String.class, null))
+                .apiKey(getInputValue(parameters, API_KEY, String.class, "changeMe"))
+                .chatModelName(getInputValue(
+                        parameters, CHAT_MODEL_NAME, String.class, OpenAiChatModelName.GPT_4_O_MINI.toString()))
+                .modelTemperature(getInputValue(parameters, MODEL_TEMPERATURE, Double.class, null))
+                .requestTimeout(getInputValue(parameters, TIMEOUT_MS, Integer.class, null))
+                .build();
     }
 
-    public Optional<List<String>> getFieldsToExtract() {
-        return Optional.ofNullable(fieldsToExtract);
-    }
-
-    public Optional<String> getSourceDocumentRef() {
-        return Optional.ofNullable(sourceDocumentRef);
-    }
-
-    protected static <T> Optional<T> getInputValue(Map<String, Object> parameters, String name, Class<T> type)
+    public static <T> Optional<T> getInputValue(Map<String, Object> parameters, String name, Class<T> type)
             throws ConnectorValidationException {
         try {
             var value = type.cast(parameters.get(name));
@@ -69,28 +67,29 @@ public class OpenAiConfiguration {
         }
     }
 
-    protected static <T> T getInputValue(Map<String, Object> parameters, String name, Class<T> type, T defaultValue)
+    public static <T> T getInputValue(Map<String, Object> parameters, String name, Class<T> type, T defaultValue)
             throws ConnectorValidationException {
         return getInputValue(parameters, name, type).orElse(defaultValue);
     }
 
-    public static OpenAiConfiguration from(Map<String, Object> parameters) throws ConnectorValidationException {
-        var config = new OpenAiConfiguration();
-        config.url = getInputValue(parameters, URL, String.class, null);
-        config.apiKey = getInputValue(parameters, API_KEY, String.class, "changeMe");
+    public OpenAiChatModel.OpenAiChatModelBuilder getChatModelBuilder() {
+        var chatModelBuilder = OpenAiChatModel.builder();
+        // API Key
+        chatModelBuilder.apiKey(this.getApiKey());
+        // Url override
+        this.getBaseUrl().ifPresent(chatModelBuilder::baseUrl);
+        // Chat model name
+        chatModelBuilder.modelName(this.getChatModelName());
+        // Temperature
+        this.getModelTemperature().ifPresent(chatModelBuilder::temperature);
+        // Req timeout
+        if (this.getRequestTimeout().isPresent()) {
+            chatModelBuilder.timeout(Duration.of(this.getRequestTimeout().get(), ChronoUnit.MILLIS));
+        }
+        return chatModelBuilder;
+    }
 
-        config.chatModelName =
-                getInputValue(parameters, CHAT_MODEL_NAME, String.class, OpenAiChatModelName.GPT_4_O_MINI.toString());
-        config.systemPrompt = getInputValue(parameters, SYSTEM_PROMPT, String.class, "You are a polite Assistant");
-        config.userPrompt = getInputValue(parameters, USER_PROMPT, String.class, "");
-        config.sourceDocumentRef = getInputValue(parameters, SOURCE_DOCUMENT_REF, String.class, null);
-
-        config.modelTemperature = getInputValue(parameters, MODEL_TEMPERATURE, Double.class, null);
-        config.requestTimeout = getInputValue(parameters, TIMEOUT_MS, Integer.class, null);
-
-        config.outputJsonSchema = getInputValue(parameters, OUTPUT_JSON_SCHEMA, String.class, null);
-        config.fieldsToExtract = getInputValue(parameters, FIELDS_TO_EXTRACT, List.class, null);
-
-        return config;
+    public static OpenAiConfiguration.OpenAiConfigurationBuilder builder() {
+        return new OpenAiConfiguration.OpenAiConfigurationBuilder();
     }
 }

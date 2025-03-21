@@ -73,32 +73,25 @@
         <extract.impl.version>${project.version}</extract.impl.version>
         <extract.main-class>org.bonitasoft.connectors.openai.extract.OpenAiExtractDataConnector</extract.main-class>
 
-<!--        &lt;!&ndash;Categorize Connector &ndash;&gt;-->
-<!--        <categorize.def.id>${project.artifactId}-categorize</categorize.def.id>-->
-<!--        <categorize.def.version>1.0.0</categorize.def.version>-->
-<!--        <categorize.impl.id>${categorize.def.id}-impl</categorize.impl.id>-->
-<!--        <categorize.impl.version>${project.version}</categorize.impl.version>-->
-<!--        <categorize.main-class>org.bonitasoft.connectors.openai.categorize.OpenAiCategorizeConnector</categorize.main-class>-->
-
         <!-- Bonita -->
         <bonita-runtime.version>10.2.0</bonita-runtime.version>
 
         <!-- AI -->
-        <langchain4j.version>1.0.0-beta1</langchain4j.version>
+        <langchain4j.version>1.0.0-beta2</langchain4j.version>
 
         <!-- Tests -->
-        <junit-jupiter-engine.version>5.10.0</junit-jupiter-engine.version>
-        <assertj-core.version>3.24.2</assertj-core.version>
-        <mockito-core.version>5.6.0</mockito-core.version>
+        <junit-jupiter-engine.version>5.12.1</junit-jupiter-engine.version>
+        <assertj-core.version>3.27.3</assertj-core.version>
+        <mockito-core.version>5.16.1</mockito-core.version>
 
         <!-- Maven plugins -->
-        <maven-compiler-plugin.version>3.11.0</maven-compiler-plugin.version>
+        <maven-compiler-plugin.version>3.14.0</maven-compiler-plugin.version>
         <maven.compiler.release>${java.version}</maven.compiler.release>
         <maven-assembly-plugin.version>3.6.0</maven-assembly-plugin.version>
         <maven-deploy-plugin.version>3.1.4</maven-deploy-plugin.version>
         <groovy-maven-plugin.version>2.1.1</groovy-maven-plugin.version>
         <groovy-xml.version>3.0.19</groovy-xml.version>
-        <maven-surefire-plugin.version>3.2.2</maven-surefire-plugin.version>
+        <maven-surefire-plugin.version>3.5.2</maven-surefire-plugin.version>
 
         <maven-gpg-plugin.version>3.2.4</maven-gpg-plugin.version>
         <git-commit-id-plugin.version>4.9.10</git-commit-id-plugin.version>
@@ -182,6 +175,12 @@
             <version>${langchain4j.version}</version>
         </dependency>
 
+        <!-- OCR -->
+        <dependency>
+            <groupId>org.bytedeco</groupId>
+            <artifactId>tesseract-platform</artifactId>
+            <version>5.5.0-1.5.11</version>
+        </dependency>
 
         <!-- misc -->
         <dependency>

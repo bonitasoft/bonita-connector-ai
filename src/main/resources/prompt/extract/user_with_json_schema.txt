@@ -1,5 +1,4 @@
-**Document Text:**
-{{document}}
+Extract the requested information from the provided document.
 
 **Instructions:**
 1. Identify and extract the information listed in the provide JSON schema.
