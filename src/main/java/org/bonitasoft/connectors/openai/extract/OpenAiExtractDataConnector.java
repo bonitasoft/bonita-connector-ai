@@ -1,8 +1,5 @@
 package org.bonitasoft.connectors.openai.extract;
 
-import static org.bonitasoft.connectors.openai.extract.ExtractConfiguration.*;
-
-import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -11,6 +8,11 @@ import org.bonitasoft.connectors.openai.OpenAiConnectorException;
 import org.bonitasoft.connectors.openai.doc.UserDocument;
 import org.bonitasoft.engine.connector.ConnectorException;
 import org.bonitasoft.engine.connector.ConnectorValidationException;
+
+import java.util.List;
+
+import static org.bonitasoft.connectors.openai.extract.ExtractConfiguration.OUTPUT_JSON_SCHEMA;
+import static org.bonitasoft.connectors.openai.extract.ExtractConfiguration.SOURCE_DOCUMENT_REF;
 
 @Slf4j
 @Getter
@@ -23,11 +25,11 @@ public class OpenAiExtractDataConnector extends OpenAiConnector {
     @Override
     protected void validateConfiguration() throws ConnectorValidationException {
         try {
-            extractConfiguration = ExtractConfiguration.builder()
-                    .sourceDocumentRef((String) getInputParameter(SOURCE_DOCUMENT_REF))
-                    .outputJsonSchema((String) getInputParameter(OUTPUT_JSON_SCHEMA))
-                    .fieldsToExtract((List<String>) getInputParameter(FIELDS_TO_EXTRACT))
-                    .build();
+            var builder = ExtractConfiguration.builder();
+            getInputValue(SOURCE_DOCUMENT_REF, String.class).ifPresent(builder::sourceDocumentRef);
+            getInputValue(OUTPUT_JSON_SCHEMA, String.class).ifPresent(builder::outputJsonSchema);
+            getInputValue(SOURCE_DOCUMENT_REF, List.class).ifPresent(builder::fieldsToExtract);
+            extractConfiguration = builder.build();
         } catch (ClassCastException e) {
             throw new ConnectorValidationException("Some input parameter is not of expected type : " + e.getMessage());
         }
@@ -36,7 +38,7 @@ public class OpenAiExtractDataConnector extends OpenAiConnector {
             throw new ConnectorValidationException("Source document ref is empty");
         }
         if (extractConfiguration.getFieldsToExtract().isEmpty()
-                && extractConfiguration.getOutputJsonSchema().isEmpty()) {
+            && extractConfiguration.getOutputJsonSchema().isEmpty()) {
             throw new ConnectorValidationException("Either field list or a jsonschema must be provided");
         }
     }

@@ -1,9 +1,5 @@
 package org.bonitasoft.connectors.openai;
 
-import static org.bonitasoft.connectors.openai.OpenAiConfiguration.*;
-
-import java.util.HashMap;
-import java.util.Optional;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -15,6 +11,11 @@ import org.bonitasoft.engine.bpm.document.DocumentNotFoundException;
 import org.bonitasoft.engine.connector.AbstractConnector;
 import org.bonitasoft.engine.connector.ConnectorException;
 import org.bonitasoft.engine.connector.ConnectorValidationException;
+
+import java.util.HashMap;
+import java.util.Optional;
+
+import static org.bonitasoft.connectors.openai.OpenAiConfiguration.*;
 
 /**
  * Connector lifecycle:
@@ -44,17 +45,13 @@ public abstract class OpenAiConnector extends AbstractConnector {
         if (this.configuration == null) {
             try {
                 var builder = OpenAiConfiguration.builder();
-                builder.baseUrl((String) getInputParameter(URL));
-                var apiKey =
-                        Optional.ofNullable(System.getenv(OPENAI_API_KEY)).orElse((String) getInputParameter(API_KEY));
-                if (apiKey != null && !apiKey.isEmpty()) {
-                    builder.baseUrl(apiKey);
-                }
-                var chatModelName = (String) getInputParameter(CHAT_MODEL_NAME);
-                builder.chatModelName(chatModelName);
-                builder.requestTimeout((Integer) getInputParameter(TIMEOUT_MS));
-                builder.modelTemperature((Double) getInputParameter(MODEL_TEMPERATURE));
-
+                Optional.ofNullable(System.getenv(OPENAI_API_KEY))
+                        .or(() -> getInputValue(API_KEY, String.class)
+                        ).ifPresent(builder::apiKey);
+                getInputValue(URL, String.class).ifPresent(builder::baseUrl);
+                getInputValue(CHAT_MODEL_NAME, String.class).ifPresent(builder::chatModelName);
+                getInputValue(TIMEOUT_MS, Integer.class).ifPresent(builder::requestTimeout);
+                getInputValue(MODEL_TEMPERATURE, Double.class).ifPresent(builder::modelTemperature);
                 this.configuration = builder.build();
             } catch (ClassCastException e) {
                 throw new ConnectorValidationException(
@@ -98,6 +95,16 @@ public abstract class OpenAiConnector extends AbstractConnector {
             return new UserDocument(document.getContentMimeType(), data, metadata);
         } catch (final DocumentNotFoundException e) {
             throw new OpenAiConnectorException("Document not found for ref: " + docRef, e);
+        }
+    }
+
+    protected <T> Optional<T> getInputValue(String name, Class<T> type) {
+        try {
+            Object parameter = getInputParameter(name);
+            var value = type.cast(parameter);
+            return Optional.ofNullable(value);
+        } catch (ClassCastException e) {
+            throw new OpenAiConnectorException(String.format("Parameter %s type must be a %s", name, type.getName()));
         }
     }
 }

@@ -1,7 +1,5 @@
 package org.bonitasoft.connectors.openai.ask;
 
-import static org.bonitasoft.connectors.openai.ask.AskConfiguration.*;
-
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -9,6 +7,8 @@ import org.bonitasoft.connectors.openai.OpenAiConnector;
 import org.bonitasoft.connectors.openai.doc.UserDocument;
 import org.bonitasoft.engine.connector.ConnectorException;
 import org.bonitasoft.engine.connector.ConnectorValidationException;
+
+import static org.bonitasoft.connectors.openai.ask.AskConfiguration.*;
 
 @Slf4j
 @Getter
@@ -21,12 +21,12 @@ public class OpenAiAskConnector extends OpenAiConnector {
     @Override
     protected void validateConfiguration() throws ConnectorValidationException {
         try {
-            this.askConfiguration = AskConfiguration.builder()
-                    .systemPrompt((String) getInputParameter(SYSTEM_PROMPT))
-                    .userPrompt((String) getInputParameter(USER_PROMPT))
-                    .sourceDocumentRef((String) getInputParameter(SOURCE_DOCUMENT_REF))
-                    .outputJsonSchema((String) getInputParameter(OUTPUT_JSON_SCHEMA))
-                    .build();
+            var builder = AskConfiguration.builder();
+            getInputValue(SYSTEM_PROMPT, String.class).ifPresent(builder::systemPrompt);
+            getInputValue(USER_PROMPT, String.class).ifPresent(builder::userPrompt);
+            getInputValue(SOURCE_DOCUMENT_REF, String.class).ifPresent(builder::sourceDocumentRef);
+            getInputValue(OUTPUT_JSON_SCHEMA, String.class).ifPresent(builder::outputJsonSchema);
+            this.askConfiguration = builder.build();
         } catch (ClassCastException e) {
             throw new ConnectorValidationException("Some input parameter is not of expected type : " + e.getMessage());
         }
