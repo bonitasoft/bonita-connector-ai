@@ -8,8 +8,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.bonitasoft.connectors.openai.OpenAiConfiguration;
 import org.bonitasoft.connectors.openai.doc.UserDocument;
 import org.bonitasoft.connectors.utils.IOs;
-import org.bonitasoft.engine.connector.ConnectorException;
-import org.bonitasoft.engine.connector.ConnectorValidationException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -33,7 +31,7 @@ class OpenAiAskChatIT {
     }
 
     @Test
-    void should_use_doc() throws ConnectorException, IOException, ConnectorValidationException {
+    void should_use_doc() throws IOException {
         // Given
         var document = new UserDocument("application/pdf", IOs.readAllBytes("/data/AgileManifesto.pdf"));
         var config = AskConfiguration.builder()

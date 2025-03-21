@@ -31,7 +31,14 @@ public class OpenAiExtractDataConnector extends OpenAiConnector {
         } catch (ClassCastException e) {
             throw new ConnectorValidationException("Some input parameter is not of expected type : " + e.getMessage());
         }
-        // TODO: validation
+
+        if (extractConfiguration.getSourceDocumentRef().isEmpty()) {
+            throw new ConnectorValidationException("Source document ref is empty");
+        }
+        if (extractConfiguration.getFieldsToExtract().isEmpty()
+                && extractConfiguration.getOutputJsonSchema().isEmpty()) {
+            throw new ConnectorValidationException("Either field list or a jsonschema must be provided");
+        }
     }
 
     @Override
