@@ -102,7 +102,7 @@ For more details on Bonita Connector please refer to {doc-url}/connector-archety
 
 === Ask connector
 
-This connector allow extracting information from a bonita document. The result can be a simple JSON object or one compliant with a provided JSON schema.
+This connector allow extracting information from a bonita document.
 
 [caption=Configuration,options=autowidth]
 |===
@@ -130,11 +130,12 @@ This connector allow extracting information from a bonita document. The result c
 
 |===
 
-OpenAI response content will be placed as a map entry for the key named *output*.
+The result can be a simple JSON object or one compliant with a provided JSON schema.
+This result will be placed as a map entry of type `java.lang.String` for the key named *output*.
 
 === Extract connector
 
-This connector allow extracting information from a bonita document. The result can be a simple JSON object or one compliant with a provided JSON schema.
+This connector allow extracting information from a bonita document.
 
 [caption=Configuration,options=autowidth]
 |===
@@ -159,7 +160,50 @@ This connector allow extracting information from a bonita document. The result c
 
 IMPORTANT: You must provide at least one of `fieldsToExtract` or `outputJsonSchema` parameters.
 
-OpenAI response content will be placed as a map entry for the key named *output*.
+The result can be a simple JSON object or one compliant with a provided JSON schema.
+This connector result will be placed as a map entry of type `java.lang.String` for the key named *output*.
+
+=== Classify connector
+
+This connector allow to classify a bonita process document according to a list of category provided by the user.
+
+[caption=Configuration,options=autowidth]
+|===
+|Parameter name |Required |Description |Default value
+
+|*sourceDocumentRef*
+|*true*
+|The reference to the process document to load and add to the user prompt. If not null, the connector will try to read the specified document  and send it as an attachment to the user prompt. Format supported are "doc", "docx", "pdf", "png", "jpg", "jpeg", ... (see https://tika.apache.org/3.1.0/formats.html)
+|null
+
+|*categories*
+|*true*
+|The list of category used to classify the given document. The connector expect a list of String (like `List.of("RIB","ID",...)`.
+It is recommended to add a default category if none other matches such as `Unknown`
+|null
+
+|===
+
+
+The result is a JSON String such as the following sample.
+
+.sample classification result
+[source,json]
+----
+{
+  "category": "xxx",
+  "confidence": 0.9
+}
+----
+
+The confidence score is defined as :
+
+- [0.0..0.3]: Very uncertain or guessing
+- [0.3..0.6]: Some uncertainty, potential ambiguity exists
+- [0.6..0.8]: Reasonably certain, minor doubt
+- [0.8..1.0]: Very certain, no doubt
+
+This connector result will be placed as a map entry of type `java.lang.String` for the key named *output*.
 
 == Developing
 // _**TODO**_: Here's a brief introduction about what a developer must do in order to start developing the project further:

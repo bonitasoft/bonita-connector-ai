@@ -1,6 +1,6 @@
 package org.bonitasoft.connectors.openai.classify;
 
-import static org.bonitasoft.connectors.openai.classify.ClassifyConfiguration.CATEGORIES;
+import static org.bonitasoft.connectors.openai.classify.ClassifyConfiguration.CATEGORY_LIST;
 import static org.bonitasoft.connectors.openai.classify.ClassifyConfiguration.SOURCE_DOCUMENT_REF;
 
 import java.util.List;
@@ -18,7 +18,7 @@ public class OpenAiClassifyConnector extends OpenAiConnector {
         if (classifyConfiguration == null) {
             var builder = ClassifyConfiguration.builder();
             getInputValue(SOURCE_DOCUMENT_REF, String.class).ifPresent(builder::sourceDocumentRef);
-            getInputValue(CATEGORIES, List.class).ifPresent(builder::categories);
+            getInputValue(CATEGORY_LIST, List.class).ifPresent(builder::categories);
             classifyConfiguration = builder.build();
         }
         if (classifyConfiguration.getSourceDocumentRef() == null

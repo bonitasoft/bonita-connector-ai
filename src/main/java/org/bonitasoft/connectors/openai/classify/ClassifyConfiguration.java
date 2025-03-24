@@ -10,7 +10,7 @@ import lombok.Data;
 public class ClassifyConfiguration {
 
     public static final String SOURCE_DOCUMENT_REF = "sourceDocumentRef";
-    public static final String CATEGORIES = "categories";
+    public static final String CATEGORY_LIST = "categories";
 
     private final String sourceDocumentRef;
 

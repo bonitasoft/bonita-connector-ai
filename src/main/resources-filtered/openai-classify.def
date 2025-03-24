@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <definition:ConnectorDefinition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:definition="http://www.bonitasoft.org/ns/connector/definition/6.1">
-    <id>${extract.def.id}</id> <!-- Id of the definition -->
-    <version>${extract.def.version}</version> <!-- Version of the definition -->
+    <id>${classify.def.id}</id> <!-- Id of the definition -->
+    <version>${classify.def.version}</version> <!-- Version of the definition -->
     <icon>openai.png</icon> <!-- The icon used in the Studio for this definition -->
     <category icon="openai.png" id="ai"/> <!-- The category of this definition, used in the Studio (e.g: http, script ...) -->
 
@@ -13,8 +13,7 @@
     <input name="requestTimeout" type="java.lang.Integer"/>
 
     <input name="sourceDocumentRef" type="java.lang.String" mandatory="true"/>
-    <input name="outputJsonSchema" type="java.lang.String"/>
-    <input name="fieldsToExtract" type="java.util.List"/>
+    <input name="categories" type="java.util.List" mandatory="true"/>
 
     <!-- Connector outputs -->
     <output name="output" type="java.lang.String"/>
@@ -28,8 +27,7 @@
     -->
     <page id="defaultPage">
         <widget xsi:type="definition:Text" id="sourceDocumentRefWidget" inputName="sourceDocumentRef" showDocuments="true"/>
-        <widget xsi:type="definition:List" id="fieldsToExtractWidget" inputName="fieldsToExtract"/>
-        <widget xsi:type="definition:TextArea" id="outputJsonSchemaWidget" inputName="outputJsonSchema"/>
+        <widget xsi:type="definition:List" id="categoriesWidget" inputName="categories"/>
     </page>
     <page id="advancedPage">
         <widget xsi:type="definition:Text" id="apiKeyWidget" inputName="apiKey"/>

@@ -32,7 +32,10 @@ class OpenAiClassifyChatIT {
     void should_classify_user_doc() throws Exception {
         // Given
         var doc = new UserDocument("application/pdf", IOs.readAllBytes("/data/classify/rib-sample.pdf"));
-        var categories = List.of("RIB", "Carte d'identité", "Justificatif de domicile", "Passeport");
+        // "/data/classify/justificatif-anon.jpg"
+        // "/data/AgileManifesto.pdf"
+
+        var categories = List.of("RIB", "Carte d'identité", "Justificatif de domicile", "Passeport", "Unknown");
 
         // When
         String category = chat.classify(categories, doc);

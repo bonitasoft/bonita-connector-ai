@@ -10,3 +10,7 @@ Give me also a confidence index of the classification.
   - 0.8–1.0: Very certain, no doubt
 - Be particularly cautious in borderline cases.
 Do not provide additional explanation or commentary to explain the confidence.
+
+1. Follow the format instructions precisely.
+2. Do not include markdown in the output.
+3. Answer must only contain the JSON output.
