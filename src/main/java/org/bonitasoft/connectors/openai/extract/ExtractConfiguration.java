@@ -11,7 +11,7 @@ public class ExtractConfiguration {
 
     public static final String SOURCE_DOCUMENT_REF = "sourceDocumentRef";
     public static final String OUTPUT_JSON_SCHEMA = "outputJsonSchema";
-    public static final String FIELDS_TO_EXTRACT = "fieldsToExtract";
+    public static final String FIELD_LIST = "fieldsToExtract";
 
     private String sourceDocumentRef;
     private String outputJsonSchema;
