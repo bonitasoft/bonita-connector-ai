@@ -43,8 +43,6 @@ toc::[]
 
 == Getting started
 
-// _**TODO**_: A quick introduction of the minimal setup you need to get a hello world up & running.
-
 To use this connector, add it as a dependency to your Bonita process.
 For more details on Bonita Connector please refer to {doc-url}/connector-archetype[documentation]
 
