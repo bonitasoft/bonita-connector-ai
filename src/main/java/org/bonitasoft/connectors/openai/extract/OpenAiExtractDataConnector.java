@@ -1,19 +1,51 @@
 package org.bonitasoft.connectors.openai.extract;
 
-import dev.langchain4j.service.AiServices;
-import dev.langchain4j.service.SystemMessage;
-import dev.langchain4j.service.UserMessage;
-import dev.langchain4j.service.V;
-import java.util.Collections;
-import java.util.concurrent.Callable;
+import static org.bonitasoft.connectors.openai.extract.ExtractConfiguration.OUTPUT_JSON_SCHEMA;
+import static org.bonitasoft.connectors.openai.extract.ExtractConfiguration.SOURCE_DOCUMENT_REF;
+
+import java.util.List;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.time.StopWatch;
-import org.bonitasoft.connectors.openai.AbstractOpenAiConnector;
+import org.bonitasoft.connectors.openai.OpenAiConnector;
 import org.bonitasoft.connectors.openai.OpenAiConnectorException;
+import org.bonitasoft.connectors.openai.doc.UserDocument;
 import org.bonitasoft.engine.connector.ConnectorException;
+import org.bonitasoft.engine.connector.ConnectorValidationException;
 
 @Slf4j
-public class OpenAiExtractDataConnector extends AbstractOpenAiConnector {
+@Getter
+@Setter
+public class OpenAiExtractDataConnector extends OpenAiConnector {
+
+    private ExtractConfiguration extractConfiguration;
+    private ExtractChat chat;
+
+    @Override
+    protected void validateConfiguration() throws ConnectorValidationException {
+        try {
+            var builder = ExtractConfiguration.builder();
+            getInputValue(SOURCE_DOCUMENT_REF, String.class).ifPresent(builder::sourceDocumentRef);
+            getInputValue(OUTPUT_JSON_SCHEMA, String.class).ifPresent(builder::outputJsonSchema);
+            getInputValue(SOURCE_DOCUMENT_REF, List.class).ifPresent(builder::fieldsToExtract);
+            extractConfiguration = builder.build();
+        } catch (ClassCastException e) {
+            throw new ConnectorValidationException("Some input parameter is not of expected type : " + e.getMessage());
+        }
+
+        if (extractConfiguration.getSourceDocumentRef().isEmpty()) {
+            throw new ConnectorValidationException("Source document ref is empty");
+        }
+        if (extractConfiguration.getFieldsToExtract().isEmpty()
+                && extractConfiguration.getOutputJsonSchema().isEmpty()) {
+            throw new ConnectorValidationException("Either field list or a jsonschema must be provided");
+        }
+    }
+
+    @Override
+    public void connect() throws ConnectorException {
+        chat = new OpenAiExtractChat(configuration);
+    }
 
     /**
      * @return
@@ -21,44 +53,17 @@ public class OpenAiExtractDataConnector extends AbstractOpenAiConnector {
      */
     @Override
     protected Object doExecute() throws ConnectorException {
-
-        // Doc content
-        var docContent = getOpenAiConfiguration()
+        // Try to read doc
+        UserDocument userDocument = extractConfiguration
                 .getSourceDocumentRef()
-                .map(this::getDocContent)
-                .orElse("");
+                .map(this::getUserDocument)
+                .orElseThrow(() -> new OpenAiConnectorException("Failed to load document to analyze."));
 
-        // JSON fields
-        var fieldsToExtract = openAiConfiguration.getFieldsToExtract().orElse(Collections.emptyList());
-        var fieldsToExtractForPrompt = String.join("\n   - ", fieldsToExtract);
+        var output = extractConfiguration
+                .getOutputJsonSchema()
+                .map(jsonSchema -> chat.extract(userDocument, jsonSchema))
+                .or(() -> extractConfiguration.getFieldsToExtract().map(fields -> chat.extract(userDocument, fields)));
 
-        OpenAiExtractor openAiExtractor = AiServices.create(OpenAiExtractor.class, chatModel);
-        if (openAiConfiguration.getOutputJsonSchema().isPresent()) {
-            return monitor(() -> openAiExtractor.extractWithJsonSchema(
-                    docContent, openAiConfiguration.getOutputJsonSchema().get()));
-        }
-        return monitor(() -> openAiExtractor.extract(docContent, fieldsToExtractForPrompt));
-    }
-
-    protected String monitor(Callable<String> callable) {
-        StopWatch stopWatch = StopWatch.createStarted();
-        try {
-            return callable.call();
-        } catch (Exception e) {
-            throw new OpenAiConnectorException("Failed to request LLM", e);
-        } finally {
-            stopWatch.stop();
-            log.debug("OpenAI call duration: {}", stopWatch);
-        }
-    }
-
-    public interface OpenAiExtractor {
-        @SystemMessage(fromResource = "prompt/extract/system.txt")
-        @UserMessage(fromResource = "prompt/extract/user.txt")
-        String extract(@V("document") String document, @V("fieldsToExtract") String fieldsToExtract);
-
-        @SystemMessage(fromResource = "prompt/extract/system.txt")
-        @UserMessage(fromResource = "prompt/extract/user_with_json_schema.txt")
-        String extractWithJsonSchema(@V("document") String document, @V("jsonSchema") String jsonSchema);
+        return output.orElseThrow(() -> new OpenAiConnectorException("Fields to extract or JSON schema is missing."));
     }
 }

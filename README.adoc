@@ -68,6 +68,38 @@ For more details on Bonita Connector please refer to {doc-url}/connector-archety
 
 === Configuration
 
+=== Common configuration
+
+[caption=Configuration,options=autowidth]
+|===
+|Parameter name |Required |Description |Default value
+
+|*apiKey*
+|false
+|The OpenAI API key. Parameter is optional for testing purpose but obviously required with official OpenAI endpoint. The connector will use the system environment variable named OPENAI_API_KEY then the provided parameter and at last a dummy `changeMe` value.
+| changeMe
+
+|*url*
+|false
+|The OpenAI endpoint url. This parameter allows to use an alternate endpoint for tests.
+|Default to the official OpenAI endpoint
+
+|*requestTimeout*
+|false
+|The request timeout in milliseconds for OpenAI calls.
+|null
+
+|*chatModelName*
+|false
+|The model to use for chat like gpt-4, gpt-4o-mini, lama, ... See OpenAI documentation at https://platform.openai.com/docs/models/models for detailed information about models.
+|gpt-4o-mini
+
+|*modelTemperature*
+|false
+|The temperature to use for the model. Higher values will result in more creative responses. Must be between 0 and 1. Leave blank if the selected model does not support this parameter. If parameter is not present, the temperature will not be set in chat context.
+|null
+|===
+
 === Ask connector
 
 This connector allow extracting information from a bonita document. The result can be a simple JSON object or one compliant with a provided JSON schema.
@@ -88,7 +120,7 @@ This connector allow extracting information from a bonita document. The result c
 
 |*sourceDocumentRef*
 |false
-|The reference to the process document to load and add to the user prompt. If not null, the connector will try to read the specified document and replace the variable {{document}} if present in the user prompt.
+|The reference to the process document to load and add to the user prompt. If not null, the connector will try to read the specified document and send it as an attachment to the user prompt. Format supported are "doc", "docx", "pdf", "png", "jpg", "jpeg", ... (see https://tika.apache.org/3.1.0/formats.html)
 |null
 
 |*outputJsonSchema*
@@ -96,30 +128,6 @@ This connector allow extracting information from a bonita document. The result c
 |The JSON schema that represent how to structure the JSON connector output.
 |null
 
-|*apiKey*
-|false
-|The OpenAI API key. Parameter is optional for testing purpose but obviously required with official OpenAI endpoint. The connector will use the system environment variable named OPENAI_API_KEY then the provided parameter and at last a dummy `changeMe` value.
-| changeMe
-
-|*url*
-|false
-|The OpenAI endpoint url. This parameter allows to use an alternate endpoint for tests.
-|Default to the official OpenAI endpoint
-
-|*requestTimeout*
-|false
-|The request timeout for OpenAI calls.
-|null
-
-|*chatModelName*
-|false
-|The model to use for chat like gpt-4, gpt-4o-mini, lama, ... See OpenAI documentation at https://platform.openai.com/docs/models/models for detailed information about models.
-|gpt-4o-mini
-
-|*modelTemperature*
-|false
-|The temperature to use for the model. Higher values will result in more creative responses. Must be between 0 and 1. Leave blank if the selected model does not support this parameter. If parameter is not present, the temperature will not be set in chat context.
-|null
 |===
 
 OpenAI response content will be placed as a map entry for the key named *output*.
@@ -133,8 +141,8 @@ This connector allow extracting information from a bonita document. The result c
 |Parameter name |Required |Description |Default value
 
 |*sourceDocumentRef*
-|true
-|The reference to the process document to load and add to the user prompt. If not null, the connector will try to read the specified document and append the user prompt with its content after a `\n----\n` separation.
+|*true*
+|The reference to the process document to load and add to the user prompt. If not null, the connector will try to read the specified document  and send it as an attachment to the user prompt. Format supported are "doc", "docx", "pdf", "png", "jpg", "jpeg", ... (see https://tika.apache.org/3.1.0/formats.html)
 |null
 
 |*fieldsToExtract*
@@ -147,31 +155,9 @@ This connector allow extracting information from a bonita document. The result c
 |The JSON schema that represent how to structure the JSON connector output. If a JSON schema is specified, the `fieldsToExtract` parameter is ignored.
 |null
 
-|*apiKey*
-|false
-|The OpenAI API key. Parameter is optional for testing purpose but obviously required with official OpenAI endpoint. The connector will use the system environment variable named OPENAI_API_KEY then the provided parameter and at last a dummy `changeMe` value.
-| changeMe
-
-|*url*
-|false
-|The OpenAI endpoint url. This parameter allows to use an alternate endpoint for tests.
-|Default to the official OpenAI endpoint
-
-|*requestTimeout*
-|false
-|The request timeout for OpenAI calls.
-|null
-
-|*chatModelName*
-|false
-|The model to use for chat like gpt-4, gpt-4o-mini, lama, ... See OpenAI documentation at https://platform.openai.com/docs/models/models for detailed information about models.
-|gpt-4o-mini
-
-|*modelTemperature*
-|false
-|The temperature to use for the model. Higher values will result in more creative responses. Must be between 0 and 1. Leave blank if the selected model does not support this parameter. If parameter is not present, the temperature will not be set in chat context.
-|null
 |===
+
+IMPORTANT: You must provide at least one of `fieldsToExtract` or `outputJsonSchema` parameters.
 
 OpenAI response content will be placed as a map entry for the key named *output*.
 
@@ -206,7 +192,7 @@ The build should produce a jar archive under the `target/` folder named `bonita-
 The connector needs an OpenAI endpoint up & running. A docker compose file is present in the root folder which starts
 a https://ollama.com/[ollama] container that you can use as a local replacement of OpenAI provider.
 
-Just issue `docker compose up -d` and ollama API will be available at `http://localhost:8080/v1`
+Just issue `docker compose up -d` and ollama API will be available at `http://localhost:11434/v1`
 
 NOTE: To download model use the following command `docker compose exec ollama bash -c 'ollama pull <model name>'`.  You can check the logs with `docker compose logs -f ollama` for more info.
 
