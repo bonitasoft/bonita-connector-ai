@@ -30,7 +30,7 @@ image:{uri-repo}/actions/workflows/build.yaml/badge.svg[Build,link="{uri-repo}/a
 
 
 
-The project **bonita-connector-openai** is a set of Bonita Connector for **Bonita {short-bonita-version}**  **Community** version written in `java` language.
+The project **bonita-connector-openai** is a set of Bonita Connectors for **Bonita {short-bonita-version}**  **Community** version written in `java` language.
 
 The connectors allow to interact with OpenAI chat models by sending prompt and documents and returning the generated output.
 
