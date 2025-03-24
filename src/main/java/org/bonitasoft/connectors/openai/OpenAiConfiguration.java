@@ -39,8 +39,4 @@ public class OpenAiConfiguration {
     public Optional<Integer> getRequestTimeout() {
         return Optional.ofNullable(requestTimeout);
     }
-
-    public static OpenAiConfiguration.OpenAiConfigurationBuilder builder() {
-        return new OpenAiConfiguration.OpenAiConfigurationBuilder();
-    }
 }
