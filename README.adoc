@@ -30,11 +30,9 @@ image:{uri-repo}/actions/workflows/build.yaml/badge.svg[Build,link="{uri-repo}/a
 
 
 
-The project **bonita-connector-openai** is a Bonita Connector for **Bonita {short-bonita-version}**  **Community** version written in `java` language.
+The project **bonita-connector-openai** is a set of Bonita Connectors for **Bonita {short-bonita-version}**  **Community** version written in `java` language.
 
-// _**TODO**_: A brief description of your project, what it is used for and how does life get awesome when someone starts to use it.
-
-This connector allow to interact with OpenAI chat models by sending prompt and returning the generated output.
+The connectors allow to interact with OpenAI chat models by sending prompt and documents and returning the generated output.
 
 [WARNING]
 ====
@@ -43,16 +41,7 @@ The connector is still under development and current state is just a draft versi
 
 toc::[]
 
-== Features
-
-// _**TODO**_: What's all the bells and whistles this project can perform?
-
-* Take a user prompt and send it to the AI provider then return the AI response
-* Enrich user prompt with the content of the last document of the process if a reference is provided before requesting the AI provider
-
 == Getting started
-
-// _**TODO**_: A quick introduction of the minimal setup you need to get a hello world up & running.
 
 To use this connector, add it as a dependency to your Bonita process.
 For more details on Bonita Connector please refer to {doc-url}/connector-archetype[documentation]
@@ -65,8 +54,6 @@ For more details on Bonita Connector please refer to {doc-url}/connector-archety
     <version>{project-version}</version>
 </dependency>
 ----
-
-=== Configuration
 
 === Common configuration
 
@@ -100,9 +87,12 @@ For more details on Bonita Connector please refer to {doc-url}/connector-archety
 |null
 |===
 
+
+== Connectors
+
 === Ask connector
 
-This connector allow extracting information from a bonita document.
+Take a user prompt and send it to OpenAI then return the AI response. The prompt text can ask question about a provided process document.
 
 [caption=Configuration,options=autowidth]
 |===
