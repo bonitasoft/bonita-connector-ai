@@ -1,0 +1,8 @@
+Carefully classify the document into one of the following categories:
+{{categories}}
+
+Return strictly in JSON format as:
+{
+  "category": "Selected category",
+  "confidence": "Confidence score between 0 and 1"
+}
