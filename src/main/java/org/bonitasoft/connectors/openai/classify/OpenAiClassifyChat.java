@@ -10,6 +10,10 @@ import dev.langchain4j.model.chat.response.ChatResponse;
 import dev.langchain4j.model.input.Prompt;
 import dev.langchain4j.model.input.PromptTemplate;
 import dev.langchain4j.model.openai.OpenAiChatModel;
+import java.util.ArrayList;
+import java.util.Base64;
+import java.util.List;
+import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
 import org.bonitasoft.connectors.openai.OpenAiChat;
 import org.bonitasoft.connectors.openai.OpenAiConfiguration;
@@ -17,14 +21,8 @@ import org.bonitasoft.connectors.openai.doc.UserDocument;
 import org.bonitasoft.connectors.openai.doc.UserDocumentSource;
 import org.bonitasoft.connectors.utils.IOs;
 
-import java.util.ArrayList;
-import java.util.Base64;
-import java.util.List;
-import java.util.Map;
-
 @Slf4j
 public class OpenAiClassifyChat extends OpenAiChat implements ClassifyChat {
-
 
     private String systemPrompt;
     private String userPrompt;

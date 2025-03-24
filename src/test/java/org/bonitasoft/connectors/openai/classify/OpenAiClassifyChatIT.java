@@ -1,15 +1,14 @@
 package org.bonitasoft.connectors.openai.classify;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.List;
 import org.bonitasoft.connectors.openai.OpenAiConfiguration;
 import org.bonitasoft.connectors.openai.doc.UserDocument;
 import org.bonitasoft.connectors.utils.IOs;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 class OpenAiClassifyChatIT {
 
@@ -29,7 +28,6 @@ class OpenAiClassifyChatIT {
         chat = new OpenAiClassifyChat(configuration);
     }
 
-
     @Test
     void should_classify_user_doc() throws Exception {
         // Given
@@ -46,6 +44,5 @@ class OpenAiClassifyChatIT {
         assertThat(classification.confidence()).isGreaterThan(0.5);
     }
 
-    record Classification(String category, Double confidence) {
-    }
+    record Classification(String category, Double confidence) {}
 }

@@ -1,8 +1,7 @@
 package org.bonitasoft.connectors.openai.classify;
 
-import org.bonitasoft.connectors.openai.doc.UserDocument;
-
 import java.util.List;
+import org.bonitasoft.connectors.openai.doc.UserDocument;
 
 public interface ClassifyChat {
 

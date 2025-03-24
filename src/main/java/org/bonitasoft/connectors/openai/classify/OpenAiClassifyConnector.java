@@ -1,13 +1,12 @@
 package org.bonitasoft.connectors.openai.classify;
 
+import static org.bonitasoft.connectors.openai.classify.ClassifyConfiguration.CATEGORIES;
+import static org.bonitasoft.connectors.openai.classify.ClassifyConfiguration.SOURCE_DOCUMENT_REF;
+
+import java.util.List;
 import org.bonitasoft.connectors.openai.OpenAiConnector;
 import org.bonitasoft.connectors.openai.doc.UserDocument;
 import org.bonitasoft.engine.connector.ConnectorValidationException;
-
-import java.util.List;
-
-import static org.bonitasoft.connectors.openai.classify.ClassifyConfiguration.CATEGORIES;
-import static org.bonitasoft.connectors.openai.classify.ClassifyConfiguration.SOURCE_DOCUMENT_REF;
 
 public class OpenAiClassifyConnector extends OpenAiConnector {
 
@@ -22,10 +21,12 @@ public class OpenAiClassifyConnector extends OpenAiConnector {
             getInputValue(CATEGORIES, List.class).ifPresent(builder::categories);
             classifyConfiguration = builder.build();
         }
-        if (classifyConfiguration.getSourceDocumentRef() == null || classifyConfiguration.getSourceDocumentRef().isEmpty()) {
+        if (classifyConfiguration.getSourceDocumentRef() == null
+                || classifyConfiguration.getSourceDocumentRef().isEmpty()) {
             throw new ConnectorValidationException("Source document ref is empty");
         }
-        if (classifyConfiguration.getCategories() == null || classifyConfiguration.getCategories().isEmpty()) {
+        if (classifyConfiguration.getCategories() == null
+                || classifyConfiguration.getCategories().isEmpty()) {
             throw new ConnectorValidationException("Classification categories are empty");
         }
     }
