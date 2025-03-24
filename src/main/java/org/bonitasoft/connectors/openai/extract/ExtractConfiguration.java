@@ -24,8 +24,4 @@ public class ExtractConfiguration {
     public Optional<List<String>> getFieldsToExtract() {
         return Optional.ofNullable(fieldsToExtract);
     }
-
-    public Optional<String> getSourceDocumentRef() {
-        return Optional.ofNullable(sourceDocumentRef);
-    }
 }

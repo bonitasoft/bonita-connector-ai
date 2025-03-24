@@ -53,11 +53,8 @@ public class OpenAiExtractDataConnector extends OpenAiConnector {
      */
     @Override
     protected Object doExecute() throws ConnectorException {
-        // Try to read doc
-        UserDocument userDocument = extractConfiguration
-                .getSourceDocumentRef()
-                .map(this::getUserDocument)
-                .orElseThrow(() -> new OpenAiConnectorException("Failed to load document to analyze."));
+        // Read doc
+        UserDocument userDocument = getUserDocument(extractConfiguration.getSourceDocumentRef());
 
         var output = extractConfiguration
                 .getOutputJsonSchema()
