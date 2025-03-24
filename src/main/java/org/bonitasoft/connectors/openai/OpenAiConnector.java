@@ -1,5 +1,9 @@
 package org.bonitasoft.connectors.openai;
 
+import static org.bonitasoft.connectors.openai.OpenAiConfiguration.*;
+
+import java.util.HashMap;
+import java.util.Optional;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -11,11 +15,6 @@ import org.bonitasoft.engine.bpm.document.DocumentNotFoundException;
 import org.bonitasoft.engine.connector.AbstractConnector;
 import org.bonitasoft.engine.connector.ConnectorException;
 import org.bonitasoft.engine.connector.ConnectorValidationException;
-
-import java.util.HashMap;
-import java.util.Optional;
-
-import static org.bonitasoft.connectors.openai.OpenAiConfiguration.*;
 
 /**
  * Connector lifecycle:
@@ -46,8 +45,8 @@ public abstract class OpenAiConnector extends AbstractConnector {
             try {
                 var builder = OpenAiConfiguration.builder();
                 Optional.ofNullable(System.getenv(OPENAI_API_KEY))
-                        .or(() -> getInputValue(API_KEY, String.class)
-                        ).ifPresent(builder::apiKey);
+                        .or(() -> getInputValue(API_KEY, String.class))
+                        .ifPresent(builder::apiKey);
                 getInputValue(URL, String.class).ifPresent(builder::baseUrl);
                 getInputValue(CHAT_MODEL_NAME, String.class).ifPresent(builder::chatModelName);
                 getInputValue(TIMEOUT_MS, Integer.class).ifPresent(builder::requestTimeout);

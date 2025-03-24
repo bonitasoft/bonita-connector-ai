@@ -1,11 +1,9 @@
 package org.bonitasoft.connectors.openai;
 
 import dev.langchain4j.model.openai.OpenAiChatModelName;
-import java.util.Map;
 import java.util.Optional;
 import lombok.Builder;
 import lombok.Data;
-import org.bonitasoft.engine.connector.ConnectorValidationException;
 
 @Data
 @Builder

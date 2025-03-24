@@ -1,5 +1,9 @@
 package org.bonitasoft.connectors.openai.extract;
 
+import static org.bonitasoft.connectors.openai.extract.ExtractConfiguration.OUTPUT_JSON_SCHEMA;
+import static org.bonitasoft.connectors.openai.extract.ExtractConfiguration.SOURCE_DOCUMENT_REF;
+
+import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -8,11 +12,6 @@ import org.bonitasoft.connectors.openai.OpenAiConnectorException;
 import org.bonitasoft.connectors.openai.doc.UserDocument;
 import org.bonitasoft.engine.connector.ConnectorException;
 import org.bonitasoft.engine.connector.ConnectorValidationException;
-
-import java.util.List;
-
-import static org.bonitasoft.connectors.openai.extract.ExtractConfiguration.OUTPUT_JSON_SCHEMA;
-import static org.bonitasoft.connectors.openai.extract.ExtractConfiguration.SOURCE_DOCUMENT_REF;
 
 @Slf4j
 @Getter
@@ -38,7 +37,7 @@ public class OpenAiExtractDataConnector extends OpenAiConnector {
             throw new ConnectorValidationException("Source document ref is empty");
         }
         if (extractConfiguration.getFieldsToExtract().isEmpty()
-            && extractConfiguration.getOutputJsonSchema().isEmpty()) {
+                && extractConfiguration.getOutputJsonSchema().isEmpty()) {
             throw new ConnectorValidationException("Either field list or a jsonschema must be provided");
         }
     }

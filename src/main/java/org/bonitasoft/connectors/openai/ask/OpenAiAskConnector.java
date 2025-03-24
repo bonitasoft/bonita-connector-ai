@@ -1,5 +1,7 @@
 package org.bonitasoft.connectors.openai.ask;
 
+import static org.bonitasoft.connectors.openai.ask.AskConfiguration.*;
+
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -7,8 +9,6 @@ import org.bonitasoft.connectors.openai.OpenAiConnector;
 import org.bonitasoft.connectors.openai.doc.UserDocument;
 import org.bonitasoft.engine.connector.ConnectorException;
 import org.bonitasoft.engine.connector.ConnectorValidationException;
-
-import static org.bonitasoft.connectors.openai.ask.AskConfiguration.*;
 
 @Slf4j
 @Getter
