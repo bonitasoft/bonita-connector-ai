@@ -23,8 +23,8 @@
 :java-version: 17
 = bonita-connector-openai
 
-image:src/main/resources/openai.png[OpenAI,link="https://openai.com",width=100px]
 image:bonitasoft-community.png[Bonitasoft,link="https://www.bonitasoft.com",width=250px]
+image:src/main/resources/openai@2x.png[OpenAI,link="https://openai.com"]
 
 image:{uri-repo}/actions/workflows/build.yaml/badge.svg[Build,link="{uri-repo}/actions?query=build"]
 
