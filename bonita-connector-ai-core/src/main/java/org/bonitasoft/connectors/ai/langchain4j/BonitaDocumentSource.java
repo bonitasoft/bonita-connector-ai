@@ -1,5 +1,7 @@
-package dev.langchain4j.data.document;
+package org.bonitasoft.connectors.ai.langchain4j;
 
+import dev.langchain4j.data.document.DocumentSource;
+import dev.langchain4j.data.document.Metadata;
 import dev.langchain4j.internal.ValidationUtils;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;

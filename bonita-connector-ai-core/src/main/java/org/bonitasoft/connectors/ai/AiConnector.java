@@ -2,12 +2,12 @@ package org.bonitasoft.connectors.ai;
 
 import static org.bonitasoft.connectors.ai.AiConfiguration.*;
 
-import dev.langchain4j.data.document.BonitaDocumentSource;
 import java.util.HashMap;
 import java.util.Optional;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import org.bonitasoft.connectors.ai.langchain4j.BonitaDocumentSource;
 import org.bonitasoft.engine.api.ProcessAPI;
 import org.bonitasoft.engine.bpm.document.Document;
 import org.bonitasoft.engine.bpm.document.DocumentNotFoundException;

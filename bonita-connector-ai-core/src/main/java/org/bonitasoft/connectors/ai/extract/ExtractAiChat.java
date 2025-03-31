@@ -1,7 +1,6 @@
 package org.bonitasoft.connectors.ai.extract;
 
 import dev.langchain4j.data.document.DocumentLoader;
-import dev.langchain4j.data.document.UserDocumentSource;
 import dev.langchain4j.data.document.parser.apache.tika.ApacheTikaDocumentParser;
 import dev.langchain4j.data.message.*;
 import dev.langchain4j.model.chat.ChatLanguageModel;
@@ -16,6 +15,7 @@ import java.util.Map;
 import org.bonitasoft.connectors.ai.AiChat;
 import org.bonitasoft.connectors.ai.AiConfiguration;
 import org.bonitasoft.connectors.ai.UserDocument;
+import org.bonitasoft.connectors.ai.langchain4j.UserDocumentSource;
 import org.bonitasoft.connectors.utils.IOs;
 
 public abstract class ExtractAiChat<T extends ChatLanguageModel> implements AiChat<T>, ExtractChat {

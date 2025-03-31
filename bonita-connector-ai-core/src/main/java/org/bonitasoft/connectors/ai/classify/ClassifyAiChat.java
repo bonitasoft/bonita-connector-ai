@@ -1,7 +1,6 @@
 package org.bonitasoft.connectors.ai.classify;
 
 import dev.langchain4j.data.document.DocumentLoader;
-import dev.langchain4j.data.document.UserDocumentSource;
 import dev.langchain4j.data.document.parser.apache.tika.ApacheTikaDocumentParser;
 import dev.langchain4j.data.message.*;
 import dev.langchain4j.model.chat.ChatLanguageModel;
@@ -17,6 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.bonitasoft.connectors.ai.AiChat;
 import org.bonitasoft.connectors.ai.AiConfiguration;
 import org.bonitasoft.connectors.ai.UserDocument;
+import org.bonitasoft.connectors.ai.langchain4j.UserDocumentSource;
 import org.bonitasoft.connectors.utils.IOs;
 
 @Slf4j
