@@ -10,10 +10,7 @@
     <artifactId>bonita-connector-ai-core</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>Bonita::AI::core</name>
-    <properties>
-    </properties>
     <dependencies>
-
         <dependency>
             <groupId>dev.langchain4j</groupId>
             <artifactId>langchain4j</artifactId>
@@ -24,15 +21,5 @@
             <artifactId>langchain4j-document-parser-apache-tika</artifactId>
             <version>${langchain4j.version}</version>
         </dependency>
-        <dependency>
-            <groupId>dev.langchain4j</groupId>
-            <artifactId>langchain4j-core</artifactId>
-            <version>${langchain4j.version}</version>
-        </dependency>
-
     </dependencies>
-
-    <build>
-    </build>
-
 </project>
