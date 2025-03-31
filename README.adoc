@@ -24,7 +24,8 @@
 = bonita-connector-openai
 
 image:bonitasoft-community.png[Bonitasoft,link="https://www.bonitasoft.com",width=250px]
-image:src/main/resources/openai@2x.png[OpenAI,link="https://openai.com"]
+image:./openai@2x.png[OpenAI,link="https://openai.com"] image:./mistralai@2x.png[MistralAI,link="https://mistral.ai"]
+
 
 image:{uri-repo}/actions/workflows/build.yaml/badge.svg[Build,link="{uri-repo}/actions?query=build"]
 
@@ -43,7 +44,8 @@ toc::[]
 
 == Getting started
 
-To use this connector, add it as a dependency to your Bonita process.
+To use a connector, add it as a dependency to your Bonita process. (Choose the one related to your AI provider)
+
 For more details on Bonita Connector please refer to {doc-url}/connector-archetype[documentation]
 
 [source,xml,subs="attributes+"]
@@ -51,6 +53,17 @@ For more details on Bonita Connector please refer to {doc-url}/connector-archety
 <dependency>
     <groupId>org.bonitasoft.connectors</groupId>
     <artifactId>bonita-connector-openai</artifactId>
+    <version>{project-version}</version>
+</dependency>
+----
+
+or
+
+[source,xml,subs="attributes+"]
+----
+<dependency>
+    <groupId>org.bonitasoft.connectors</groupId>
+    <artifactId>bonita-connector-mistral</artifactId>
     <version>{project-version}</version>
 </dependency>
 ----
@@ -63,7 +76,7 @@ For more details on Bonita Connector please refer to {doc-url}/connector-archety
 
 |*apiKey*
 |false
-|The OpenAI API key. Parameter is optional for testing purpose but obviously required with official OpenAI endpoint. The connector will use the system environment variable named OPENAI_API_KEY then the provided parameter and at last a dummy `changeMe` value.
+|The AI provider API key. Parameter is optional for testing purpose but obviously required with official OpenAI endpoint. The connector will use the system environment variable named AI_API_KEY then the provided parameter and at last a dummy `changeMe` value.
 | changeMe
 
 |*url*
