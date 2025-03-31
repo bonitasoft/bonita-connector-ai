@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <implementation:connectorImplementation xmlns:implementation="http://www.bonitasoft.org/ns/connector/implementation/6.0">
-  <implementationId>${ask.impl.id}</implementationId> <!-- Id of the implementation -->
-  <implementationVersion>${ask.impl.version}</implementationVersion> <!-- Version of the implementation -->
-  <definitionId>${ask.def.id}</definitionId> <!-- Id of the definition implemented -->
-  <definitionVersion>${ask.def.version}</definitionVersion> <!-- Version of the definition implemented -->
-  <implementationClassname>${ask.main-class}</implementationClassname> <!-- Path to the main implementation class -->
-  <description>Default ${ask.def.id} implementation</description>
+  <implementationId>${openai.ask.impl.id}</implementationId> <!-- Id of the implementation -->
+  <implementationVersion>${openai.ask.impl.version}</implementationVersion> <!-- Version of the implementation -->
+  <definitionId>${openai.ask.def.id}</definitionId> <!-- Id of the definition implemented -->
+  <definitionVersion>${openai.ask.def.version}</definitionVersion> <!-- Version of the definition implemented -->
+  <implementationClassname>${openai.ask.main-class}</implementationClassname> <!-- Path to the main implementation class -->
+  <description>Default ${openai.ask.def.id} implementation</description>
 
 <!-- retrieved from the pom.xml at build time -->
 ${connector-dependencies}

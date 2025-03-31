@@ -3,7 +3,7 @@ package org.bonitasoft.connectors.utils;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
-import org.bonitasoft.connectors.openai.OpenAiConnectorException;
+import org.bonitasoft.connectors.ai.AiConnectorException;
 
 public final class IOs {
 
@@ -20,7 +20,7 @@ public final class IOs {
             assert stream != null;
             return stream.readAllBytes();
         } catch (IOException e) {
-            throw new OpenAiConnectorException("Failed to read classpath resource: " + classpathResource, e);
+            throw new AiConnectorException("Failed to read classpath resource: " + classpathResource, e);
         }
     }
 }

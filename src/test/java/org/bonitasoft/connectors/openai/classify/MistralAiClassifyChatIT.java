@@ -6,15 +6,15 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.List;
 import org.bonitasoft.connectors.ai.AiConfiguration;
 import org.bonitasoft.connectors.ai.doc.UserDocument;
-import org.bonitasoft.connectors.ai.openai.OpenAiClassifyChat;
+import org.bonitasoft.connectors.ai.mistral.MistralAiClassifyChat;
 import org.bonitasoft.connectors.utils.IOs;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-class OpenAiClassifyChatIT {
+class MistralAiClassifyChatIT {
 
     ObjectMapper mapper = new ObjectMapper().findAndRegisterModules();
-    OpenAiClassifyChat chat;
+    MistralAiClassifyChat chat;
 
     @BeforeEach
     void setUp() {
@@ -26,7 +26,7 @@ class OpenAiClassifyChatIT {
                 .requestTimeout(3 * 60 * 1000)
                 .build();
 
-        chat = new OpenAiClassifyChat(configuration);
+        chat = new MistralAiClassifyChat(configuration);
     }
 
     @Test

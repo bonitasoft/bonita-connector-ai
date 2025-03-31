@@ -1,11 +1,12 @@
 package org.bonitasoft.connectors.openai.ask;
 
-import static org.bonitasoft.connectors.openai.ask.AskConfiguration.*;
+import static org.bonitasoft.connectors.ai.ask.AskConfiguration.*;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.HashMap;
 import java.util.Map;
-import org.bonitasoft.connectors.openai.OpenAiConnectorException;
+import org.bonitasoft.connectors.ai.AiConnectorException;
+import org.bonitasoft.connectors.ai.openai.OpenAiAskConnector;
 import org.bonitasoft.engine.connector.ConnectorValidationException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -37,6 +38,6 @@ class OpenAiAskConnectorTest {
         Map<String, Object> parameters = new HashMap<>();
         parameters.put(USER_PROMPT, 38);
         connector.setInputParameters(parameters);
-        assertThrows(OpenAiConnectorException.class, () -> connector.validateInputParameters());
+        assertThrows(AiConnectorException.class, () -> connector.validateInputParameters());
     }
 }

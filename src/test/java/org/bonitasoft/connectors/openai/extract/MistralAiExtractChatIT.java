@@ -11,17 +11,16 @@ import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.bonitasoft.connectors.ai.AiConfiguration;
 import org.bonitasoft.connectors.ai.doc.UserDocument;
-import org.bonitasoft.connectors.ai.openai.OpenAiExtractChat;
+import org.bonitasoft.connectors.ai.mistral.MistralAiExtractChat;
 import org.bonitasoft.connectors.utils.IOs;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 @Slf4j
-class OpenAiExtractChatIT {
+class MistralAiExtractChatIT {
 
     ObjectMapper objectMapper = new ObjectMapper().findAndRegisterModules();
-    OpenAiExtractChat chat;
+    MistralAiExtractChat chat;
 
     @BeforeEach
     void setUp() {
@@ -33,7 +32,7 @@ class OpenAiExtractChatIT {
                 .requestTimeout(3 * 60 * 1000)
                 .build();
 
-        chat = new OpenAiExtractChat(configuration);
+        chat = new MistralAiExtractChat(configuration);
     }
 
     @Test
@@ -78,7 +77,7 @@ class OpenAiExtractChatIT {
         assertJsonContent(json);
     }
 
-    @Disabled("Does not work with ollama")
+    // @Disabled("Does not work with ollama")
     @Test
     void should_extract_data_from_png() throws Exception {
         // Given

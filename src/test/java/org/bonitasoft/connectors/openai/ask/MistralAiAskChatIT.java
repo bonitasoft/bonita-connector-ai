@@ -8,16 +8,16 @@ import lombok.extern.slf4j.Slf4j;
 import org.bonitasoft.connectors.ai.AiConfiguration;
 import org.bonitasoft.connectors.ai.ask.AskConfiguration;
 import org.bonitasoft.connectors.ai.doc.UserDocument;
-import org.bonitasoft.connectors.ai.openai.OpenAiAskChat;
+import org.bonitasoft.connectors.ai.mistral.MistralAiAskChat;
 import org.bonitasoft.connectors.utils.IOs;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 @Slf4j
-class OpenAiAskChatIT {
+class MistralAiAskChatIT {
 
     ObjectMapper objectMapper = new ObjectMapper().findAndRegisterModules();
-    OpenAiAskChat chat;
+    MistralAiAskChat chat;
 
     @BeforeEach
     void setUp() {
@@ -28,7 +28,7 @@ class OpenAiAskChatIT {
                 .requestTimeout(3 * 60 * 1000)
                 .build();
 
-        chat = new OpenAiAskChat(configuration);
+        chat = new MistralAiAskChat(configuration);
     }
 
     @Test
