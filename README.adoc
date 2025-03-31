@@ -13,7 +13,7 @@
 
 // Vars
 :project-group-id: org.bonitasoft.connectors
-:project-artifact-id: bonita-connector-openai
+:project-artifact-id: bonita-connector-ai
 :project-version: 1.0.0-SNAPSHOT
 :orga: bonitasoft
 :uri-org: https://github.com/{orga}
@@ -21,7 +21,7 @@
 :short-bonita-version: 10.2
 :doc-url: https://documentation.bonitasoft.com/bonita/{short-bonita-version}
 :java-version: 17
-= bonita-connector-openai
+= {project-artifact-id}
 
 image:bonitasoft-community.png[Bonitasoft,link="https://www.bonitasoft.com",width=250px]
 image:./openai@2x.png[OpenAI,link="https://openai.com"] image:./mistralai@2x.png[MistralAI,link="https://mistral.ai"]
@@ -31,9 +31,9 @@ image:{uri-repo}/actions/workflows/build.yaml/badge.svg[Build,link="{uri-repo}/a
 
 
 
-The project **bonita-connector-openai** is a set of Bonita Connectors for **Bonita {short-bonita-version}**  **Community** version written in `java` language.
+The project **{project-artifact-id}** is a set of Bonita Connectors for **Bonita {short-bonita-version}**  **Community** version written in `java` language.
 
-The connectors allow to interact with OpenAI chat models by sending prompt and documents and returning the generated output.
+The connectors allow to interact with OpenAI and MistralAI chat models by sending prompt and documents and returning the generated output.
 
 [WARNING]
 ====
@@ -91,7 +91,7 @@ or
 
 |*chatModelName*
 |false
-|The model to use for chat like gpt-4, gpt-4o-mini, lama, ... See OpenAI documentation at https://platform.openai.com/docs/models/models for detailed information about models.
+|The model to use for chat like gpt-4, gpt-4o-mini, lama, pixtral, ... See OpenAI documentation at https://platform.openai.com/docs/models/models and Mistral AI documentation at https://docs.mistral.ai/getting-started/models/models_overview/ for detailed information about models.
 |gpt-4o-mini
 
 |*modelTemperature*
@@ -222,14 +222,14 @@ Prerequisite:
 // _**TODO**_: If your project needs some additional steps for the developer to build the project after some code changes, state them here:
 The project is a standard maven project. For more details about Apache Maven, please refer to the https://maven.apache.org/guides/getting-started/[documentation]
 
-[source,bash]
+[source,bash,subs=attributes]
 ----
-git clone https://your.github.com/bonita-connector-openai.git
-cd bonita-connector-openai/
+git clone {uri-repo}.git
+cd {project-artifact-id}/
 ./mwnw package
 ----
 
-The build should produce a jar archive under the `target/` folder named `bonita-connector-openai-{project-version}.jar`
+The build should produce connector packages a jar and zip archives under the modules `target/` folders.
 
 
 === Run integration tests
@@ -274,9 +274,9 @@ Once ollama is ready, you can run integration tests using standard maven command
 // format like in a .json file, it's good to include a summary of most useful
 // links to humans using your project. You can include links like:
 
-. Project homepage: https://github.com/bonitasoft-labs/bonita-connector-openai
-. Repository: https://github.com/bonitasoft-labs/bonita-connector-openai
-. Issue tracker: https://github.com/bonitasoft-labs/bonita-connector-openai/issues
+. Project homepage: {uri-repo}
+. Repository: {uri-repo}.git
+. Issue tracker: {uri-repo}/issues
 // .. In case of sensitive bugs like security vulnerabilities, please contact
 //     my@email.com directly instead of using issue tracker. We value your effort
 //     to improve the security and privacy of this project!
