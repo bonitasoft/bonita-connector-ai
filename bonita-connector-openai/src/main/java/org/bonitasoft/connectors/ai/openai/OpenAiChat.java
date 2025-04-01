@@ -17,7 +17,7 @@ public interface OpenAiChat extends AiChat<OpenAiChatModel> {
         // Url override
         configuration.getBaseUrl().ifPresent(chatModelBuilder::baseUrl);
         // Chat model name
-        chatModelBuilder.modelName(configuration.getChatModelName());
+        chatModelBuilder.modelName(configuration.getChatModelName().orElse("gpt-4o-mini"));
         // Temperature
         configuration.getModelTemperature().ifPresent(chatModelBuilder::temperature);
         // Req timeout

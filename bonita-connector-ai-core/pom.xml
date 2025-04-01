@@ -9,7 +9,7 @@
     </parent>
     <artifactId>bonita-connector-ai-core</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>Bonita::AI::core</name>
+    <name>Bonita :: AI :: Core</name>
     <dependencies>
         <dependency>
             <groupId>dev.langchain4j</groupId>

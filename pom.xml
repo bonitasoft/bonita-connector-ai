@@ -5,7 +5,7 @@
     <groupId>org.bonitasoft.connectors</groupId>
     <artifactId>bonita-connector-ai</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>Bonita::AI::Connectors</name>
+    <name>Bonita :: AI :: Connectors</name>
     <packaging>pom</packaging>
 
     <url>https://www.bonitasoft.com</url>

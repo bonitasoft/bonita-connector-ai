@@ -21,14 +21,17 @@ public class AiConfiguration {
     @Builder.Default
     private String apiKey = "changeMe";
 
-    @Builder.Default
-    private String chatModelName = "gpt-4o-mini";
+    private String chatModelName;
 
     private Double modelTemperature;
     private Integer requestTimeout;
 
     public Optional<String> getBaseUrl() {
         return Optional.ofNullable(baseUrl);
+    }
+
+    public Optional<String> getChatModelName() {
+        return Optional.ofNullable(chatModelName);
     }
 
     public Optional<Double> getModelTemperature() {

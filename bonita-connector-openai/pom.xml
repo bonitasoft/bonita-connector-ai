@@ -9,7 +9,7 @@
     </parent>
     <artifactId>bonita-connector-openai</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>Bonita::AI::OpenAI</name>
+    <name>Bonita :: AI :: OpenAI</name>
     <properties>
         <!--Ask Connector -->
         <openai.ask.def.id>${project.artifactId}-openai-ask</openai.ask.def.id>

@@ -17,8 +17,7 @@ public interface MistralAiChat extends AiChat<MistralAiChatModel> {
         // Url override
         configuration.getBaseUrl().ifPresent(chatModelBuilder::baseUrl);
         // Chat model name
-        // chatModelBuilder.modelName(configuration.getChatModelName());
-        // chatModelBuilder.modelName("mistral-ocr-latest");
+        chatModelBuilder.modelName(configuration.getChatModelName().orElse("pixtral-12b-2409"));
         // Temperature
         configuration.getModelTemperature().ifPresent(chatModelBuilder::temperature);
         // Req timeout

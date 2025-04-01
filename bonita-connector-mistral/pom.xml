@@ -9,7 +9,7 @@
     </parent>
     <artifactId>bonita-connector-mistral</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>Bonita::AI::MistralAI</name>
+    <name>Bonita :: AI :: MistralAI</name>
     <properties>
 
         <!--Ask Connector -->
