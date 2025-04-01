@@ -1,21 +1,19 @@
 package org.bonitasoft.connectors.ai.ask;
 
-import dev.langchain4j.data.document.DocumentLoader;
-import dev.langchain4j.data.document.parser.apache.tika.ApacheTikaDocumentParser;
 import dev.langchain4j.data.message.*;
 import dev.langchain4j.model.chat.ChatLanguageModel;
 import dev.langchain4j.model.chat.request.ChatRequest;
 import dev.langchain4j.model.chat.response.ChatResponse;
 import java.util.ArrayList;
-import java.util.Base64;
 import lombok.extern.slf4j.Slf4j;
+import org.bonitasoft.connectors.ai.AbstractAiChat;
 import org.bonitasoft.connectors.ai.AiChat;
 import org.bonitasoft.connectors.ai.AiConfiguration;
 import org.bonitasoft.connectors.ai.UserDocument;
-import org.bonitasoft.connectors.ai.langchain4j.UserDocumentSource;
+import org.bonitasoft.connectors.utils.Markdown;
 
 @Slf4j
-public abstract class AskAiChat<T extends ChatLanguageModel> implements AiChat<T>, AskChat {
+public abstract class AskAiChat<T extends ChatLanguageModel> extends AbstractAiChat<T> implements AiChat<T>, AskChat {
 
     protected final AiConfiguration configuration;
 
@@ -52,29 +50,23 @@ public abstract class AskAiChat<T extends ChatLanguageModel> implements AiChat<T
                             7. Do not include markdown in the output.
                             8. Do not include the JSON schema in the JSON output.
                             9. Answer must only contain the JSON output.
+                            10.Do not include ```json ``` in the output.
                             """);
         }
         var userMessage = UserMessage.from(userPromptText.toString());
         messages.add(userMessage);
 
         if (document != null) {
-            Content content =
-                    switch (document.mimeType()) {
-                        case "image/png", "image/jpg", "image/jpeg" -> ImageContent.from(
-                                Base64.getEncoder().encodeToString(document.data()), document.mimeType());
-                        default -> {
-                            // Default to Tika parser support and extracting text.
-                            var doc = DocumentLoader.load(
-                                    new UserDocumentSource(document), new ApacheTikaDocumentParser());
-                            yield TextContent.from(doc.text());
-                        }
-                    };
-            var docMessage = UserMessage.from(content);
+            var docMessage = newDocMessage(document);
             messages.add(docMessage);
         }
 
         var chatRequest = ChatRequest.builder().messages(messages).build();
         ChatResponse chatResponse = getChatModel().chat(chatRequest);
+
+        if (jsonSchema != null && !jsonSchema.isEmpty()) {
+            return Markdown.noJsonBlock(chatResponse.aiMessage().text());
+        }
         return chatResponse.aiMessage().text();
     }
 }

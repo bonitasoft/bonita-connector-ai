@@ -1,6 +1,7 @@
 package org.bonitasoft.connectors.ai.openai;
 
 import dev.langchain4j.model.openai.OpenAiChatModel;
+import dev.langchain4j.model.openai.OpenAiChatModelName;
 import java.time.Duration;
 import java.time.temporal.ChronoUnit;
 import org.bonitasoft.connectors.ai.AiChat;
@@ -17,7 +18,7 @@ public interface OpenAiChat extends AiChat<OpenAiChatModel> {
         // Url override
         configuration.getBaseUrl().ifPresent(chatModelBuilder::baseUrl);
         // Chat model name
-        chatModelBuilder.modelName(configuration.getChatModelName().orElse("gpt-4o-mini"));
+        chatModelBuilder.modelName(configuration.getChatModelName().orElse(OpenAiChatModelName.GPT_4_O.toString()));
         // Temperature
         configuration.getModelTemperature().ifPresent(chatModelBuilder::temperature);
         // Req timeout

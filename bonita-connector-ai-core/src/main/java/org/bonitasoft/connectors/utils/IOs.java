@@ -8,7 +8,7 @@ import org.bonitasoft.connectors.ai.AiConnectorException;
 public final class IOs {
 
     private IOs() {
-        // Utility
+        // Utility class
     }
 
     public static String readAsString(String classpathResource) {

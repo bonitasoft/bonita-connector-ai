@@ -1,35 +1,34 @@
-package org.bonitasoft.connectors.openai.ask;
+package org.bonitasoft.connectors.ai.ask;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import lombok.extern.slf4j.Slf4j;
 import org.bonitasoft.connectors.ai.AiConfiguration;
 import org.bonitasoft.connectors.ai.UserDocument;
-import org.bonitasoft.connectors.ai.ask.AskConfiguration;
-import org.bonitasoft.connectors.ai.openai.OpenAskAiChat;
 import org.bonitasoft.connectors.utils.IOs;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 @Slf4j
-class OpenAskAiChatIT {
+public abstract class AskChatIT {
 
     ObjectMapper objectMapper = new ObjectMapper().findAndRegisterModules();
-    OpenAskAiChat chat;
+    AskChat chat;
 
     @BeforeEach
     void setUp() {
-        var configuration = AiConfiguration.builder()
-                //                .baseUrl("http://localhost:11434/v1")
-                //                .chatModelName("llama3.1:8b")
-                //                .apiKey("changeMe")
-                .requestTimeout(3 * 60 * 1000)
-                .build();
-
-        chat = new OpenAskAiChat(configuration);
+        var configurationBuilder = AiConfiguration.builder().requestTimeout(3 * 60 * 1000);
+        customize(configurationBuilder);
+        var configuration = configurationBuilder.build();
+        chat = getChat(configuration);
     }
+
+    protected abstract AskChat getChat(AiConfiguration configuration);
+
+    protected void customize(AiConfiguration.AiConfigurationBuilder builder) {}
 
     @Test
     void should_use_doc() throws IOException {
@@ -71,5 +70,6 @@ class OpenAskAiChatIT {
         assertThat(value.year()).isEqualTo("2001");
     }
 
+    @JsonIgnoreProperties(ignoreUnknown = true)
     record YearOfDocument(String year) {}
 }

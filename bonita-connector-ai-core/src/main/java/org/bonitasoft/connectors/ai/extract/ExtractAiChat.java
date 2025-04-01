@@ -1,24 +1,25 @@
 package org.bonitasoft.connectors.ai.extract;
 
-import dev.langchain4j.data.document.DocumentLoader;
-import dev.langchain4j.data.document.parser.apache.tika.ApacheTikaDocumentParser;
-import dev.langchain4j.data.message.*;
+import dev.langchain4j.data.message.ChatMessage;
+import dev.langchain4j.data.message.SystemMessage;
+import dev.langchain4j.data.message.UserMessage;
 import dev.langchain4j.model.chat.ChatLanguageModel;
 import dev.langchain4j.model.chat.request.ChatRequest;
 import dev.langchain4j.model.chat.response.ChatResponse;
 import dev.langchain4j.model.input.Prompt;
 import dev.langchain4j.model.input.PromptTemplate;
 import java.util.ArrayList;
-import java.util.Base64;
 import java.util.List;
 import java.util.Map;
+import org.bonitasoft.connectors.ai.AbstractAiChat;
 import org.bonitasoft.connectors.ai.AiChat;
 import org.bonitasoft.connectors.ai.AiConfiguration;
 import org.bonitasoft.connectors.ai.UserDocument;
-import org.bonitasoft.connectors.ai.langchain4j.UserDocumentSource;
 import org.bonitasoft.connectors.utils.IOs;
+import org.bonitasoft.connectors.utils.Markdown;
 
-public abstract class ExtractAiChat<T extends ChatLanguageModel> implements AiChat<T>, ExtractChat {
+public abstract class ExtractAiChat<T extends ChatLanguageModel> extends AbstractAiChat<T>
+        implements AiChat<T>, ExtractChat {
 
     protected final String systemPrompt;
     protected final String userPrompt;
@@ -63,20 +64,6 @@ public abstract class ExtractAiChat<T extends ChatLanguageModel> implements AiCh
         messages.add(docMessage);
         var chatRequest = ChatRequest.builder().messages(messages).build();
         ChatResponse chatResponse = getChatModel().chat(chatRequest);
-        return chatResponse.aiMessage().text();
-    }
-
-    protected ChatMessage newDocMessage(UserDocument document) {
-        Content content =
-                switch (document.mimeType()) {
-                    case "image/png", "image/jpg", "image/jpeg" -> ImageContent.from(
-                            Base64.getEncoder().encodeToString(document.data()), document.mimeType());
-                    default -> {
-                        // Default to Tika parser support and extracting text.
-                        var doc = DocumentLoader.load(new UserDocumentSource(document), new ApacheTikaDocumentParser());
-                        yield TextContent.from(doc.text());
-                    }
-                };
-        return UserMessage.from(content);
+        return Markdown.noJsonBlock(chatResponse.aiMessage().text());
     }
 }

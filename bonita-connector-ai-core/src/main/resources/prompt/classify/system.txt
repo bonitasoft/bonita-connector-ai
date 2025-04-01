@@ -13,4 +13,8 @@ Do not provide additional explanation or commentary to explain the confidence.
 
 1. Follow the format instructions precisely.
 2. Do not include markdown in the output.
-3. Answer must only contain the JSON output.
+3. Output MUST be valid JSON (no code fences, no Markdown).
+4. Answer must only contain the JSON output.
+5. Do not include any additional text outside the JSON.
+6. Links Must be represented as a URL element.
+7. Short, straight to the point, no introduction.

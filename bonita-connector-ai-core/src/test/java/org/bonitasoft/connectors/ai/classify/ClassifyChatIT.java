@@ -1,33 +1,32 @@
-package org.bonitasoft.connectors.openai.classify;
+package org.bonitasoft.connectors.ai.classify;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.List;
 import org.bonitasoft.connectors.ai.AiConfiguration;
 import org.bonitasoft.connectors.ai.UserDocument;
-import org.bonitasoft.connectors.ai.mistral.MistralAiClassifyChat;
 import org.bonitasoft.connectors.utils.IOs;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-class MistralAiClassifyChatIT {
+public abstract class ClassifyChatIT {
 
     ObjectMapper mapper = new ObjectMapper().findAndRegisterModules();
-    MistralAiClassifyChat chat;
+    ClassifyChat chat;
 
     @BeforeEach
     void setUp() {
-
-        var configuration = AiConfiguration.builder()
-                //                .baseUrl("http://localhost:11434/v1")
-                //                .chatModelName("llama3.1:8b")
-                //                .apiKey("changeMe")
-                .requestTimeout(3 * 60 * 1000)
-                .build();
-
-        chat = new MistralAiClassifyChat(configuration);
+        var configurationBuilder = AiConfiguration.builder().requestTimeout(3 * 60 * 1000);
+        customize(configurationBuilder);
+        var configuration = configurationBuilder.build();
+        chat = getChat(configuration);
     }
+
+    protected abstract ClassifyChat getChat(AiConfiguration configuration);
+
+    protected void customize(AiConfiguration.AiConfigurationBuilder builder) {}
 
     @Test
     void should_classify_user_doc() throws Exception {
@@ -48,5 +47,6 @@ class MistralAiClassifyChatIT {
         assertThat(classification.confidence()).isGreaterThan(0.5);
     }
 
+    @JsonIgnoreProperties(ignoreUnknown = true)
     record Classification(String category, Double confidence) {}
 }

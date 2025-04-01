@@ -1,8 +1,13 @@
 Carefully classify the document into one of the following categories:
 {{categories}}
 
-Return strictly in JSON format as:
+1. Answer strictly in JSON format as:
+```json
 {
   "category": "Selected category",
   "confidence": "Confidence score between 0 and 1"
 }
+```
+2. Output MUST be valid JSON (no code fences, no Markdown).
+3. Answer must only contain the JSON output.
+4. Do not include any additional text outside the JSON.

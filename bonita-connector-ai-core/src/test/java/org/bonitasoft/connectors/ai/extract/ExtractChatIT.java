@@ -1,40 +1,36 @@
-package org.bonitasoft.connectors.openai.extract;
+package org.bonitasoft.connectors.ai.extract;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.bonitasoft.connectors.ai.AiConfiguration;
 import org.bonitasoft.connectors.ai.UserDocument;
-import org.bonitasoft.connectors.ai.openai.OpenAiExtractChat;
 import org.bonitasoft.connectors.utils.IOs;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 @Slf4j
-class OpenAiExtractChatIT {
+public abstract class ExtractChatIT {
 
     ObjectMapper objectMapper = new ObjectMapper().findAndRegisterModules();
-    OpenAiExtractChat chat;
+    ExtractChat chat;
 
     @BeforeEach
     void setUp() {
-
-        var configuration = AiConfiguration.builder()
-                //                .baseUrl("http://localhost:11434/v1")
-                //                .chatModelName("llama3.1:8b")
-                //                .apiKey("changeMe")
-                .requestTimeout(3 * 60 * 1000)
-                .build();
-
-        chat = new OpenAiExtractChat(configuration);
+        var configurationBuilder = AiConfiguration.builder().requestTimeout(3 * 60 * 1000);
+        customize(configurationBuilder);
+        var configuration = configurationBuilder.build();
+        chat = getChat(configuration);
     }
+
+    protected abstract ExtractChat getChat(AiConfiguration configuration);
+
+    protected void customize(AiConfiguration.AiConfigurationBuilder builder) {}
 
     @Test
     void should_extract_data_from_pdf() throws Exception {
@@ -67,7 +63,7 @@ class OpenAiExtractChatIT {
         // Given
         var doc = new UserDocument(
                 "application/pdf", IOs.readAllBytes("/data/justificatifs/justificatif_domicile_1.pdf"));
-        var jsonSchema = Files.readString(Paths.get("src/test/resources/extract/schema.json"));
+        var jsonSchema = IOs.readAsString("/extract/schema.json");
 
         // When
         String json = chat.extract(doc, jsonSchema);
@@ -83,7 +79,7 @@ class OpenAiExtractChatIT {
     void should_extract_data_from_png() throws Exception {
         // Given
         var doc = new UserDocument("image/png", IOs.readAllBytes("/data/justificatifs/justificatif_domicile_1.png"));
-        var jsonSchema = Files.readString(Paths.get("src/test/resources/extract/schema.json"));
+        var jsonSchema = IOs.readAsString("/extract/schema.json");
 
         // When
         String json = chat.extract(doc, jsonSchema);
