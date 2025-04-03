@@ -80,8 +80,8 @@
 
     <modules>
         <module>bonita-connector-ai-core</module>
-        <module>bonita-connector-mistral</module>
-        <module>bonita-connector-openai</module>
+        <module>bonita-connector-ai-mistral</module>
+        <module>bonita-connector-ai-openai</module>
     </modules>
 
     <dependencyManagement>
