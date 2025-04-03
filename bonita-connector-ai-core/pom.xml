@@ -10,6 +10,11 @@
     <artifactId>bonita-connector-ai-core</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>Bonita :: AI :: Core</name>
+
+    <properties>
+        <license-header-file>${project.parent.basedir}/src/format/header.txt</license-header-file>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>dev.langchain4j</groupId>

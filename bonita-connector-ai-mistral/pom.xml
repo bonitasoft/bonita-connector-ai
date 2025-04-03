@@ -12,6 +12,8 @@
     <name>Bonita :: AI :: MistralAI</name>
     <properties>
 
+        <license-header-file>${project.parent.basedir}/src/format/header.txt</license-header-file>
+
         <!--Ask Connector -->
         <mistral.ask.def.id>${project.artifactId}-mistral-ask</mistral.ask.def.id>
         <mistral.ask.def.version>1.0.0</mistral.ask.def.version>
