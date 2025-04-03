@@ -33,4 +33,4 @@ jobs:
         if: github.event_name != 'pull_request'
         env:
           ALT_DEPLOYMENT_REPOSITORY: snapshots::${{ vars.SNAPSHOTS_REPOSITORY_URL }} 
-        run: ./mvnw --no-transfer-progress -B deploy -Prelease -DaltDeploymentRepository=${{env.ALT_DEPLOYMENT_REPOSITORY}}
+        run: ./mvnw -B -ntp deploy -Prelease -DaltDeploymentRepository=${{env.ALT_DEPLOYMENT_REPOSITORY}}
