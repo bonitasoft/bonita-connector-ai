@@ -48,25 +48,29 @@ To use a connector, add it as a dependency to your Bonita process. (Choose the o
 
 For more details on Bonita Connector please refer to {doc-url}/connector-archetype[documentation]
 
-[source,xml,subs="attributes+"]
-----
-<dependency>
-    <groupId>org.bonitasoft.connectors</groupId>
-    <artifactId>bonita-connector-openai</artifactId>
-    <version>{project-version}</version>
-</dependency>
-----
-
-or
+=== OpenAI
 
 [source,xml,subs="attributes+"]
 ----
 <dependency>
     <groupId>org.bonitasoft.connectors</groupId>
-    <artifactId>bonita-connector-mistral</artifactId>
+    <artifactId>bonita-connector-ai-openai</artifactId>
     <version>{project-version}</version>
 </dependency>
 ----
+
+=== MistralAI
+
+[source,xml,subs="attributes+"]
+----
+<dependency>
+    <groupId>org.bonitasoft.connectors</groupId>
+    <artifactId>bonita-connector-ai-mistral</artifactId>
+    <version>{project-version}</version>
+</dependency>
+----
+
+WARNING: Image documents are not supported yet for Mistral connector due to a langchain4j limitation.
 
 === Common configuration
 
@@ -91,8 +95,8 @@ or
 
 |*chatModelName*
 |false
-|The model to use for chat like gpt-4, gpt-4o-mini, lama, pixtral, ... See OpenAI documentation at https://platform.openai.com/docs/models/models and Mistral AI documentation at https://docs.mistral.ai/getting-started/models/models_overview/ for detailed information about models.
-|gpt-4o-mini
+|The model to use for chat like gpt-4o, gpt-4o-mini, llama, pixtral, ... See OpenAI documentation at https://platform.openai.com/docs/models/models and Mistral AI documentation at https://docs.mistral.ai/getting-started/models/models_overview/ for detailed information about models.
+|`gpt-4o` for OpenAI and `pixtral-12b-2409` for MistralAI
 
 |*modelTemperature*
 |false
