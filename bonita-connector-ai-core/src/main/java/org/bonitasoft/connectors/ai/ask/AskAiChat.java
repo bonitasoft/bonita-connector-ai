@@ -17,7 +17,7 @@ public abstract class AskAiChat<T extends ChatLanguageModel> extends AbstractAiC
 
     protected final AiConfiguration configuration;
 
-    public AskAiChat(AiConfiguration configuration) {
+    protected AskAiChat(AiConfiguration configuration) {
         this.configuration = configuration;
     }
 

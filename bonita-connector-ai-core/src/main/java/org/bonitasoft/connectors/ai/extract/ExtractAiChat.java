@@ -26,7 +26,7 @@ public abstract class ExtractAiChat<T extends ChatLanguageModel> extends Abstrac
     protected final String userPromptWthJsonSchema;
     protected final AiConfiguration configuration;
 
-    public ExtractAiChat(AiConfiguration configuration) {
+    protected ExtractAiChat(AiConfiguration configuration) {
         this.configuration = configuration;
         systemPrompt = IOs.readAsString("/prompt/extract/system.txt");
         userPrompt = IOs.readAsString("/prompt/extract/user.txt");
