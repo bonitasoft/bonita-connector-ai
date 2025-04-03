@@ -25,7 +25,7 @@ public abstract class ClassifyAiChat<T extends ChatLanguageModel> extends Abstra
     protected String userPrompt;
     protected final AiConfiguration configuration;
 
-    public ClassifyAiChat(AiConfiguration configuration) {
+    protected ClassifyAiChat(AiConfiguration configuration) {
         this.configuration = configuration;
         systemPrompt = IOs.readAsString("/prompt/classify/system.txt");
         userPrompt = IOs.readAsString("/prompt/classify/user.txt");
