@@ -11,6 +11,9 @@
     <version>0.0.1-SNAPSHOT</version>
     <name>Bonita :: AI :: OpenAI</name>
     <properties>
+
+        <license-header-file>${project.parent.basedir}/src/format/header.txt</license-header-file>
+
         <!--Ask Connector -->
         <openai.ask.def.id>${project.artifactId}-openai-ask</openai.ask.def.id>
         <openai.ask.def.version>1.0.0</openai.ask.def.version>

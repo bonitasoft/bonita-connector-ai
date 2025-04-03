@@ -76,6 +76,7 @@
         <maven-source-plugin.version>3.3.1</maven-source-plugin.version>
         <maven-javadoc-plugin.version>3.11.2</maven-javadoc-plugin.version>
         <spotless-maven-plugin.version>2.44.3</spotless-maven-plugin.version>
+        <license-header-file>${project.basedir}/src/format/header.txt</license-header-file>
     </properties>
 
     <modules>
@@ -287,6 +288,9 @@
                     <configuration>
                         <java>
                             <palantirJavaFormat/>
+                            <licenseHeader>
+                                <file>${license-header-file}</file>
+                            </licenseHeader>
                         </java>
                     </configuration>
                     <executions>
