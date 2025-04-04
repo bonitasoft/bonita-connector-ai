@@ -22,6 +22,9 @@ jobs:
           keeper-secret-config: ${{ secrets.KSM_CONFIG }}
           secrets: |
             ${{ vars.KEEPER_SONARCLOUD_RECORD_ID }}/field/password > env:SONAR_TOKEN
+      - uses: bonitasoft/maven-settings-action@v1
+        with:
+          keeper-secret-config: ${{ secrets.KSM_CONFIG }}
 
       - uses: actions/setup-java@v4
         with:
@@ -40,15 +43,10 @@ jobs:
           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-m2
 
-      - uses: bonitasoft/maven-settings-action@v1
-        with:
-          keeper-secret-config: ${{ secrets.KSM_CONFIG }}
-
       - name: Build and test
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
         run: ./mvnw -B -ntp verify sonar:sonar
-
 
       - name: Publish to Artifactory
         if: github.event_name != 'pull_request'
