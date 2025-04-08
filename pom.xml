@@ -75,7 +75,7 @@
         <git-commit-id-plugin.version>4.9.10</git-commit-id-plugin.version>
         <maven-source-plugin.version>3.3.1</maven-source-plugin.version>
         <maven-javadoc-plugin.version>3.11.2</maven-javadoc-plugin.version>
-        <spotless-maven-plugin.version>2.44.3</spotless-maven-plugin.version>
+        <spotless-maven-plugin.version>2.44.4</spotless-maven-plugin.version>
         <license-header-file>${project.basedir}/src/format/header.txt</license-header-file>
     </properties>
 
