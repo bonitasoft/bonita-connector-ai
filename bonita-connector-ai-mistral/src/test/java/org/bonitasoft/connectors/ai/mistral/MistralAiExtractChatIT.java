@@ -16,16 +16,27 @@
  */
 package org.bonitasoft.connectors.ai.mistral;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import lombok.extern.slf4j.Slf4j;
 import org.bonitasoft.connectors.ai.AiConfiguration;
 import org.bonitasoft.connectors.ai.extract.ExtractChat;
 import org.bonitasoft.connectors.ai.extract.ExtractChatIT;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 @Slf4j
 class MistralAiExtractChatIT extends ExtractChatIT {
     @Override
     protected void customize(AiConfiguration.AiConfigurationBuilder builder) {
         builder.apiKey(System.getenv("MISTRAL_API_KEY"));
+    }
+
+    @Disabled("No supported yet by langchain4j")
+    @Test
+    @Override
+    public void should_extract_data_from_png() throws Exception {
+        assertThat(true).isTrue();
     }
 
     @Override

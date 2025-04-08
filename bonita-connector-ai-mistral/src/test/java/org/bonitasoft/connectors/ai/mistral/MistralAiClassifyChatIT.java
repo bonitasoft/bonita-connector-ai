@@ -16,15 +16,26 @@
  */
 package org.bonitasoft.connectors.ai.mistral;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import org.bonitasoft.connectors.ai.AiConfiguration;
 import org.bonitasoft.connectors.ai.classify.ClassifyChat;
 import org.bonitasoft.connectors.ai.classify.ClassifyChatIT;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 class MistralAiClassifyChatIT extends ClassifyChatIT {
 
     @Override
     protected void customize(AiConfiguration.AiConfigurationBuilder builder) {
         builder.apiKey(System.getenv("MISTRAL_API_KEY"));
+    }
+
+    @Disabled("Not supported yet by langchain4j")
+    @Test
+    @Override
+    public void should_classify_png_anon() throws Exception {
+        assertThat(true).isTrue();
     }
 
     @Override

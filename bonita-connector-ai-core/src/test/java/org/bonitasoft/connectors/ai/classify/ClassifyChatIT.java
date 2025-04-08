@@ -26,6 +26,8 @@ import org.bonitasoft.connectors.ai.UserDocument;
 import org.bonitasoft.connectors.utils.IOs;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 
 public abstract class ClassifyChatIT {
 
@@ -44,12 +46,14 @@ public abstract class ClassifyChatIT {
 
     protected void customize(AiConfiguration.AiConfigurationBuilder builder) {}
 
-    @Test
-    void should_classify_user_doc() throws Exception {
+    @ParameterizedTest
+    @CsvSource({
+        "application/pdf,/data/classify/rib-sample.pdf,RIB",
+        "application/pdf,/data/AgileManifesto.pdf,Unknown",
+    })
+    public void should_classify_pdf(String mimeType, String docPath, String expectedCategory) throws Exception {
         // Given
-        var doc = new UserDocument("application/pdf", IOs.readAllBytes("/data/classify/rib-sample.pdf"));
-        // "/data/classify/justificatif-anon.jpg"
-        // "/data/AgileManifesto.pdf"
+        var doc = new UserDocument(mimeType, IOs.readAllBytes(docPath));
 
         var categories = List.of("RIB", "Carte d'identité", "Justificatif de domicile", "Passeport", "Unknown");
 
@@ -59,7 +63,24 @@ public abstract class ClassifyChatIT {
         // Then
         assertThat(category).isNotEmpty();
         Classification classification = mapper.readValue(category, Classification.class);
-        assertThat(classification.category()).isEqualTo("RIB");
+        assertThat(classification.category()).isEqualTo(expectedCategory);
+        assertThat(classification.confidence()).isGreaterThan(0.5);
+    }
+
+    @Test
+    public void should_classify_png_anon() throws Exception {
+        // Given
+        var doc = new UserDocument("image/jpg", IOs.readAllBytes("/data/classify/justificatif-anon.jpg"));
+
+        var categories = List.of("RIB", "Carte d'identité", "Justificatif de domicile", "Passeport", "Unknown");
+
+        // When
+        String category = chat.classify(categories, doc);
+
+        // Then
+        assertThat(category).isNotEmpty();
+        Classification classification = mapper.readValue(category, Classification.class);
+        assertThat(classification.category()).isEqualTo("Justificatif de domicile");
         assertThat(classification.confidence()).isGreaterThan(0.5);
     }
 

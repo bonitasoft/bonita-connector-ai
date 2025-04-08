@@ -24,11 +24,12 @@ import lombok.Data;
 @Builder
 public class AiConfiguration {
 
+    // System environment variable name
+    public static final String AI_API_KEY = "AI_API_KEY";
+
     public static final String URL = "url";
     public static final String TIMEOUT_MS = "requestTimeoutMs";
     public static final String API_KEY = "apiKey";
-    // System environment variable name
-    public static final String AI_API_KEY = "AI_API_KEY";
     public static final String CHAT_MODEL_NAME = "chatModelName";
     public static final String MODEL_TEMPERATURE = "modelTemperature";
 

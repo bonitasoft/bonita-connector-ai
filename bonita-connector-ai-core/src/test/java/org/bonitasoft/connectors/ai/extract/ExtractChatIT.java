@@ -27,7 +27,6 @@ import org.bonitasoft.connectors.ai.AiConfiguration;
 import org.bonitasoft.connectors.ai.UserDocument;
 import org.bonitasoft.connectors.utils.IOs;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 @Slf4j
@@ -49,7 +48,7 @@ public abstract class ExtractChatIT {
     protected void customize(AiConfiguration.AiConfigurationBuilder builder) {}
 
     @Test
-    void should_extract_data_from_pdf() throws Exception {
+    public void should_extract_data_from_pdf() throws Exception {
 
         // Given
         var doc = new UserDocument(
@@ -74,7 +73,7 @@ public abstract class ExtractChatIT {
     }
 
     @Test
-    void should_extract_data_from_pdf_with_json_schema() throws Exception {
+    public void should_extract_data_from_pdf_with_json_schema() throws Exception {
 
         // Given
         var doc = new UserDocument(
@@ -90,9 +89,8 @@ public abstract class ExtractChatIT {
         assertJsonContent(json);
     }
 
-    @Disabled("Does not work with ollama")
     @Test
-    void should_extract_data_from_png() throws Exception {
+    public void should_extract_data_from_png() throws Exception {
         // Given
         var doc = new UserDocument("image/png", IOs.readAllBytes("/data/justificatifs/justificatif_domicile_1.png"));
         var jsonSchema = IOs.readAsString("/extract/schema.json");

@@ -57,20 +57,18 @@ public abstract class AiConnector extends AbstractConnector {
     public void validateInputParameters() throws ConnectorValidationException {
         // Parse configuration from input parameters
         if (this.configuration == null) {
-            try {
-                var builder = AiConfiguration.builder();
-                Optional.ofNullable(System.getenv(AI_API_KEY))
-                        .or(() -> getInputValue(API_KEY, String.class))
-                        .ifPresent(builder::apiKey);
-                getInputValue(URL, String.class).ifPresent(builder::baseUrl);
-                getInputValue(CHAT_MODEL_NAME, String.class).ifPresent(builder::chatModelName);
-                getInputValue(TIMEOUT_MS, Integer.class).ifPresent(builder::requestTimeout);
-                getInputValue(MODEL_TEMPERATURE, Double.class).ifPresent(builder::modelTemperature);
-                this.configuration = builder.build();
-            } catch (ClassCastException e) {
-                throw new ConnectorValidationException(
-                        "Provided input parameter is not of expected type : " + e.getMessage());
+            var builder = AiConfiguration.builder();
+            String envApiKey = System.getenv(AI_API_KEY);
+            if (envApiKey != null && !envApiKey.isEmpty()) {
+                builder.apiKey(envApiKey);
+            } else {
+                getInputValue(API_KEY, String.class).ifPresent(builder::apiKey);
             }
+            getInputValue(URL, String.class).ifPresent(builder::baseUrl);
+            getInputValue(CHAT_MODEL_NAME, String.class).ifPresent(builder::chatModelName);
+            getInputValue(TIMEOUT_MS, Integer.class).ifPresent(builder::requestTimeout);
+            getInputValue(MODEL_TEMPERATURE, Double.class).ifPresent(builder::modelTemperature);
+            this.configuration = builder.build();
         }
         // delegate validation to concrete classes
         validateConfiguration();
