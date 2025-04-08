@@ -6,7 +6,7 @@ on:
       - main
     paths-ignore:
       - "README.adoc"
-      - "CONTRIBUTING.md"
+      - "CONTRIBUTING.adoc"
       - "LICENSE"
       - ".github/**"
       - "!.github/workflows/build.yml"
