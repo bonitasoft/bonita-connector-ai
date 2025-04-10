@@ -15,21 +15,21 @@
         <license-header-file>${project.parent.basedir}/src/format/header.txt</license-header-file>
 
         <!--Ask Connector -->
-        <openai.ask.def.id>${project.artifactId}-openai-ask</openai.ask.def.id>
+        <openai.ask.def.id>${project.artifactId}-ask</openai.ask.def.id>
         <openai.ask.def.version>1.0.0</openai.ask.def.version>
         <openai.ask.impl.id>${openai.ask.def.id}-impl</openai.ask.impl.id>
         <openai.ask.impl.version>${project.version}</openai.ask.impl.version>
         <openai.ask.main-class>org.bonitasoft.connectors.ai.openai.OpenAiAskConnector</openai.ask.main-class>
 
         <!--Extract Connector -->
-        <openai.extract.def.id>${project.artifactId}-openai-extract</openai.extract.def.id>
+        <openai.extract.def.id>${project.artifactId}-extract</openai.extract.def.id>
         <openai.extract.def.version>1.0.0</openai.extract.def.version>
         <openai.extract.impl.id>${openai.extract.def.id}-impl</openai.extract.impl.id>
         <openai.extract.impl.version>${project.version}</openai.extract.impl.version>
         <openai.extract.main-class>org.bonitasoft.connectors.ai.openai.OpenAiExtractDataConnector</openai.extract.main-class>
 
         <!-- Classify Connector -->
-        <openai.classify.def.id>${project.artifactId}-openai-classify</openai.classify.def.id>
+        <openai.classify.def.id>${project.artifactId}-classify</openai.classify.def.id>
         <openai.classify.def.version>1.0.0</openai.classify.def.version>
         <openai.classify.impl.id>${openai.classify.def.id}-impl</openai.classify.impl.id>
         <openai.classify.impl.version>${project.version}</openai.classify.impl.version>

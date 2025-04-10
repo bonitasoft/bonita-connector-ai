@@ -15,21 +15,21 @@
         <license-header-file>${project.parent.basedir}/src/format/header.txt</license-header-file>
 
         <!--Ask Connector -->
-        <mistral.ask.def.id>${project.artifactId}-mistral-ask</mistral.ask.def.id>
+        <mistral.ask.def.id>${project.artifactId}-ask</mistral.ask.def.id>
         <mistral.ask.def.version>1.0.0</mistral.ask.def.version>
         <mistral.ask.impl.id>${mistral.ask.def.id}-impl</mistral.ask.impl.id>
         <mistral.ask.impl.version>${project.version}</mistral.ask.impl.version>
         <mistral.ask.main-class>org.bonitasoft.connectors.ai.mistral.MistralAiAskConnector</mistral.ask.main-class>
 
         <!--Extract Connector -->
-        <mistral.extract.def.id>${project.artifactId}-mistral-extract</mistral.extract.def.id>
+        <mistral.extract.def.id>${project.artifactId}-extract</mistral.extract.def.id>
         <mistral.extract.def.version>1.0.0</mistral.extract.def.version>
         <mistral.extract.impl.id>${mistral.extract.def.id}-impl</mistral.extract.impl.id>
         <mistral.extract.impl.version>${project.version}</mistral.extract.impl.version>
         <mistral.extract.main-class>org.bonitasoft.connectors.ai.mistral.MistralAiExtractDataConnector</mistral.extract.main-class>
 
         <!-- Classify Connector -->
-        <mistral.classify.def.id>${project.artifactId}-mistral-classify</mistral.classify.def.id>
+        <mistral.classify.def.id>${project.artifactId}-classify</mistral.classify.def.id>
         <mistral.classify.def.version>1.0.0</mistral.classify.def.version>
         <mistral.classify.impl.id>${mistral.classify.def.id}-impl</mistral.classify.impl.id>
         <mistral.classify.impl.version>${project.version}</mistral.classify.impl.version>
