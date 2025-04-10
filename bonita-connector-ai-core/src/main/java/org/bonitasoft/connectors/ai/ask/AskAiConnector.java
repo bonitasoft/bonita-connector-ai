@@ -32,16 +32,13 @@ public abstract class AskAiConnector extends AiConnector {
 
     @Override
     protected void validateConfiguration() throws ConnectorValidationException {
-        try {
-            var builder = AskConfiguration.builder();
-            getInputValue(SYSTEM_PROMPT, String.class).ifPresent(builder::systemPrompt);
-            getInputValue(USER_PROMPT, String.class).ifPresent(builder::userPrompt);
-            getInputValue(SOURCE_DOCUMENT_REF, String.class).ifPresent(builder::sourceDocumentRef);
-            getInputValue(OUTPUT_JSON_SCHEMA, String.class).ifPresent(builder::outputJsonSchema);
-            this.askConfiguration = builder.build();
-        } catch (ClassCastException e) {
-            throw new ConnectorValidationException("Some input parameter is not of expected type : " + e.getMessage());
-        }
+        var builder = AskConfiguration.builder();
+        getInputValue(SYSTEM_PROMPT, String.class).ifPresent(builder::systemPrompt);
+        getInputValue(USER_PROMPT, String.class).ifPresent(builder::userPrompt);
+        getInputValue(SOURCE_DOCUMENT_REF, String.class).ifPresent(builder::sourceDocumentRef);
+        getInputValue(OUTPUT_JSON_SCHEMA, String.class).ifPresent(builder::outputJsonSchema);
+        this.askConfiguration = builder.build();
+
         // Specific validation
         if (askConfiguration.getUserPrompt() == null) {
             throw new ConnectorValidationException("UserPrompt is required");

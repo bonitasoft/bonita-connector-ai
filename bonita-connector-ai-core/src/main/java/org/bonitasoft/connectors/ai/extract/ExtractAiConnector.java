@@ -35,15 +35,11 @@ public abstract class ExtractAiConnector<T extends ExtractChat> extends AiConnec
 
     @Override
     protected void validateConfiguration() throws ConnectorValidationException {
-        try {
-            var builder = ExtractConfiguration.builder();
-            getInputValue(SOURCE_DOCUMENT_REF, String.class).ifPresent(builder::sourceDocumentRef);
-            getInputValue(OUTPUT_JSON_SCHEMA, String.class).ifPresent(builder::outputJsonSchema);
-            getInputValue(SOURCE_DOCUMENT_REF, List.class).ifPresent(builder::fieldsToExtract);
-            extractConfiguration = builder.build();
-        } catch (ClassCastException e) {
-            throw new ConnectorValidationException("Some input parameter is not of expected type : " + e.getMessage());
-        }
+        var builder = ExtractConfiguration.builder();
+        getInputValue(SOURCE_DOCUMENT_REF, String.class).ifPresent(builder::sourceDocumentRef);
+        getInputValue(OUTPUT_JSON_SCHEMA, String.class).ifPresent(builder::outputJsonSchema);
+        getInputValue(SOURCE_DOCUMENT_REF, List.class).ifPresent(builder::fieldsToExtract);
+        extractConfiguration = builder.build();
 
         if (extractConfiguration.getSourceDocumentRef().isEmpty()) {
             throw new ConnectorValidationException("Source document ref is empty");
