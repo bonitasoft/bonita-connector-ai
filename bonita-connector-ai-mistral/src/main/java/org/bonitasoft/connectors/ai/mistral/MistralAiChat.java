@@ -24,6 +24,8 @@ import org.bonitasoft.connectors.ai.AiConfiguration;
 
 public interface MistralAiChat extends AiChat<MistralAiChatModel> {
 
+    String PIXTRAL_12_B_2409 = "pixtral-12b-2409";
+
     @Override
     default MistralAiChatModel getChatModel() {
         AiConfiguration configuration = getConfiguration();
@@ -33,7 +35,7 @@ public interface MistralAiChat extends AiChat<MistralAiChatModel> {
         // Url override
         configuration.getBaseUrl().ifPresent(chatModelBuilder::baseUrl);
         // Chat model name
-        chatModelBuilder.modelName(configuration.getChatModelName().orElse("pixtral-12b-2409"));
+        chatModelBuilder.modelName(configuration.getChatModelName().orElse(PIXTRAL_12_B_2409));
         // Temperature
         configuration.getModelTemperature().ifPresent(chatModelBuilder::temperature);
         // Req timeout

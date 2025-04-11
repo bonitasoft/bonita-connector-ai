@@ -7,9 +7,9 @@
 
     <!-- Connector inputs -->
     <input name="url" type="java.lang.String"/>
-    <input name="apiKey" type="java.lang.String" defaultValue="changeMe"/>
+    <input name="apiKey" type="java.lang.String"/>
 
-    <input name="chatModelName" type="java.lang.String"  defaultValue="gpt-4o-mini"/>
+    <input name="chatModelName" type="java.lang.String"/>
     <input name="userPrompt" type="java.lang.String" mandatory="true"/>
     <input name="systemPrompt" type="java.lang.String" defaultValue="You are a polite assistant."/>
 
