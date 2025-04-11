@@ -17,8 +17,9 @@
 package org.bonitasoft.connectors.ai.openai;
 
 import org.bonitasoft.connectors.ai.classify.ClassifyAiConnector;
+import org.bonitasoft.engine.connector.Connector;
 
-public class OpenAiClassifyConnector extends ClassifyAiConnector<OpenAiClassifyChat> {
+public class OpenAiClassifyConnector extends ClassifyAiConnector<OpenAiClassifyChat> implements Connector {
 
     @Override
     public void connect() {

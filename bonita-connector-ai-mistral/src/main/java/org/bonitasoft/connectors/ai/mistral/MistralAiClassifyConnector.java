@@ -17,8 +17,9 @@
 package org.bonitasoft.connectors.ai.mistral;
 
 import org.bonitasoft.connectors.ai.classify.ClassifyAiConnector;
+import org.bonitasoft.engine.connector.Connector;
 
-public class MistralAiClassifyConnector extends ClassifyAiConnector<MistralAiClassifyChat> {
+public class MistralAiClassifyConnector extends ClassifyAiConnector<MistralAiClassifyChat> implements Connector {
 
     @Override
     public void connect() {
