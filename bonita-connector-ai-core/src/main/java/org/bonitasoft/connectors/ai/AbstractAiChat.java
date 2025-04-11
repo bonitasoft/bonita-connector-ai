@@ -26,16 +26,15 @@ import org.bonitasoft.connectors.ai.langchain4j.UserDocumentSource;
 public abstract class AbstractAiChat<T extends ChatLanguageModel> implements AiChat<T> {
 
     protected ChatMessage newDocMessage(UserDocument document) {
-        Content content =
+        return UserMessage.from(
                 switch (document.mimeType()) {
-                    case "image/png", "image/jpg", "image/jpeg" ->
-                        ImageContent.from(Base64.getEncoder().encodeToString(document.data()), document.mimeType());
+                    case "image/png", "image/jpg", "image/jpeg" -> ImageContent.from(
+                            Base64.getEncoder().encodeToString(document.data()), document.mimeType());
                     default -> {
                         // Default to Tika parser support and extracting text.
                         var doc = DocumentLoader.load(new UserDocumentSource(document), new ApacheTikaDocumentParser());
                         yield TextContent.from(doc.text());
                     }
-                };
-        return UserMessage.from(content);
+                });
     }
 }
