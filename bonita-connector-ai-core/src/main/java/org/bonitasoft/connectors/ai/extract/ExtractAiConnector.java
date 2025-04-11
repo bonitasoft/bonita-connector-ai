@@ -16,8 +16,7 @@
  */
 package org.bonitasoft.connectors.ai.extract;
 
-import static org.bonitasoft.connectors.ai.extract.ExtractConfiguration.OUTPUT_JSON_SCHEMA;
-import static org.bonitasoft.connectors.ai.extract.ExtractConfiguration.SOURCE_DOCUMENT_REF;
+import static org.bonitasoft.connectors.ai.extract.ExtractConfiguration.*;
 
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
@@ -38,7 +37,7 @@ public abstract class ExtractAiConnector<T extends ExtractChat> extends AiConnec
         var builder = ExtractConfiguration.builder();
         getInputValue(SOURCE_DOCUMENT_REF, String.class).ifPresent(builder::sourceDocumentRef);
         getInputValue(OUTPUT_JSON_SCHEMA, String.class).ifPresent(builder::outputJsonSchema);
-        getInputValue(SOURCE_DOCUMENT_REF, List.class).ifPresent(builder::fieldsToExtract);
+        getInputValue(FIELD_LIST, List.class).ifPresent(builder::fieldsToExtract);
         extractConfiguration = builder.build();
 
         if (extractConfiguration.getSourceDocumentRef().isEmpty()) {
