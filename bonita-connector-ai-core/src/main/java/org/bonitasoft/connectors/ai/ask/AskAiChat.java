@@ -26,7 +26,7 @@ import org.bonitasoft.connectors.ai.AbstractAiChat;
 import org.bonitasoft.connectors.ai.AiChat;
 import org.bonitasoft.connectors.ai.AiConfiguration;
 import org.bonitasoft.connectors.ai.UserDocument;
-import org.bonitasoft.connectors.utils.Markdown;
+import org.bonitasoft.connectors.utils.AiResponse;
 
 @Slf4j
 public abstract class AskAiChat<T extends ChatLanguageModel> extends AbstractAiChat<T> implements AiChat<T>, AskChat {
@@ -81,7 +81,7 @@ public abstract class AskAiChat<T extends ChatLanguageModel> extends AbstractAiC
         ChatResponse chatResponse = getChatModel().chat(chatRequest);
 
         if (jsonSchema != null && !jsonSchema.isEmpty()) {
-            return Markdown.noJsonBlock(chatResponse.aiMessage().text());
+            return AiResponse.ensureJson(chatResponse.aiMessage().text());
         }
         return chatResponse.aiMessage().text();
     }
