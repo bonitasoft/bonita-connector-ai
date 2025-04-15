@@ -59,6 +59,7 @@ public abstract class AiConnector extends AbstractConnector {
         if (this.configuration == null) {
             var builder = AiConfiguration.builder();
             Optional.ofNullable(System.getenv(AI_API_KEY))
+                    .or(() -> Optional.ofNullable(System.getProperty(AI_API_KEY)))
                     .or(() -> getInputValue(API_KEY, String.class))
                     .ifPresent(builder::apiKey);
             getInputValue(URL, String.class).ifPresent(builder::baseUrl);

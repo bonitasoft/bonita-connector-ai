@@ -31,8 +31,8 @@ import org.bonitasoft.connectors.ai.AbstractAiChat;
 import org.bonitasoft.connectors.ai.AiChat;
 import org.bonitasoft.connectors.ai.AiConfiguration;
 import org.bonitasoft.connectors.ai.UserDocument;
+import org.bonitasoft.connectors.utils.AiResponse;
 import org.bonitasoft.connectors.utils.IOs;
-import org.bonitasoft.connectors.utils.Markdown;
 
 public abstract class ExtractAiChat<T extends ChatLanguageModel> extends AbstractAiChat<T>
         implements AiChat<T>, ExtractChat {
@@ -80,6 +80,6 @@ public abstract class ExtractAiChat<T extends ChatLanguageModel> extends Abstrac
         messages.add(docMessage);
         var chatRequest = ChatRequest.builder().messages(messages).build();
         ChatResponse chatResponse = getChatModel().chat(chatRequest);
-        return Markdown.noJsonBlock(chatResponse.aiMessage().text());
+        return AiResponse.ensureJson(chatResponse.aiMessage().text());
     }
 }

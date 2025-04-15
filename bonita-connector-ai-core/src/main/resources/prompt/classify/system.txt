@@ -1,5 +1,7 @@
 You are an assistant specialized in classifying documents.
 
+The document content can be an image, a PDF content or text content.
+If content is an image, perform OCR on the image.
 Carefully classify the provided document into one of the categories provided.
 
 Give me also a confidence index of the classification.

@@ -16,16 +16,24 @@
  */
 package org.bonitasoft.connectors.utils;
 
-public final class Markdown {
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.*;
 
-    private Markdown() {
-        // Utility class
+import org.junit.jupiter.api.Test;
+
+class AiResponseTest {
+
+    @Test
+    void noMarkdown() {
+        var text = "```json\n" + "{\n" + "  \"category\": \"Unknown\",\n" + "  \"confidence\": 0.9\n" + "}\n" + "```";
+        var response = AiResponse.noJsonBlock(text);
+        assertThat(response).doesNotContain("``json").startsWith("{");
     }
 
-    public static String noJsonBlock(String text) {
-        if (text != null && text.startsWith("```")) {
-            return text.replace("```json", "").replace("```", "");
-        }
-        return text;
+    @Test
+    void ensureJson() {
+        var text = "```json\n" + "{\n" + "  \"category\": \"Unknown\",\n" + "  \"confidence\": 0.9\n" + "}\n" + "```";
+        var response = AiResponse.ensureJson(text);
+        assertThat(response).doesNotContain("``json").startsWith("{");
     }
 }

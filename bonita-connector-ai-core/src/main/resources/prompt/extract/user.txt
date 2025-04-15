@@ -1,6 +1,4 @@
 Extract the requested information from the provided content.
-The content can be an image, a PDF content or text content.
-If content is an image, perform OCR on the image.
 
 **Instructions:**
 1. Identify and extract the following information:
