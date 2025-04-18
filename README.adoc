@@ -19,6 +19,7 @@
 :uri-org: https://github.com/{orga}
 :uri-repo: {uri-org}/{project-artifact-id}
 :short-bonita-version: 10.2
+:year-bonita-version: 2024.3
 :doc-url: https://documentation.bonitasoft.com/bonita/{short-bonita-version}
 :java-version: 17
 = {project-artifact-id}
@@ -26,14 +27,11 @@
 image:bonitasoft-community.png[Bonitasoft,link="https://www.bonitasoft.com",width=250px]
 image:./openai@2x.png[OpenAI,link="https://openai.com"] image:./mistralai@2x.png[MistralAI,link="https://mistral.ai"]
 
-
 image:{uri-repo}/actions/workflows/build.yaml/badge.svg[Build,link="{uri-repo}/actions?query=build"]
 
-
-
-The project **{project-artifact-id}** is a set of Bonita Connectors for **Bonita {short-bonita-version}**  **Community** version written in `java` language.
-
 The connectors allow to interact with OpenAI and MistralAI chat models by sending prompt and documents and returning the generated output.
+
+The Bonita AI Connectors are available for **Bonita {short-bonita-version} Community ({year-bonita-version})** version and above.
 
 [WARNING]
 ====
@@ -44,49 +42,30 @@ toc::[]
 
 == Getting started
 
-To use a connector, add it as a dependency to your Bonita process. (Choose the one related to your AI provider)
+To use a connector, add it as a dependency to your Bonita process. Choose the one related to your AI provider.
 
-For more details on Bonita Connector please refer to {doc-url}/connector-archetype[documentation]
+Currently supported providers:
 
-=== OpenAI
+* image:bonita-connector-ai-openai/src/main/resources/openai.png[OpenAI] OpenAI
+* image:bonita-connector-ai-mistral/src/main/resources/mistral.png[MistralAI] Mistral AI
 
-[source,xml,subs="attributes+"]
-----
-<dependency>
-    <groupId>org.bonitasoft.connectors</groupId>
-    <artifactId>bonita-connector-ai-openai</artifactId>
-    <version>{project-version}</version>
-</dependency>
-----
-
-=== MistralAI
-
-[source,xml,subs="attributes+"]
-----
-<dependency>
-    <groupId>org.bonitasoft.connectors</groupId>
-    <artifactId>bonita-connector-ai-mistral</artifactId>
-    <version>{project-version}</version>
-</dependency>
-----
-
-WARNING: Image documents are not supported yet for Mistral connector due to a langchain4j limitation.
+WARNING: Image documents are not supported yet for Mistral connector due to a limitation of the underlying library we use.
 
 === Common configuration
 
-[caption=Configuration,options=autowidth]
+[caption=Configuration]
 |===
 |Parameter name |Required |Description |Default value
 
 |*apiKey*
 |false
-|The AI provider API key. Parameter is optional for testing purpose but obviously required with official OpenAI endpoint. The connector will use the system environment variable named AI_API_KEY then the provided parameter and at last a dummy `changeMe` value.
+|The AI provider API key. Parameter is optional for testing purpose but obviously required with official OpenAI endpoint. The connector will use the system environment variable named `AI_API_KEY` or the same JVM property (`-DAI_API_KEY=xxx`) or the provided connector parameter and at last a dummy `changeMe` value.
 | changeMe
 
 |*url*
 |false
 |The OpenAI endpoint url. This parameter allows to use an alternate endpoint for tests.
-|Default to the official OpenAI endpoint
+|Default to the official provider endpoint if not specified.
 
 |*requestTimeout*
 |false
@@ -95,8 +74,10 @@ WARNING: Image documents are not supported yet for Mistral connector due to a la
 
 |*chatModelName*
 |false
-|The model to use for chat like gpt-4o, gpt-4o-mini, llama, pixtral, ... See OpenAI documentation at https://platform.openai.com/docs/models/models and Mistral AI documentation at https://docs.mistral.ai/getting-started/models/models_overview/ for detailed information about models.
-|`gpt-4o` for OpenAI and `pixtral-12b-2409` for MistralAI
+|The model to use for chat like `gpt-4o`, `gpt-4o-mini`, `llama`, `pixtral`, ... See OpenAI documentation at https://platform.openai.com/docs/models/models and Mistral AI documentation at https://docs.mistral.ai/getting-started/models/models_overview/ for detailed information about models.
+a|
+- OpenAI : `gpt-4o`
+- MistralAI : `pixtral-12b-2409`
 
 |*modelTemperature*
 |false
@@ -107,11 +88,57 @@ WARNING: Image documents are not supported yet for Mistral connector due to a la
 
 == Connectors
 
+AI connectors have the capability to retrun structured data in JSON format. It is possible to pass a https://json-schema.org/learn/getting-started-step-by-step[JSON schema] to tell the LLM how to format response data.
+
+When using a JSON schema, you **must** list in the `required` property, all the fields you want in the JSON response.
+
+.JSON schema sample
+[source, json]
+----
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "ProofOfAddress",
+  "type": "object",
+  "required": [
+    "firstName",
+    "lastName",
+    "fullName",
+    "fullAddress",
+    "emissionDate",
+    "issuerName",
+    "identificationNumber"
+  ],
+  "properties": {
+    "firstName": {
+      "type": "string"
+    },
+    "lastName": {
+      "type": "string"
+    },
+    "fullName": {
+      "type": "string"
+    },
+    "fullAddress": {
+      "type": "string"
+    },
+    "emissionDate": {
+      "type": "string"
+    },
+    "issuerName": {
+      "type": "string"
+    },
+    "identificationNumber": {
+      "type": "string"
+    }
+  }
+}
+----
+
 === Ask connector
 
 Take a user prompt and send it to OpenAI then return the AI response. The prompt text can ask question about a provided process document.
 
-[caption=Configuration,options=autowidth]
+[caption=Configuration]
 |===
 |Parameter name |Required |Description |Default value
 
@@ -127,7 +154,7 @@ Take a user prompt and send it to OpenAI then return the AI response. The prompt
 
 |*sourceDocumentRef*
 |false
-|The reference to the process document to load and add to the user prompt. If not null, the connector will try to read the specified document and send it as an attachment to the user prompt. Format supported are "doc", "docx", "pdf", "png", "jpg", "jpeg", ... (see https://tika.apache.org/3.1.0/formats.html)
+|The reference to the process document to load and add to the user prompt. If not null, the connector will try to read the specified document and send it as an attachment to the user prompt. Format supported are "doc", "docx", "pdf", ... (see https://tika.apache.org/3.1.0/formats.html)
 |null
 
 |*outputJsonSchema*
@@ -144,13 +171,13 @@ This result will be placed as a map entry of type `java.lang.String` for the key
 
 This connector allow extracting information from a bonita document.
 
-[caption=Configuration,options=autowidth]
+[caption=Configuration]
 |===
 |Parameter name |Required |Description |Default value
 
 |*sourceDocumentRef*
 |*true*
-|The reference to the process document to load and add to the user prompt. If not null, the connector will try to read the specified document  and send it as an attachment to the user prompt. Format supported are "doc", "docx", "pdf", "png", "jpg", "jpeg", ... (see https://tika.apache.org/3.1.0/formats.html)
+|The reference to the process document to load and add to the user prompt. If not null, the connector will try to read the specified document  and send it as an attachment to the user prompt. Format supported are "doc", "docx", "pdf", ... (see https://tika.apache.org/3.1.0/formats.html)
 |null
 
 |*fieldsToExtract*
@@ -174,13 +201,13 @@ This connector result will be placed as a map entry of type `java.lang.String` f
 
 This connector allow to classify a bonita process document according to a list of category provided by the user.
 
-[caption=Configuration,options=autowidth]
+[caption=Configuration]
 |===
 |Parameter name |Required |Description |Default value
 
 |*sourceDocumentRef*
 |*true*
-|The reference to the process document to load and add to the user prompt. If not null, the connector will try to read the specified document  and send it as an attachment to the user prompt. Format supported are "doc", "docx", "pdf", "png", "jpg", "jpeg", ... (see https://tika.apache.org/3.1.0/formats.html)
+|The reference to the process document to load and add to the user prompt. If not null, the connector will try to read the specified document  and send it as an attachment to the user prompt. Format supported are "doc", "docx", "pdf", ... (see https://tika.apache.org/3.1.0/formats.html)
 |null
 
 |*categories*
