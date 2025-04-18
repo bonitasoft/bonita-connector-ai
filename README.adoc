@@ -49,7 +49,29 @@ Currently supported providers:
 * image:bonita-connector-ai-openai/src/main/resources/openai.png[OpenAI] OpenAI
 * image:bonita-connector-ai-mistral/src/main/resources/mistral.png[MistralAI] Mistral AI
 
+==== OpenAI
+
+[source,xml,subs="attributes+"]
+----
+<dependency>
+    <groupId>org.bonitasoft.connectors</groupId>
+    <artifactId>bonita-connector-ai-openai</artifactId>
+    <version>{project-version}</version>
+</dependency>
+----
+
+==== MistralAI
+
 WARNING: Image documents are not supported yet for Mistral connector due to a limitation of the underlying library we use.
+
+[source,xml,subs="attributes+"]
+----
+<dependency>
+    <groupId>org.bonitasoft.connectors</groupId>
+    <artifactId>bonita-connector-ai-mistral</artifactId>
+    <version>{project-version}</version>
+</dependency>
+----
 
 === Common configuration
 
