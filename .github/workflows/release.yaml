@@ -14,7 +14,7 @@ on:
         required: false
         default: ''
       skipMergeReleaseInMain:
-        description: 'Whether release branch merge should be skip into master (major/minor version only should be merged)'
+        description: 'Whether release branch merge should be skip into main (major/minor version only should be merged)'
         type: boolean
         required: false
         default: false
