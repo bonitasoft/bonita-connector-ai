@@ -45,3 +45,4 @@ jobs:
 
       - name: Create Release
         run: ./mvnw -ntp --batch-mode -Dstyle.color=always gitflow:release -Prelease -DdevelopmentVersion=${{ github.event.inputs.nextVersion }} -DreleaseVersion=${{ github.event.inputs.version }} -DskipReleaseMergeProdBranch=${{ github.event.inputs.skipMergeReleaseInMain }} -Dverbose
+
