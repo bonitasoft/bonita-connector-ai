@@ -3,9 +3,9 @@ name: 'Build PR'
 on:
   pull_request:
     branches:
+      - "develop"
       - "main"
       - "support/*"
-      - "develop"
     paths-ignore:
       - "**/README.adoc"
       - "CONTRIBUTING.adoc"
