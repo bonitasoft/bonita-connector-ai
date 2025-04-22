@@ -3,9 +3,9 @@ name: Build
 on:
   push:
     branches:
-      - develop
-      - release/*
-      - support/*
+      - "develop"
+      - "release/*"
+      - "support/*"
     paths-ignore:
       - "README.adoc"
       - "CONTRIBUTING.adoc"
@@ -47,10 +47,6 @@ jobs:
           server-password: MAVEN_PASSWORD # env variable for token in deploy
           gpg-private-key: ${{ env.GPG_PRIVATE_KEY }} # Value of the GPG private key to import
           gpg-passphrase: MAVEN_GPG_PASSPHRASE # env variable for GPG private key passphrase
-
-      - uses: bonitasoft/maven-settings-action@v1
-        with:
-          keeper-secret-config: ${{ secrets.KSM_CONFIG }}
 
       - name: Build and test
         env:
