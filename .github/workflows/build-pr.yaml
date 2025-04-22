@@ -20,7 +20,7 @@ permissions:
   checks: write
 
 jobs:
-  build:
+  build-pr:
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
