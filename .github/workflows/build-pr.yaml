@@ -1,0 +1,43 @@
+name: 'Build PR'
+
+on:
+  pull_request:
+    branches:
+      - develop
+      - release/*
+      - support/*
+    paths-ignore:
+      - "**/README.adoc"
+      - "CONTRIBUTING.adoc"
+      - "!.github/workflows/build-pr.yml"
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  checks: write
+
+jobs:
+  build-pr:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: "temurin"
+          java-version: 17
+          cache: "maven"
+
+      - name: Build
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Needed to get PR information, if any
+        run: ./mvnw -B -ntp clean verify
+
+      - name: Publish Test Report
+        uses: mikepenz/action-junit-report@v5
+        if: always() # always run even if the previous step fails
+        with:
+          report_paths: "**/target/*-reports/TEST-*.xml"

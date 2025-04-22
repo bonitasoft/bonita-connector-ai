@@ -9,8 +9,11 @@ updates:
   # Maintain dependencies for GitHub Actions
   - package-ecosystem: "github-actions"
     directory: "/"
+    target-branch: develop
     schedule:
-      interval: "daily"
+      interval: weekly
+      day: sunday
+      time: "05:00"
     commit-message:
       prefix: "chore"
       include: "scope"
@@ -18,9 +21,11 @@ updates:
   # Maintain dependencies for maven
   - package-ecosystem: "maven"
     directory: "/"
-    target-branch: main
+    target-branch: develop
     schedule:
-      interval: "daily"
+      interval: weekly
+      day: sunday
+      time: "06:00"
     commit-message:
       prefix: "chore"
       include: "scope"

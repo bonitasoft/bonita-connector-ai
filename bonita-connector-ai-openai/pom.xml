@@ -1,87 +1,81 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
-    <parent>
-        <groupId>org.bonitasoft.connectors</groupId>
-        <artifactId>bonita-connector-ai</artifactId>
-        <version>0.0.1-SNAPSHOT</version>
-    </parent>
-    <artifactId>bonita-connector-ai-openai</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
-    <name>Bonita :: AI :: OpenAI</name>
-    <properties>
-
-        <license-header-file>${project.parent.basedir}/src/format/header.txt</license-header-file>
-
-        <!--Ask Connector -->
-        <openai.ask.def.id>openai-ask</openai.ask.def.id>
-        <openai.ask.def.version>1.0.0</openai.ask.def.version>
-        <openai.ask.impl.id>${openai.ask.def.id}-impl</openai.ask.impl.id>
-        <openai.ask.impl.version>${project.version}</openai.ask.impl.version>
-        <openai.ask.main-class>org.bonitasoft.connectors.ai.openai.OpenAiAskConnector</openai.ask.main-class>
-
-        <!--Extract Connector -->
-        <openai.extract.def.id>openai-extract</openai.extract.def.id>
-        <openai.extract.def.version>1.0.0</openai.extract.def.version>
-        <openai.extract.impl.id>${openai.extract.def.id}-impl</openai.extract.impl.id>
-        <openai.extract.impl.version>${project.version}</openai.extract.impl.version>
-        <openai.extract.main-class>org.bonitasoft.connectors.ai.openai.OpenAiExtractDataConnector</openai.extract.main-class>
-
-        <!-- Classify Connector -->
-        <openai.classify.def.id>openai-classify</openai.classify.def.id>
-        <openai.classify.def.version>1.0.0</openai.classify.def.version>
-        <openai.classify.impl.id>${openai.classify.def.id}-impl</openai.classify.impl.id>
-        <openai.classify.impl.version>${project.version}</openai.classify.impl.version>
-        <openai.classify.main-class>org.bonitasoft.connectors.ai.openai.OpenAiClassifyConnector</openai.classify.main-class>
-
-    </properties>
-    <dependencies>
-        <dependency>
-            <groupId>org.bonitasoft.connectors</groupId>
-            <artifactId>bonita-connector-ai-core</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>dev.langchain4j</groupId>
-            <artifactId>langchain4j-open-ai</artifactId>
-            <version>${langchain4j.version}</version>
-        </dependency>
-
-        <!-- Test -->
-        <dependency>
-            <groupId>org.bonitasoft.connectors</groupId>
-            <artifactId>bonita-connector-ai-core</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
-            <classifier>test</classifier>
-            <type>test-jar</type>
-            <scope>test</scope>
-        </dependency>
-
-    </dependencies>
-
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.codehaus.gmaven</groupId>
-                <artifactId>groovy-maven-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <phase>generate-resources</phase>
-                        <goals>
-                            <goal>execute</goal>
-                        </goals>
-                        <configuration>
-                            <source>${project.basedir}/src/script/dependencies-as-var.groovy</source>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-assembly-plugin</artifactId>
-            </plugin>
-        </plugins>
-    </build>
-
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>org.bonitasoft.connectors</groupId>
+    <artifactId>bonita-connector-ai</artifactId>
+    <version>0.0.1-alpha1</version>
+  </parent>
+  <artifactId>bonita-connector-ai-openai</artifactId>
+  <version>0.0.1-alpha1</version>
+  <name>Bonita :: AI :: OpenAI</name>
+  <properties>
+    <license-header-file>${project.parent.basedir}/src/format/header.txt</license-header-file>
+    <!--Ask Connector -->
+    <openai.ask.def.id>openai-ask</openai.ask.def.id>
+    <openai.ask.def.version>1.0.0</openai.ask.def.version>
+    <openai.ask.impl.id>${openai.ask.def.id}-impl</openai.ask.impl.id>
+    <openai.ask.impl.version>${project.version}</openai.ask.impl.version>
+    <openai.ask.main-class>org.bonitasoft.connectors.ai.openai.OpenAiAskConnector</openai.ask.main-class>
+    <!--Extract Connector -->
+    <openai.extract.def.id>openai-extract</openai.extract.def.id>
+    <openai.extract.def.version>1.0.0</openai.extract.def.version>
+    <openai.extract.impl.id>${openai.extract.def.id}-impl</openai.extract.impl.id>
+    <openai.extract.impl.version>${project.version}</openai.extract.impl.version>
+    <openai.extract.main-class>org.bonitasoft.connectors.ai.openai.OpenAiExtractDataConnector</openai.extract.main-class>
+    <!-- Classify Connector -->
+    <openai.classify.def.id>openai-classify</openai.classify.def.id>
+    <openai.classify.def.version>1.0.0</openai.classify.def.version>
+    <openai.classify.impl.id>${openai.classify.def.id}-impl</openai.classify.impl.id>
+    <openai.classify.impl.version>${project.version}</openai.classify.impl.version>
+    <openai.classify.main-class>org.bonitasoft.connectors.ai.openai.OpenAiClassifyConnector</openai.classify.main-class>
+  </properties>
+  <dependencies>
+    <dependency>
+      <groupId>org.bonitasoft.connectors</groupId>
+      <artifactId>bonita-connector-ai-core</artifactId>
+      <version>0.0.1-alpha1</version>
+    </dependency>
+    <dependency>
+      <groupId>dev.langchain4j</groupId>
+      <artifactId>langchain4j-open-ai</artifactId>
+      <version>${langchain4j.version}</version>
+    </dependency>
+    <!-- Test -->
+    <dependency>
+      <groupId>org.bonitasoft.connectors</groupId>
+      <artifactId>bonita-connector-ai-core</artifactId>
+      <version>0.0.1-alpha1</version>
+      <classifier>test</classifier>
+      <type>test-jar</type>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.codehaus.gmaven</groupId>
+        <artifactId>groovy-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <goals>
+              <goal>execute</goal>
+            </goals>
+            <phase>generate-resources</phase>
+            <configuration>
+              <source>${project.basedir}/src/script/dependencies-as-var.groovy</source>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-assembly-plugin</artifactId>
+      </plugin>
+      <plugin>
+        <groupId>org.sonatype.plugins</groupId>
+        <artifactId>nexus-staging-maven-plugin</artifactId>
+      </plugin>
+    </plugins>
+  </build>
 </project>

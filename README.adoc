@@ -271,6 +271,11 @@ Prerequisite:
 - A Git client (optional but highly recommended)
 - Docker and docker compose for integration tests
 
+=== Branching strategy
+
+This repository follows the https://gitversion.net/docs/learn/branching-strategies/gitflow/examples[GitFlow branching strategy].
+
+
 === Building
 // _**TODO**_: If your project needs some additional steps for the developer to build the project after some code changes, state them here:
 The project is a standard maven project. For more details about Apache Maven, please refer to the https://maven.apache.org/guides/getting-started/[documentation]
@@ -305,6 +310,14 @@ Once ollama is ready, you can run integration tests using standard maven command
 // _**TODO**_: In case there's some step you have to take that publishes this project to a server, this is the right time to state it.
 
 {doc-url}/managing-extension-studio[Install the connector in your Bonita project using the Studio, window = "_blank"].
+
+==== Release
+
+To release a new version, maintainers may use the Release and Publication GitHub actions.
+
+* Release action will invoke the `gitflow-maven-plugin` to perform all required merges, version updates and tag creation.
+* Publication action will build and deploy a given tag to Maven Central.
+* A GitHub release should be created and associated with the tag.
 
 // == Contributing
 //
