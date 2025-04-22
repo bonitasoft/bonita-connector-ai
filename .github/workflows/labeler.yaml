@@ -13,6 +13,6 @@ jobs:
       pull-requests: write # for TimonVS/pr-labeler-action to add labels in PR
     runs-on: ubuntu-24.04
     steps:
-      - uses: TimonVS/pr-labeler-action@v5
-        with:
-          repo-token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Add labels to PR
+        if: contains(fromJSON('["opened", "synchronize", "reopened"]'), github.event.action)
+        uses: actions/labeler@v5
