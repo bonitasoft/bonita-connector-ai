@@ -1,13 +1,20 @@
-name: workflow-pr
+name: 'Build PR'
 
 on:
   pull_request:
-    branches: ["main", "support/*", "develop"]
+    branches:
+      - "main"
+      - "support/*"
+      - "develop"
     paths-ignore:
       - "**/README.adoc"
       - "CONTRIBUTING.adoc"
       - ".github/**"
       - "!.github/workflows/build-pr.yml"
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 permissions:
   checks: write

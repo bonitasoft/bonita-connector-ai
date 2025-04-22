@@ -3,9 +3,9 @@ name: Build
 on:
   push:
     branches:
-      - develop
-      - release/*
-      - support/*
+      - "develop"
+      - "release/*"
+      - "support/*"
     paths-ignore:
       - "README.adoc"
       - "CONTRIBUTING.adoc"
