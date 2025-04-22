@@ -3,13 +3,12 @@ name: 'Build PR'
 on:
   pull_request:
     branches:
-      - "main"
-      - "support/*"
-      - "develop"
+      - develop
+      - release/*
+      - support/*
     paths-ignore:
       - "**/README.adoc"
       - "CONTRIBUTING.adoc"
-      - ".github/**"
       - "!.github/workflows/build-pr.yml"
 
 concurrency:
@@ -20,7 +19,7 @@ permissions:
   checks: write
 
 jobs:
-  build:
+  build-pr:
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
