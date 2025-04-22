@@ -14,7 +14,7 @@
 // Vars
 :project-group-id: org.bonitasoft.connectors
 :project-artifact-id: bonita-connector-ai
-:project-version: 0.0.1-SNAPSHOT
+:project-version: 0.0.1-beta-SNAPSHOT
 :orga: bonitasoft
 :uri-org: https://github.com/{orga}
 :uri-repo: {uri-org}/{project-artifact-id}
