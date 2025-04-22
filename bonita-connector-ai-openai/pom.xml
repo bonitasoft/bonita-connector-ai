@@ -4,10 +4,10 @@
   <parent>
     <groupId>org.bonitasoft.connectors</groupId>
     <artifactId>bonita-connector-ai</artifactId>
-    <version>0.0.1-alpha1</version>
+    <version>0.0.1-SNAPSHOT</version>
   </parent>
   <artifactId>bonita-connector-ai-openai</artifactId>
-  <version>0.0.1-alpha1</version>
+  <version>0.0.1-SNAPSHOT</version>
   <name>Bonita :: AI :: OpenAI</name>
   <properties>
     <license-header-file>${project.parent.basedir}/src/format/header.txt</license-header-file>
@@ -34,7 +34,7 @@
     <dependency>
       <groupId>org.bonitasoft.connectors</groupId>
       <artifactId>bonita-connector-ai-core</artifactId>
-      <version>0.0.1-alpha1</version>
+      <version>0.0.1-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>dev.langchain4j</groupId>
@@ -45,7 +45,7 @@
     <dependency>
       <groupId>org.bonitasoft.connectors</groupId>
       <artifactId>bonita-connector-ai-core</artifactId>
-      <version>0.0.1-alpha1</version>
+      <version>0.0.1-SNAPSHOT</version>
       <classifier>test</classifier>
       <type>test-jar</type>
       <scope>test</scope>
