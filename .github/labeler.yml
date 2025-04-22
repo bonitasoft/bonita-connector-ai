@@ -1,0 +1,31 @@
+# Add 'enhancement' label to any PR where the head branch name starts with `feat/`
+enhancement:
+  - head-branch: ['^feat/']
+
+# Add 'bug' label to any PR where the head branch name starts with `fix/`
+bug:
+  - head-branch: ['^fix/']
+
+# Add 'chore' label to any PR where the head branch name starts with `chore/`
+chore:
+  - head-branch: ['^chore/']
+
+# Add 'ci' label to any PR where the head branch name starts with `ci/`
+ci:
+  - head-branch: ['^ci/']
+  - changed-files:
+      - any-glob-to-any-file:
+          - '.github/workflows/**' # Any change to files within '.github/workflows' folder or any subfolders
+          - '.github/*.yml' # Any change to any file starting by '.github/' and finishing by '.yml'
+
+# Add 'defect' label to any PR where the head branch name starts with `defect/`
+defect:
+  - head-branch: ['^defect/']
+
+# Add 'documentation' label
+documentation:
+  - head-branch: ['^docs/'] # Any PR where the head branch name starts with `docs/`
+  - changed-files:
+      - any-glob-to-any-file:
+          - 'docs/**' # Any change to files within 'docs' folder or any subfolders
+          - '**/*.adoc' # Any change to .adoc files within the entire repository

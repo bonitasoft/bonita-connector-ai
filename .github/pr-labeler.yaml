@@ -1,5 +1,0 @@
-enhancement: 'feat/*'
-defect: 'defect/*'
-bug: 'fix/*'
-github_actions: 'ci/*'
-other: ['chore/*', 'docs/*']
