@@ -87,7 +87,7 @@
     <spotless-maven-plugin.version>2.44.3</spotless-maven-plugin.version>
     <license-header-file>${project.basedir}/src/format/header.txt</license-header-file>
     <versions-maven-plugin.version>2.18.0</versions-maven-plugin.version>
-    <gitflow-maven-plugin>1.21.0</gitflow-maven-plugin>
+    <gitflow-maven-plugin.version>1.21.0</gitflow-maven-plugin.version>
   </properties>
   <dependencyManagement>
     <dependencies>
