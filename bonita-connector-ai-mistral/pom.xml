@@ -1,88 +1,81 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
-    <parent>
-        <groupId>org.bonitasoft.connectors</groupId>
-        <artifactId>bonita-connector-ai</artifactId>
-        <version>0.0.1-SNAPSHOT</version>
-    </parent>
-    <artifactId>bonita-connector-ai-mistral</artifactId>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>org.bonitasoft.connectors</groupId>
+    <artifactId>bonita-connector-ai</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>Bonita :: AI :: MistralAI</name>
-    <properties>
-
-        <license-header-file>${project.parent.basedir}/src/format/header.txt</license-header-file>
-
-        <!--Ask Connector -->
-        <mistral.ask.def.id>mistral-ask</mistral.ask.def.id>
-        <mistral.ask.def.version>1.0.0</mistral.ask.def.version>
-        <mistral.ask.impl.id>${mistral.ask.def.id}-impl</mistral.ask.impl.id>
-        <mistral.ask.impl.version>${project.version}</mistral.ask.impl.version>
-        <mistral.ask.main-class>org.bonitasoft.connectors.ai.mistral.MistralAiAskConnector</mistral.ask.main-class>
-
-        <!--Extract Connector -->
-        <mistral.extract.def.id>mistral-extract</mistral.extract.def.id>
-        <mistral.extract.def.version>1.0.0</mistral.extract.def.version>
-        <mistral.extract.impl.id>${mistral.extract.def.id}-impl</mistral.extract.impl.id>
-        <mistral.extract.impl.version>${project.version}</mistral.extract.impl.version>
-        <mistral.extract.main-class>org.bonitasoft.connectors.ai.mistral.MistralAiExtractDataConnector</mistral.extract.main-class>
-
-        <!-- Classify Connector -->
-        <mistral.classify.def.id>mistral-classify</mistral.classify.def.id>
-        <mistral.classify.def.version>1.0.0</mistral.classify.def.version>
-        <mistral.classify.impl.id>${mistral.classify.def.id}-impl</mistral.classify.impl.id>
-        <mistral.classify.impl.version>${project.version}</mistral.classify.impl.version>
-        <mistral.classify.main-class>org.bonitasoft.connectors.ai.mistral.MistralAiClassifyConnector</mistral.classify.main-class>
-
-    </properties>
-    <dependencies>
-        <dependency>
-            <groupId>org.bonitasoft.connectors</groupId>
-            <artifactId>bonita-connector-ai-core</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
-        </dependency>
-
-        <dependency>
-            <groupId>dev.langchain4j</groupId>
-            <artifactId>langchain4j-mistral-ai</artifactId>
-            <version>${langchain4j.version}</version>
-        </dependency>
-
-        <!-- Test -->
-        <dependency>
-            <groupId>org.bonitasoft.connectors</groupId>
-            <artifactId>bonita-connector-ai-core</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
-            <classifier>test</classifier>
-            <type>test-jar</type>
-            <scope>test</scope>
-        </dependency>
-
-    </dependencies>
-
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.codehaus.gmaven</groupId>
-                <artifactId>groovy-maven-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <phase>generate-resources</phase>
-                        <goals>
-                            <goal>execute</goal>
-                        </goals>
-                        <configuration>
-                            <source>${project.basedir}/src/script/dependencies-as-var.groovy</source>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-assembly-plugin</artifactId>
-            </plugin>
-        </plugins>
-    </build>
-
+  </parent>
+  <artifactId>bonita-connector-ai-mistral</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+  <name>Bonita :: AI :: MistralAI</name>
+  <properties>
+    <license-header-file>${project.parent.basedir}/src/format/header.txt</license-header-file>
+    <!--Ask Connector -->
+    <mistral.ask.def.id>mistral-ask</mistral.ask.def.id>
+    <mistral.ask.def.version>1.0.0</mistral.ask.def.version>
+    <mistral.ask.impl.id>${mistral.ask.def.id}-impl</mistral.ask.impl.id>
+    <mistral.ask.impl.version>${project.version}</mistral.ask.impl.version>
+    <mistral.ask.main-class>org.bonitasoft.connectors.ai.mistral.MistralAiAskConnector</mistral.ask.main-class>
+    <!--Extract Connector -->
+    <mistral.extract.def.id>mistral-extract</mistral.extract.def.id>
+    <mistral.extract.def.version>1.0.0</mistral.extract.def.version>
+    <mistral.extract.impl.id>${mistral.extract.def.id}-impl</mistral.extract.impl.id>
+    <mistral.extract.impl.version>${project.version}</mistral.extract.impl.version>
+    <mistral.extract.main-class>org.bonitasoft.connectors.ai.mistral.MistralAiExtractDataConnector</mistral.extract.main-class>
+    <!-- Classify Connector -->
+    <mistral.classify.def.id>mistral-classify</mistral.classify.def.id>
+    <mistral.classify.def.version>1.0.0</mistral.classify.def.version>
+    <mistral.classify.impl.id>${mistral.classify.def.id}-impl</mistral.classify.impl.id>
+    <mistral.classify.impl.version>${project.version}</mistral.classify.impl.version>
+    <mistral.classify.main-class>org.bonitasoft.connectors.ai.mistral.MistralAiClassifyConnector</mistral.classify.main-class>
+  </properties>
+  <dependencies>
+    <dependency>
+      <groupId>org.bonitasoft.connectors</groupId>
+      <artifactId>bonita-connector-ai-core</artifactId>
+      <version>0.0.1-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+      <groupId>dev.langchain4j</groupId>
+      <artifactId>langchain4j-mistral-ai</artifactId>
+      <version>${langchain4j.version}</version>
+    </dependency>
+    <!-- Test -->
+    <dependency>
+      <groupId>org.bonitasoft.connectors</groupId>
+      <artifactId>bonita-connector-ai-core</artifactId>
+      <version>0.0.1-SNAPSHOT</version>
+      <classifier>test</classifier>
+      <type>test-jar</type>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.codehaus.gmaven</groupId>
+        <artifactId>groovy-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <goals>
+              <goal>execute</goal>
+            </goals>
+            <phase>generate-resources</phase>
+            <configuration>
+              <source>${project.basedir}/src/script/dependencies-as-var.groovy</source>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-assembly-plugin</artifactId>
+      </plugin>
+      <plugin>
+        <groupId>org.sonatype.plugins</groupId>
+        <artifactId>nexus-staging-maven-plugin</artifactId>
+      </plugin>
+    </plugins>
+  </build>
 </project>
