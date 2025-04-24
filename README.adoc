@@ -14,7 +14,6 @@
 // Vars
 :project-group-id: org.bonitasoft.connectors
 :project-artifact-id: bonita-connector-ai
-:project-version: 0.0.1-beta-SNAPSHOT
 :orga: bonitasoft
 :uri-org: https://github.com/{orga}
 :uri-repo: {uri-org}/{project-artifact-id}
@@ -67,7 +66,7 @@ Currently supported providers:
 <dependency>
     <groupId>org.bonitasoft.connectors</groupId>
     <artifactId>bonita-connector-ai-openai</artifactId>
-    <version>{project-version}</version>
+    <version>x.y.z</version>
 </dependency>
 ----
 
@@ -80,7 +79,7 @@ WARNING: Image documents are not supported yet for Mistral connector due to a li
 <dependency>
     <groupId>org.bonitasoft.connectors</groupId>
     <artifactId>bonita-connector-ai-mistral</artifactId>
-    <version>{project-version}</version>
+    <version>x.y.z</version>
 </dependency>
 ----
 
