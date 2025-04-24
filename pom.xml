@@ -3,9 +3,10 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.bonitasoft.connectors</groupId>
   <artifactId>bonita-connector-ai</artifactId>
-  <version>0.0.1-alpha</version>
+  <version>0.0.1-beta</version>
   <packaging>pom</packaging>
-  <name>Bonita :: AI :: Connectors</name>
+  <name>Bonita AI Connectors</name>
+  <description>Parent pom for Bonita AI Connectors</description>
   <url>https://www.bonitasoft.com</url>
   <inceptionYear>2025</inceptionYear>
   <organization>
@@ -402,6 +403,10 @@
             </goals>
           </execution>
         </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.sonatype.plugins</groupId>
+        <artifactId>nexus-staging-maven-plugin</artifactId>
       </plugin>
     </plugins>
   </build>

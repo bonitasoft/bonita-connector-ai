@@ -4,11 +4,12 @@
   <parent>
     <groupId>org.bonitasoft.connectors</groupId>
     <artifactId>bonita-connector-ai</artifactId>
-    <version>0.0.1-alpha</version>
+    <version>0.0.1-beta</version>
   </parent>
   <artifactId>bonita-connector-ai-core</artifactId>
-  <version>0.0.1-alpha</version>
-  <name>Bonita :: AI :: Core</name>
+  <version>0.0.1-beta</version>
+  <name>Bonita AI Connectors - Core</name>
+  <description>Bonita AI Connectors core module.</description>
   <properties>
     <license-header-file>${project.parent.basedir}/src/format/header.txt</license-header-file>
   </properties>

@@ -4,11 +4,12 @@
   <parent>
     <groupId>org.bonitasoft.connectors</groupId>
     <artifactId>bonita-connector-ai</artifactId>
-    <version>0.0.1-alpha</version>
+    <version>0.0.1-beta</version>
   </parent>
   <artifactId>bonita-connector-ai-mistral</artifactId>
-  <version>0.0.1-alpha</version>
-  <name>Bonita :: AI :: MistralAI</name>
+  <version>0.0.1-beta</version>
+  <name>Bonita AI Connectors - MistralAI</name>
+  <description>Bonita connectors for interacting with MistralAI chat models by sending prompt and documents and returning the generated output.</description>
   <properties>
     <license-header-file>${project.parent.basedir}/src/format/header.txt</license-header-file>
     <!--Ask Connector -->
@@ -34,7 +35,7 @@
     <dependency>
       <groupId>org.bonitasoft.connectors</groupId>
       <artifactId>bonita-connector-ai-core</artifactId>
-      <version>0.0.1-alpha</version>
+      <version>0.0.1-beta</version>
     </dependency>
     <dependency>
       <groupId>dev.langchain4j</groupId>
@@ -45,7 +46,7 @@
     <dependency>
       <groupId>org.bonitasoft.connectors</groupId>
       <artifactId>bonita-connector-ai-core</artifactId>
-      <version>0.0.1-alpha</version>
+      <version>0.0.1-beta</version>
       <classifier>test</classifier>
       <type>test-jar</type>
       <scope>test</scope>

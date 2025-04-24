@@ -14,7 +14,7 @@
 // Vars
 :project-group-id: org.bonitasoft.connectors
 :project-artifact-id: bonita-connector-ai
-:project-version: 0.0.1-SNAPSHOT
+:project-version: 0.0.1-beta-SNAPSHOT
 :orga: bonitasoft
 :uri-org: https://github.com/{orga}
 :uri-repo: {uri-org}/{project-artifact-id}
@@ -36,7 +36,7 @@ image:https://img.shields.io/maven-central/v/{project-group-id}/{project-artifac
 image:https://sonarcloud.io/api/project_badges/measure?project={orga}_{project-artifact-id}&metric=alert_status[Sonar,link=https://sonarcloud.io/dashboard?id={orga}_{project-artifact-id}]
 image:https://img.shields.io/badge/License-GPL%20v2-yellow.svg[License,link="{uri-license}"]
 
-The connectors allow to interact with OpenAI and MistralAI chat models by sending prompt and documents and returning the generated output.
+The connectors allow interacting with OpenAI and MistralAI chat models by sending prompt and documents and returning the generated output.
 
 The Bonita AI Connectors are available for **Bonita {short-bonita-version} Community ({year-bonita-version})** version and above.
 
