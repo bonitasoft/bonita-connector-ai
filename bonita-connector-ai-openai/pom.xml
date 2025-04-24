@@ -8,7 +8,8 @@
   </parent>
   <artifactId>bonita-connector-ai-openai</artifactId>
   <version>0.0.1-beta-SNAPSHOT</version>
-  <name>Bonita :: AI :: OpenAI</name>
+  <name>Bonita AI Connectors - OpenAI</name>
+  <description>Bonita connectors for interacting with OpenAI chat models by sending prompt and documents and returning the generated output.</description>
   <properties>
     <license-header-file>${project.parent.basedir}/src/format/header.txt</license-header-file>
     <!--Ask Connector -->
