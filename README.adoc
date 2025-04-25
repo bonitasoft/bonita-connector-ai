@@ -39,11 +39,6 @@ The connectors allow interacting with OpenAI and MistralAI chat models by sendin
 
 The Bonita AI Connectors are available for **Bonita {short-bonita-version} Community ({year-bonita-version})** version and above.
 
-[WARNING]
-====
-The connector is still under development and current state is just a draft version.
-====
-
 '''
 
 toc::[]
@@ -71,6 +66,8 @@ Currently supported providers:
 ----
 
 ==== MistralAI
+
+WARNING: Image documents are not supported yet for Mistral connector due to a limitation of the underlying library we use.
 
 [source,xml,subs="attributes+"]
 ----
