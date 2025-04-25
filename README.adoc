@@ -72,8 +72,6 @@ Currently supported providers:
 
 ==== MistralAI
 
-WARNING: Image documents are not supported yet for Mistral connector due to a limitation of the underlying library we use.
-
 [source,xml,subs="attributes+"]
 ----
 <dependency>
