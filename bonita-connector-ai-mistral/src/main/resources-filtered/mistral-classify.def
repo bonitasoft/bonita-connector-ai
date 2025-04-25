@@ -3,7 +3,8 @@
     <id>${mistral.classify.def.id}</id> <!-- Id of the definition -->
     <version>${mistral.classify.def.version}</version> <!-- Version of the definition -->
     <icon>mistral.png</icon> <!-- The icon used in the Studio for this definition -->
-    <category icon="mistral.png" id="ai"/> <!-- The category of this definition, used in the Studio (e.g: http, script ...) -->
+    <category id="AI" icon="AI.png" /> <!-- Parent category -->
+    <category id="MistralAI" icon="mistral.png" parentCategoryId="AI"/> <!-- The category of this definition, used in the Studio (e.g: http, script ...) -->
 
     <!-- Connector inputs -->
     <input name="url" type="java.lang.String"/>

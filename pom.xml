@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.bonitasoft.connectors</groupId>
   <artifactId>bonita-connector-ai</artifactId>
-  <version>0.0.1-beta</version>
+  <version>1.0.0</version>
   <packaging>pom</packaging>
   <name>Bonita AI Connectors</name>
   <description>Parent pom for Bonita AI Connectors</description>
