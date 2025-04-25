@@ -4,10 +4,10 @@
   <parent>
     <groupId>org.bonitasoft.connectors</groupId>
     <artifactId>bonita-connector-ai</artifactId>
-    <version>1.0.0.-beta-SNAPSHOT</version>
+    <version>1.0.0</version>
   </parent>
   <artifactId>bonita-connector-ai-openai</artifactId>
-  <version>1.0.0.-beta-SNAPSHOT</version>
+  <version>1.0.0</version>
   <name>Bonita AI Connectors - OpenAI</name>
   <description>Bonita connectors for interacting with OpenAI chat models by sending prompt and documents and returning the generated output.</description>
   <properties>
@@ -35,7 +35,7 @@
     <dependency>
       <groupId>org.bonitasoft.connectors</groupId>
       <artifactId>bonita-connector-ai-core</artifactId>
-      <version>1.0.0.-beta-SNAPSHOT</version>
+      <version>1.0.0</version>
     </dependency>
     <dependency>
       <groupId>dev.langchain4j</groupId>
@@ -46,7 +46,7 @@
     <dependency>
       <groupId>org.bonitasoft.connectors</groupId>
       <artifactId>bonita-connector-ai-core</artifactId>
-      <version>1.0.0.-beta-SNAPSHOT</version>
+      <version>1.0.0</version>
       <classifier>test</classifier>
       <type>test-jar</type>
       <scope>test</scope>

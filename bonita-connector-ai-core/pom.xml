@@ -4,10 +4,10 @@
   <parent>
     <groupId>org.bonitasoft.connectors</groupId>
     <artifactId>bonita-connector-ai</artifactId>
-    <version>1.0.0.-beta-SNAPSHOT</version>
+    <version>1.0.0</version>
   </parent>
   <artifactId>bonita-connector-ai-core</artifactId>
-  <version>1.0.0.-beta-SNAPSHOT</version>
+  <version>1.0.0</version>
   <name>Bonita AI Connectors - Core</name>
   <description>Bonita AI Connectors core module.</description>
   <properties>
