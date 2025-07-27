@@ -85,7 +85,7 @@
     <maven-source-plugin.version>3.3.1</maven-source-plugin.version>
     <nexus-staging-maven-plugin.version>1.7.0</nexus-staging-maven-plugin.version>
     <maven-javadoc-plugin.version>3.11.2</maven-javadoc-plugin.version>
-    <spotless-maven-plugin.version>2.44.3</spotless-maven-plugin.version>
+    <spotless-maven-plugin.version>2.46.1</spotless-maven-plugin.version>
     <license-header-file>${project.basedir}/src/format/header.txt</license-header-file>
     <versions-maven-plugin.version>2.18.0</versions-maven-plugin.version>
     <gitflow-maven-plugin.version>1.21.0</gitflow-maven-plugin.version>
