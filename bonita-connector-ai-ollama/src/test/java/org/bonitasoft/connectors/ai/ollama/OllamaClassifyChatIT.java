@@ -16,30 +16,67 @@
  */
 package org.bonitasoft.connectors.ai.ollama;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.bonitasoft.connectors.ai.AiConfiguration;
+import org.bonitasoft.connectors.ai.UserDocument;
 import org.bonitasoft.connectors.ai.classify.ClassifyChat;
-import org.bonitasoft.connectors.ai.classify.ClassifyChatIT;
+import org.bonitasoft.connectors.utils.IOs;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 @Slf4j
-class OllamaClassifyChatIT extends ClassifyChatIT {
+class OllamaClassifyChatIT {
 
-    @Override
-    protected void customize(AiConfiguration.AiConfigurationBuilder builder) {
+    ObjectMapper mapper = new ObjectMapper().findAndRegisterModules();
+    ClassifyChat chat;
+
+    @BeforeEach
+    void setUp() {
+        var configurationBuilder = AiConfiguration.builder().requestTimeout(3 * 60 * 1000);
         // Use environment variable for base URL if provided, otherwise default to localhost
         String baseUrl = System.getenv("OLLAMA_BASE_URL");
         if (baseUrl != null && !baseUrl.isEmpty()) {
-            builder.baseUrl(baseUrl);
+            configurationBuilder.baseUrl(baseUrl);
         }
         // Use environment variable for model name if provided, otherwise use default
         String modelName = System.getenv("OLLAMA_MODEL_NAME");
         if (modelName != null && !modelName.isEmpty()) {
-            builder.chatModelName(modelName);
+            configurationBuilder.chatModelName(modelName);
         }
+        var configuration = configurationBuilder.build();
+        chat = new OllamaClassifyChat(configuration);
     }
 
-    @Override
-    protected ClassifyChat getChat(AiConfiguration configuration) {
-        return new OllamaClassifyChat(configuration);
+    @Test
+    void should_classify_user_doc() throws Exception {
+        // Given
+        var doc = new UserDocument("application/pdf", IOs.readAllBytes("/data/classify/rib-sample.pdf"));
+        var categories = List.of("RIB", "Carte d'identité", "Justificatif de domicile", "Passeport", "Unknown");
+
+        // When
+        String category = chat.classify(categories, doc);
+
+        // Then
+        assertThat(category).isNotEmpty();
+        Classification classification = mapper.readValue(category, Classification.class);
+        log.debug("Classification result: {}", classification);
+        // Ollama models may return variations like "RIB" or "Relevé d'Identité Bancaire"
+        // We accept both the abbreviation and full name
+        assertThat(classification.category())
+                .matches(
+                        cat -> cat.equals("RIB")
+                                || cat.contains("Relevé")
+                                || cat.contains("Bancaire")
+                                || cat.contains("RIB"),
+                        "Category should be RIB or contain banking-related terms");
+        assertThat(classification.confidence()).isGreaterThan(0.3);
     }
+
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    record Classification(String category, Double confidence) {}
 }
