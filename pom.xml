@@ -32,6 +32,7 @@
     <module>bonita-connector-ai-core</module>
     <module>bonita-connector-ai-mistral</module>
     <module>bonita-connector-ai-openai</module>
+    <module>bonita-connector-ai-ollama</module>
   </modules>
   <scm child.scm.connection.inherit.append.path="false" child.scm.developerConnection.inherit.append.path="false" child.scm.url.inherit.append.path="false">
     <connection>scm:git:git@github.com:bonitasoft/bonita-connector-ai.git</connection>
