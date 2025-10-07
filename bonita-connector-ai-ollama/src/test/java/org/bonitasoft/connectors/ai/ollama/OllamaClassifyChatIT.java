@@ -73,4 +73,3 @@ class OllamaClassifyChatIT extends ClassifyChatIT {
     @JsonIgnoreProperties(ignoreUnknown = true)
     record Classification(String category, Double confidence) {}
 }
-

@@ -117,4 +117,3 @@ class OllamaExtractChatIT extends ExtractChatIT {
             String identificationNumber,
             String motherBirthday) {}
 }
-
