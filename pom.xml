@@ -47,17 +47,6 @@
     <system>github</system>
     <url>https://github.com/bonitasoft/bonita-connector-ai/actions</url>
   </ciManagement>
-  <distributionManagement>
-    <repository>
-      <id>ossrh</id>
-      <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
-    </repository>
-    <!-- Central Repository -->
-    <snapshotRepository>
-      <id>ossrh</id>
-      <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-    </snapshotRepository>
-  </distributionManagement>
   <properties>
     <!-- Maven -->
     <java.version>17</java.version>

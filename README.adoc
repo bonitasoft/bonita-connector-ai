@@ -312,15 +312,17 @@ Once ollama is ready, you can run integration tests using standard maven command
 
 // _**TODO**_: In case there's some step you have to take that publishes this project to a server, this is the right time to state it.
 
-{doc-url}/managing-extension-studio[Install the connector in your Bonita project using the Studio, window = "_blank"].
+{doc-url}/bonita-overview/managing-extension-studio[Install the connector in your Bonita project using the Studio, window = "_blank"].
 
 ==== Release
 
-To release a new version, maintainers may use the Release and Publication GitHub actions.
+To release a new version, maintainers may use the Release and Publication GitHub Actions workflows.
 
-* Release action will invoke the `gitflow-maven-plugin` to perform all required merges, version updates and tag creation.
-* Publication action will build and deploy a given tag to Maven Central.
-* A GitHub release should be created and associated with the tag.
+* Running the https://github.com/bonitasoft/bonita-connector-ai/actions/workflows/release.yaml[Release workflow] will invoke the `gitflow-maven-plugin` to perform all required merges, version updates and tag creation.
+* Run the https://github.com/bonitasoft/bonita-connector-ai/actions/workflows/publish.yaml[Publication workflow]  action will build and deploy a given tag to Maven Central.
+* A GitHub release should be created and associated with the tag. Manage this manually.
+
+Once this is done, update the https://github.com/bonitasoft/bonita-marketplace[Bonita marketplace repository] with the new version of the connector.
 
 // == Contributing
 //
