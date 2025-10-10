@@ -13,4 +13,4 @@ jobs:
     runs-on: ubuntu-24.04
     steps:
       - name: Add labels to PR
-        uses: actions/labeler@v5
+        uses: actions/labeler@v6
