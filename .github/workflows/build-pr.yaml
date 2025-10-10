@@ -9,6 +9,7 @@ on:
     paths-ignore:
       - "**/README.adoc"
       - "CONTRIBUTING.adoc"
+      - ".github/**"
       - "!.github/workflows/build-pr.yml"
 
 concurrency:
