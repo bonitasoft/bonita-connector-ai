@@ -83,7 +83,7 @@
     <maven-gpg-plugin.version>3.2.7</maven-gpg-plugin.version>
     <git-commit-id-plugin.version>4.9.10</git-commit-id-plugin.version>
     <maven-source-plugin.version>3.3.1</maven-source-plugin.version>
-    <nexus-staging-maven-plugin.version>1.7.0</nexus-staging-maven-plugin.version>
+    <central-maven-plugin.version>0.8.0</central-maven-plugin.version>
     <maven-javadoc-plugin.version>3.11.2</maven-javadoc-plugin.version>
     <spotless-maven-plugin.version>2.44.3</spotless-maven-plugin.version>
     <license-header-file>${project.basedir}/src/format/header.txt</license-header-file>
@@ -276,14 +276,12 @@
           <version>${maven-source-plugin.version}</version>
         </plugin>
         <plugin>
-          <groupId>org.sonatype.plugins</groupId>
-          <artifactId>nexus-staging-maven-plugin</artifactId>
-          <version>${nexus-staging-maven-plugin.version}</version>
+          <groupId>org.sonatype.central</groupId>
+          <artifactId>central-publishing-maven-plugin</artifactId>
+          <version>${central-maven-plugin.version}</version>
           <extensions>true</extensions>
           <configuration>
-            <serverId>ossrh</serverId>
-            <nexusUrl>https://oss.sonatype.org/</nexusUrl>
-            <autoReleaseAfterClose>false</autoReleaseAfterClose>
+            <autoPublish>true</autoPublish>
           </configuration>
         </plugin>
         <plugin>
@@ -405,8 +403,8 @@
         </executions>
       </plugin>
       <plugin>
-        <groupId>org.sonatype.plugins</groupId>
-        <artifactId>nexus-staging-maven-plugin</artifactId>
+        <groupId>org.sonatype.central</groupId>
+        <artifactId>central-publishing-maven-plugin</artifactId>
       </plugin>
     </plugins>
   </build>
