@@ -8,7 +8,6 @@
 
     <!-- Connector inputs -->
     <input name="url" type="java.lang.String"/>
-    <input name="apiKey" type="java.lang.String"/>
     <input name="chatModelName" type="java.lang.String"/>
     <input name="modelTemperature" type="java.lang.Double"/>
     <input name="requestTimeout" type="java.lang.Integer"/>
@@ -33,7 +32,6 @@
         <widget xsi:type="definition:TextArea" id="outputJsonSchemaWidget" inputName="outputJsonSchema"/>
     </page>
     <page id="advancedPage">
-        <widget xsi:type="definition:Text" id="apiKeyWidget" inputName="apiKey"/>
         <widget xsi:type="definition:Text" id="urlWidget" inputName="url"/>
         <widget xsi:type="definition:Text" id="requestTimeoutWidget" inputName="requestTimeout"/>
         <widget xsi:type="definition:Text" id="chatModelNameWidget" inputName="chatModelName"/>

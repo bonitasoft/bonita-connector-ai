@@ -8,7 +8,6 @@
 
     <!-- Connector inputs -->
     <input name="url" type="java.lang.String"/>
-    <input name="apiKey" type="java.lang.String"/>
 
     <input name="chatModelName" type="java.lang.String"/>
     <input name="userPrompt" type="java.lang.String" mandatory="true"/>
@@ -39,7 +38,6 @@
         <widget xsi:type="definition:Text" id="sourceDocumentRefWidget" inputName="sourceDocumentRef" showDocuments="true"/>
     </page>
     <page id="advancedPage">
-        <widget xsi:type="definition:Text" id="apiKeyWidget" inputName="apiKey"/>
         <widget xsi:type="definition:Text" id="urlWidget" inputName="url"/>
         <widget xsi:type="definition:Text" id="requestTimeoutWidget" inputName="requestTimeout"/>
         <widget xsi:type="definition:Text" id="chatModelNameWidget" inputName="chatModelName"/>
