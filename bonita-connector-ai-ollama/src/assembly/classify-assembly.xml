@@ -12,7 +12,7 @@
             <outputDirectory />
             <directory>target/classes</directory>
             <includes>
-                <include>mistral-classify.impl</include>
+                <include>ollama-classify.impl</include>
                 <include>classpath</include>
             </includes>
         </fileSet>

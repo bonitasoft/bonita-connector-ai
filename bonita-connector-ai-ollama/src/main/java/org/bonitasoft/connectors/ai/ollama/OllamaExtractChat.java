@@ -26,9 +26,4 @@ public class OllamaExtractChat extends ExtractAiChat<OllamaChatModel> implements
     public OllamaExtractChat(AiConfiguration configuration) {
         super(configuration);
     }
-
-    @Override
-    public AiConfiguration getConfiguration() {
-        return configuration;
-    }
 }

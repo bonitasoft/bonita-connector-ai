@@ -350,7 +350,7 @@ Ollama allows running integration tests locally without any API keys or cloud se
 
 [source,bash]
 ----
-docker-compose -f docker-compose-ollama.yml up -d
+docker compose -f docker-compose-ollama.yml up -d
 ----
 
 **Step 2: Pull a model (first time only)**
@@ -401,7 +401,7 @@ $env:OLLAMA_MODEL_NAME="llama3.2:1b"
 
 [source,bash]
 ----
-docker-compose -f docker-compose-ollama.yml down
+docker compose -f docker-compose-ollama.yml down
 ----
 
 NOTE: The Ollama Docker volume persists downloaded models between restarts. You only need to pull models once.
