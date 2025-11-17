@@ -40,6 +40,18 @@
     <dependency>
       <groupId>dev.langchain4j</groupId>
       <artifactId>langchain4j-ollama</artifactId>
+      <exclusions>
+        <exclusion>
+          <groupId>org.slf4j</groupId>
+          <artifactId>slf4j-api</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <!-- Add slf4j-api as provided so Lombok works but it's not bundled -->
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
+      <scope>provided</scope>
     </dependency>
     <!-- Test -->
     <dependency>
