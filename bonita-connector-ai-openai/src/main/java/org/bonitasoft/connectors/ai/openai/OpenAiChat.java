@@ -41,6 +41,9 @@ public interface OpenAiChat extends AiChat<OpenAiChatModel> {
         configuration
                 .getRequestTimeout()
                 .ifPresent(timeout -> chatModelBuilder.timeout(Duration.of(timeout, ChronoUnit.MILLIS)));
+
+        // TODO: If classes OTLP present, add listeners
+
         return chatModelBuilder.build();
     }
 }
