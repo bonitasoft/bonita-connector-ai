@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<implementation:connectorImplementation xmlns:implementation="http://www.bonitasoft.org/ns/connector/implementation/6.0">
+  <implementationId>${ollama.ask.impl.id}</implementationId> <!-- Id of the implementation -->
+  <implementationVersion>${ollama.ask.impl.version}</implementationVersion> <!-- Version of the implementation -->
+  <definitionId>${ollama.ask.def.id}</definitionId> <!-- Id of the definition implemented -->
+  <definitionVersion>${ollama.ask.def.version}</definitionVersion> <!-- Version of the definition implemented -->
+  <implementationClassname>${ollama.ask.main-class}</implementationClassname> <!-- Path to the main implementation class -->
+  <description>Default ${ollama.ask.def.id} implementation</description>
+
+<!-- retrieved from the pom.xml at build time -->
+${connector-dependencies}
+
+</implementation:connectorImplementation>

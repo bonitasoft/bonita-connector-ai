@@ -17,7 +17,7 @@
 package org.bonitasoft.connectors.ai.classify;
 
 import dev.langchain4j.data.message.*;
-import dev.langchain4j.model.chat.ChatLanguageModel;
+import dev.langchain4j.model.chat.ChatModel;
 import dev.langchain4j.model.chat.request.ChatRequest;
 import dev.langchain4j.model.chat.response.ChatResponse;
 import dev.langchain4j.model.input.Prompt;
@@ -25,7 +25,6 @@ import dev.langchain4j.model.input.PromptTemplate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import lombok.extern.slf4j.Slf4j;
 import org.bonitasoft.connectors.ai.AbstractAiChat;
 import org.bonitasoft.connectors.ai.AiChat;
 import org.bonitasoft.connectors.ai.AiConfiguration;
@@ -33,9 +32,7 @@ import org.bonitasoft.connectors.ai.UserDocument;
 import org.bonitasoft.connectors.utils.AiResponse;
 import org.bonitasoft.connectors.utils.IOs;
 
-@Slf4j
-public abstract class ClassifyAiChat<T extends ChatLanguageModel> extends AbstractAiChat<T>
-        implements AiChat<T>, ClassifyChat {
+public abstract class ClassifyAiChat<T extends ChatModel> extends AbstractAiChat<T> implements AiChat<T>, ClassifyChat {
 
     protected String systemPrompt;
     protected String userPrompt;

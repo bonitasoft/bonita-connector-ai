@@ -19,7 +19,7 @@ package org.bonitasoft.connectors.ai.extract;
 import dev.langchain4j.data.message.ChatMessage;
 import dev.langchain4j.data.message.SystemMessage;
 import dev.langchain4j.data.message.UserMessage;
-import dev.langchain4j.model.chat.ChatLanguageModel;
+import dev.langchain4j.model.chat.ChatModel;
 import dev.langchain4j.model.chat.request.ChatRequest;
 import dev.langchain4j.model.chat.response.ChatResponse;
 import dev.langchain4j.model.input.Prompt;
@@ -34,8 +34,7 @@ import org.bonitasoft.connectors.ai.UserDocument;
 import org.bonitasoft.connectors.utils.AiResponse;
 import org.bonitasoft.connectors.utils.IOs;
 
-public abstract class ExtractAiChat<T extends ChatLanguageModel> extends AbstractAiChat<T>
-        implements AiChat<T>, ExtractChat {
+public abstract class ExtractAiChat<T extends ChatModel> extends AbstractAiChat<T> implements AiChat<T>, ExtractChat {
 
     protected final String systemPrompt;
     protected final String userPrompt;

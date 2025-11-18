@@ -6,14 +6,12 @@ on:
       - edited
       - reopened
       - synchronize
+
 jobs:
-  check-commit-message:
-    name: Check Commit Message
-    runs-on: ubuntu-latest
+  pr-title:
+    runs-on: ubuntu-24.04
+    permissions:
+      pull-requests: write # post comments when the PR title doesn't match the "Conventional Commits" rules
     steps:
-      - name: Check Commit Type
-        uses: gsactions/commit-message-checker@v2
-        with:
-          pattern: '^\S+\((.+)\):\s(.+)$'
-          flags: 'gm'
-          error: 'Your first line has to matches the following pattern: type(category): description [flags], where flags is an optional coma separated list. Check the contributing guidlines for more details.'
+      - name: Check Pull Request title
+        uses: bonitasoft/actions/packages/pr-title-conventional-commits@v3

@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>org.bonitasoft.connectors</groupId>
+    <artifactId>bonita-connector-ai</artifactId>
+    <version>1.1.0</version>
+  </parent>
+  <artifactId>bonita-connector-ai-ollama</artifactId>
+  <version>1.1.0</version>
+  <name>Bonita AI Connectors - Ollama</name>
+  <description>Bonita connectors for interacting with Ollama local LLM models by sending prompt and documents and returning the generated output.</description>
+  <properties>
+    <license-header-file>${project.parent.basedir}/src/format/header.txt</license-header-file>
+    <!--Ask Connector -->
+    <ollama.ask.def.id>ollama-ask</ollama.ask.def.id>
+    <ollama.ask.def.version>1.0.0</ollama.ask.def.version>
+    <ollama.ask.impl.id>${ollama.ask.def.id}-impl</ollama.ask.impl.id>
+    <ollama.ask.impl.version>${project.version}</ollama.ask.impl.version>
+    <ollama.ask.main-class>org.bonitasoft.connectors.ai.ollama.OllamaAskConnector</ollama.ask.main-class>
+    <!--Extract Connector -->
+    <ollama.extract.def.id>ollama-extract</ollama.extract.def.id>
+    <ollama.extract.def.version>1.0.0</ollama.extract.def.version>
+    <ollama.extract.impl.id>${ollama.extract.def.id}-impl</ollama.extract.impl.id>
+    <ollama.extract.impl.version>${project.version}</ollama.extract.impl.version>
+    <ollama.extract.main-class>org.bonitasoft.connectors.ai.ollama.OllamaExtractDataConnector</ollama.extract.main-class>
+    <!-- Classify Connector -->
+    <ollama.classify.def.id>ollama-classify</ollama.classify.def.id>
+    <ollama.classify.def.version>1.0.0</ollama.classify.def.version>
+    <ollama.classify.impl.id>${ollama.classify.def.id}-impl</ollama.classify.impl.id>
+    <ollama.classify.impl.version>${project.version}</ollama.classify.impl.version>
+    <ollama.classify.main-class>org.bonitasoft.connectors.ai.ollama.OllamaClassifyConnector</ollama.classify.main-class>
+  </properties>
+  <dependencies>
+    <dependency>
+      <groupId>org.bonitasoft.connectors</groupId>
+      <artifactId>bonita-connector-ai-core</artifactId>
+      <version>1.1.0</version>
+    </dependency>
+    <dependency>
+      <groupId>dev.langchain4j</groupId>
+      <artifactId>langchain4j-ollama</artifactId>
+      <exclusions>
+        <exclusion>
+          <groupId>org.slf4j</groupId>
+          <artifactId>slf4j-api</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <!-- Test -->
+    <dependency>
+      <groupId>org.bonitasoft.connectors</groupId>
+      <artifactId>bonita-connector-ai-core</artifactId>
+      <version>1.1.0</version>
+      <classifier>test</classifier>
+      <type>test-jar</type>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.codehaus.gmaven</groupId>
+        <artifactId>groovy-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <goals>
+              <goal>execute</goal>
+            </goals>
+            <phase>generate-resources</phase>
+            <configuration>
+              <source>${project.basedir}/src/script/dependencies-as-var.groovy</source>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-assembly-plugin</artifactId>
+      </plugin>
+      <plugin>
+        <groupId>org.sonatype.central</groupId>
+        <artifactId>central-publishing-maven-plugin</artifactId>
+      </plugin>
+    </plugins>
+  </build>
+</project>

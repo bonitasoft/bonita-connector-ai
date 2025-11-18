@@ -16,9 +16,9 @@
  */
 package org.bonitasoft.connectors.ai;
 
-import dev.langchain4j.model.chat.ChatLanguageModel;
+import dev.langchain4j.model.chat.ChatModel;
 
-public interface AiChat<T extends ChatLanguageModel> {
+public interface AiChat<T extends ChatModel> {
 
     AiConfiguration getConfiguration();
 

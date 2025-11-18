@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.bonitasoft.connectors</groupId>
   <artifactId>bonita-connector-ai</artifactId>
-  <version>1.0.0</version>
+  <version>1.1.0</version>
   <packaging>pom</packaging>
   <name>Bonita AI Connectors</name>
   <description>Parent pom for Bonita AI Connectors</description>
@@ -32,6 +32,7 @@
     <module>bonita-connector-ai-core</module>
     <module>bonita-connector-ai-mistral</module>
     <module>bonita-connector-ai-openai</module>
+    <module>bonita-connector-ai-ollama</module>
   </modules>
   <scm child.scm.connection.inherit.append.path="false" child.scm.developerConnection.inherit.append.path="false" child.scm.url.inherit.append.path="false">
     <connection>scm:git:git@github.com:bonitasoft/bonita-connector-ai.git</connection>
@@ -47,17 +48,6 @@
     <system>github</system>
     <url>https://github.com/bonitasoft/bonita-connector-ai/actions</url>
   </ciManagement>
-  <distributionManagement>
-    <repository>
-      <id>ossrh</id>
-      <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
-    </repository>
-    <!-- Central Repository -->
-    <snapshotRepository>
-      <id>ossrh</id>
-      <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-    </snapshotRepository>
-  </distributionManagement>
   <properties>
     <!-- Maven -->
     <java.version>17</java.version>
@@ -68,7 +58,7 @@
     <!-- Bonita -->
     <bonita-runtime.version>10.2.0</bonita-runtime.version>
     <!-- AI -->
-    <langchain4j.version>1.0.0-beta3</langchain4j.version>
+    <langchain4j.version>1.8.0</langchain4j.version>
     <!-- Tests -->
     <junit-jupiter-engine.version>5.12.2</junit-jupiter-engine.version>
     <assertj-core.version>3.27.3</assertj-core.version>
@@ -83,7 +73,7 @@
     <maven-gpg-plugin.version>3.2.7</maven-gpg-plugin.version>
     <git-commit-id-plugin.version>4.9.10</git-commit-id-plugin.version>
     <maven-source-plugin.version>3.3.1</maven-source-plugin.version>
-    <nexus-staging-maven-plugin.version>1.7.0</nexus-staging-maven-plugin.version>
+    <central-maven-plugin.version>0.8.0</central-maven-plugin.version>
     <maven-javadoc-plugin.version>3.11.2</maven-javadoc-plugin.version>
     <spotless-maven-plugin.version>2.44.3</spotless-maven-plugin.version>
     <license-header-file>${project.basedir}/src/format/header.txt</license-header-file>
@@ -96,6 +86,13 @@
         <groupId>org.bonitasoft.runtime</groupId>
         <artifactId>bonita-runtime-bom</artifactId>
         <version>${bonita-runtime.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+      <dependency>
+        <groupId>dev.langchain4j</groupId>
+        <artifactId>langchain4j-bom</artifactId>
+        <version>${langchain4j.version}</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
@@ -276,14 +273,12 @@
           <version>${maven-source-plugin.version}</version>
         </plugin>
         <plugin>
-          <groupId>org.sonatype.plugins</groupId>
-          <artifactId>nexus-staging-maven-plugin</artifactId>
-          <version>${nexus-staging-maven-plugin.version}</version>
+          <groupId>org.sonatype.central</groupId>
+          <artifactId>central-publishing-maven-plugin</artifactId>
+          <version>${central-maven-plugin.version}</version>
           <extensions>true</extensions>
           <configuration>
-            <serverId>ossrh</serverId>
-            <nexusUrl>https://oss.sonatype.org/</nexusUrl>
-            <autoReleaseAfterClose>false</autoReleaseAfterClose>
+            <autoPublish>true</autoPublish>
           </configuration>
         </plugin>
         <plugin>
@@ -405,8 +400,8 @@
         </executions>
       </plugin>
       <plugin>
-        <groupId>org.sonatype.plugins</groupId>
-        <artifactId>nexus-staging-maven-plugin</artifactId>
+        <groupId>org.sonatype.central</groupId>
+        <artifactId>central-publishing-maven-plugin</artifactId>
       </plugin>
     </plugins>
   </build>

@@ -17,19 +17,17 @@
 package org.bonitasoft.connectors.ai.ask;
 
 import dev.langchain4j.data.message.*;
-import dev.langchain4j.model.chat.ChatLanguageModel;
+import dev.langchain4j.model.chat.ChatModel;
 import dev.langchain4j.model.chat.request.ChatRequest;
 import dev.langchain4j.model.chat.response.ChatResponse;
 import java.util.ArrayList;
-import lombok.extern.slf4j.Slf4j;
 import org.bonitasoft.connectors.ai.AbstractAiChat;
 import org.bonitasoft.connectors.ai.AiChat;
 import org.bonitasoft.connectors.ai.AiConfiguration;
 import org.bonitasoft.connectors.ai.UserDocument;
 import org.bonitasoft.connectors.utils.AiResponse;
 
-@Slf4j
-public abstract class AskAiChat<T extends ChatLanguageModel> extends AbstractAiChat<T> implements AiChat<T>, AskChat {
+public abstract class AskAiChat<T extends ChatModel> extends AbstractAiChat<T> implements AiChat<T>, AskChat {
 
     protected final AiConfiguration configuration;
 
