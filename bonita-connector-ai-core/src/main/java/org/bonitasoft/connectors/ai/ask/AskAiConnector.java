@@ -18,13 +18,11 @@ package org.bonitasoft.connectors.ai.ask;
 
 import static org.bonitasoft.connectors.ai.ask.AskConfiguration.*;
 
-import lombok.extern.slf4j.Slf4j;
 import org.bonitasoft.connectors.ai.AiConnector;
 import org.bonitasoft.connectors.ai.UserDocument;
 import org.bonitasoft.engine.connector.ConnectorException;
 import org.bonitasoft.engine.connector.ConnectorValidationException;
 
-@Slf4j
 public abstract class AskAiConnector extends AiConnector {
 
     protected AskConfiguration askConfiguration;

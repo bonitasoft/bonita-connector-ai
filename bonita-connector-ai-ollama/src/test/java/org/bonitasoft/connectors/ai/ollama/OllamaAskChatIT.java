@@ -16,12 +16,10 @@
  */
 package org.bonitasoft.connectors.ai.ollama;
 
-import lombok.extern.slf4j.Slf4j;
 import org.bonitasoft.connectors.ai.AiConfiguration;
 import org.bonitasoft.connectors.ai.ask.AskChat;
 import org.bonitasoft.connectors.ai.ask.AskChatIT;
 
-@Slf4j
 class OllamaAskChatIT extends AskChatIT {
 
     @Override

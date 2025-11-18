@@ -17,11 +17,9 @@
 package org.bonitasoft.connectors.ai.ollama;
 
 import dev.langchain4j.model.ollama.OllamaChatModel;
-import lombok.extern.slf4j.Slf4j;
 import org.bonitasoft.connectors.ai.AiConfiguration;
 import org.bonitasoft.connectors.ai.extract.ExtractAiChat;
 
-@Slf4j
 public class OllamaExtractChat extends ExtractAiChat<OllamaChatModel> implements OllamaChat {
     public OllamaExtractChat(AiConfiguration configuration) {
         super(configuration);

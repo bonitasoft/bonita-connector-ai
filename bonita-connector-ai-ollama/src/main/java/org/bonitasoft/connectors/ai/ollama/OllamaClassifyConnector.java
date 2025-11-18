@@ -16,12 +16,10 @@
  */
 package org.bonitasoft.connectors.ai.ollama;
 
-import lombok.extern.slf4j.Slf4j;
 import org.bonitasoft.connectors.ai.classify.ClassifyAiConnector;
 import org.bonitasoft.engine.connector.Connector;
 import org.bonitasoft.engine.connector.ConnectorException;
 
-@Slf4j
 public class OllamaClassifyConnector extends ClassifyAiConnector implements Connector {
     @Override
     public void connect() throws ConnectorException {

@@ -16,11 +16,9 @@
  */
 package org.bonitasoft.connectors.ai.openai;
 
-import lombok.extern.slf4j.Slf4j;
 import org.bonitasoft.connectors.ai.extract.ExtractAiConnector;
 import org.bonitasoft.engine.connector.Connector;
 
-@Slf4j
 public class OpenAiExtractDataConnector extends ExtractAiConnector<OpenAiExtractChat> implements Connector {
     @Override
     public void connect() {

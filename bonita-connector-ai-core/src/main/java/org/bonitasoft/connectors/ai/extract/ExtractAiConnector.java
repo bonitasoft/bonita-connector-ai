@@ -19,14 +19,12 @@ package org.bonitasoft.connectors.ai.extract;
 import static org.bonitasoft.connectors.ai.extract.ExtractConfiguration.*;
 
 import java.util.List;
-import lombok.extern.slf4j.Slf4j;
 import org.bonitasoft.connectors.ai.AiConnector;
 import org.bonitasoft.connectors.ai.AiConnectorException;
 import org.bonitasoft.connectors.ai.UserDocument;
 import org.bonitasoft.engine.connector.ConnectorException;
 import org.bonitasoft.engine.connector.ConnectorValidationException;
 
-@Slf4j
 public abstract class ExtractAiConnector<T extends ExtractChat> extends AiConnector {
 
     protected ExtractConfiguration extractConfiguration;
