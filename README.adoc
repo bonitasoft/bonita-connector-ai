@@ -27,7 +27,7 @@
 = {project-artifact-id}
 
 image:bonitasoft-community.png[Bonitasoft,link="https://www.bonitasoft.com",width=250px]
-image:./openai@2x.png[OpenAI,link="https://openai.com"] image:./mistralai@2x.png[MistralAI,link="https://mistral.ai"]
+image:./openai@2x.png[OpenAI,link="https://openai.com"] image:./mistralai@2x.png[MistralAI,link="https://mistral.ai"] image:https://ollama.com/public/ollama.png[Ollama,link="https://ollama.com",width=100px]
 
 image:{uri-repo}/actions/workflows/build.yaml/badge.svg[Build,link="{uri-repo}/actions?query=build"]
 image:https://img.shields.io/github/v/release/{orga}/{project-artifact-id}?color=blue&label=Release[Release,link="{uri-repo}/releases"]
@@ -35,7 +35,7 @@ image:https://img.shields.io/maven-central/v/{project-group-id}/{project-artifac
 image:https://sonarcloud.io/api/project_badges/measure?project={orga}_{project-artifact-id}&metric=alert_status[Sonar,link=https://sonarcloud.io/dashboard?id={orga}_{project-artifact-id}]
 image:https://img.shields.io/badge/License-GPL%20v2-yellow.svg[License,link="{uri-license}"]
 
-The connectors allow interacting with OpenAI and MistralAI chat models by sending prompt and documents and returning the generated output.
+The connectors allow interacting with OpenAI, MistralAI, and Ollama (local LLMs) chat models by sending prompt and documents and returning the generated output.
 
 The Bonita AI Connectors are available for **Bonita {short-bonita-version} Community ({year-bonita-version})** version and above.
 
@@ -53,6 +53,7 @@ Currently supported providers:
 
 * image:bonita-connector-ai-openai/src/main/resources/openai.png[OpenAI] OpenAI
 * image:bonita-connector-ai-mistral/src/main/resources/mistral.png[MistralAI] Mistral AI
+* Ollama (for running local LLMs)
 
 ==== OpenAI
 
@@ -76,6 +77,19 @@ Currently supported providers:
 </dependency>
 ----
 
+==== Ollama (Local LLMs)
+
+[source,xml,subs="attributes+"]
+----
+<dependency>
+    <groupId>org.bonitasoft.connectors</groupId>
+    <artifactId>bonita-connector-ai-ollama</artifactId>
+    <version>x.y.z</version>
+</dependency>
+----
+
+NOTE: Ollama allows you to run large language models locally on your infrastructure. This is ideal for on-premises deployments, data privacy requirements, or cost optimization.
+
 === Common configuration
 
 [caption=Configuration]
@@ -89,8 +103,11 @@ Currently supported providers:
 
 |*url*
 |false
-|The OpenAI endpoint url. This parameter allows to use an alternate endpoint for tests.
-|Default to the official provider endpoint if not specified.
+|The AI provider endpoint url. This parameter allows to use an alternate endpoint for tests or custom deployments.
+a|
+- OpenAI: Official OpenAI endpoint
+- MistralAI: Official Mistral AI endpoint
+- Ollama: `http://localhost:11434` (default local installation)
 
 |*requestTimeout*
 |false
@@ -99,10 +116,11 @@ Currently supported providers:
 
 |*chatModelName*
 |false
-|The model to use for chat like `gpt-4o`, `gpt-4o-mini`, `llama`, `pixtral`, ... See OpenAI documentation at https://platform.openai.com/docs/models/models and Mistral AI documentation at https://docs.mistral.ai/getting-started/models/models_overview/ for detailed information about models.
+|The model to use for chat like `gpt-4o`, `gpt-4o-mini`, `llama3.1`, `pixtral`, ... See OpenAI documentation at https://platform.openai.com/docs/models/models, Mistral AI documentation at https://docs.mistral.ai/getting-started/models/models_overview/, and Ollama models at https://ollama.com/library for detailed information about models.
 a|
 - OpenAI : `gpt-4o`
 - MistralAI : `pixtral-12b-2409`
+- Ollama : `llama3.1`
 
 |*modelTemperature*
 |false
@@ -295,18 +313,151 @@ The build should produce connector packages a jar and zip archives under the mod
 
 === Run integration tests
 
-// _**TODO**_: Here again you should state what actually happens when the code above gets executed.
+Integration tests require actual AI provider endpoints. Here are the options for each provider:
 
-The connector needs an OpenAI endpoint up & running. A docker compose file is present in the root folder which starts
-a https://ollama.com/[ollama] container that you can use as a local replacement of OpenAI provider.
+==== Option 1: OpenAI Integration Tests
 
-Just issue `docker compose up -d` and ollama API will be available at `http://localhost:11434/v1`
+Set your OpenAI API key and run tests:
 
-NOTE: To download model use the following command `docker compose exec ollama bash -c 'ollama pull <model name>'`.  You can check the logs with `docker compose logs -f ollama` for more info.
+[source,bash]
+----
+export OPENAI_API_KEY=your-api-key-here
+./mvnw verify -PITs -pl bonita-connector-ai-openai
+----
 
-Once ollama is ready, you can run integration tests using standard maven command and activating a dedicated maven profile (ITs)
+On Windows PowerShell:
+[source,powershell]
+----
+$env:OPENAI_API_KEY="your-api-key-here"
+.\mvnw.cmd verify -PITs -pl bonita-connector-ai-openai
+----
 
-`./mvnw verify -PITs`
+==== Option 2: MistralAI Integration Tests
+
+Set your Mistral AI API key and run tests:
+
+[source,bash]
+----
+export MISTRAL_API_KEY=your-api-key-here
+./mvnw verify -PITs -pl bonita-connector-ai-mistral
+----
+
+==== Option 3: Ollama Integration Tests (Local - No API Key Required)
+
+Ollama allows running integration tests locally without any API keys or cloud services.
+
+**Step 1: Start Ollama with Docker Compose**
+
+[source,bash]
+----
+docker compose -f docker-compose-ollama.yml up -d
+----
+
+**Step 2: Pull a model (first time only)**
+
+[source,bash]
+----
+# For default model (llama3.1 - ~4.7GB)
+docker exec -it ollama-test ollama pull llama3.1
+
+# Or for faster testing with smaller model (llama3.2:1b - ~1.3GB)
+docker exec -it ollama-test ollama pull llama3.2:1b
+----
+
+**Step 3: Verify Ollama is ready**
+
+[source,bash]
+----
+docker exec -it ollama-test ollama list
+----
+
+You should see your pulled model listed.
+
+**Step 4: Run integration tests**
+
+On Linux/Mac:
+[source,bash]
+----
+# Using default model (llama3.1)
+./mvnw verify -PITs -pl bonita-connector-ai-ollama
+
+# Using smaller model (llama3.2:1b)
+export OLLAMA_MODEL_NAME="llama3.2:1b"
+./mvnw verify -PITs -pl bonita-connector-ai-ollama
+----
+
+On Windows:
+[source,powershell]
+----
+# Using default model (llama3.1)
+.\mvnw.cmd verify -PITs -pl bonita-connector-ai-ollama
+
+# Using smaller model (llama3.2:1b)
+$env:OLLAMA_MODEL_NAME="llama3.2:1b"
+.\mvnw.cmd verify -PITs -pl bonita-connector-ai-ollama
+----
+
+**Step 5: Stop Ollama when done**
+
+[source,bash]
+----
+docker compose -f docker-compose-ollama.yml down
+----
+
+NOTE: The Ollama Docker volume persists downloaded models between restarts. You only need to pull models once.
+
+**Important: Model Selection for Testing**
+
+Different Ollama models have varying levels of accuracy and capabilities:
+
+* **llama3.1** (~4.7GB): More accurate, better at following instructions, recommended for production use
+* **llama3.2:1b** (~1.3GB): Faster and smaller, but may produce less accurate results
+
+The integration tests are designed to be tolerant of model variations. Smaller models may:
+- Return variations of expected values (e.g., "Relevé d'Identité Bancaire" instead of "RIB")
+- Handle missing data differently (null vs "Absent" vs actual values)
+- Have lower confidence scores
+
+These variations are expected and the tests account for them. Choose your model based on your priorities:
+- Use **llama3.2:1b** for quick testing and CI/CD pipelines
+- Use **llama3.1** or larger for production-grade accuracy
+
+==== Configuration Options for Ollama Tests
+
+You can customize Ollama tests with environment variables:
+
+[caption=Environment Variables]
+|===
+|Variable |Description |Default
+
+|`OLLAMA_BASE_URL`
+|Custom Ollama server URL
+|`http://localhost:11434`
+
+|`OLLAMA_MODEL_NAME`
+|Specific model to use for tests
+|`llama3.1`
+|===
+
+Example with custom configuration:
+[source,bash]
+----
+export OLLAMA_BASE_URL="http://remote-server:11434"
+export OLLAMA_MODEL_NAME="mistral"
+./mvnw verify -PITs -pl bonita-connector-ai-ollama
+----
+
+==== Run all integration tests
+
+To run integration tests for all providers at once:
+
+[source,bash]
+----
+# Make sure Ollama is running and API keys are set
+export OPENAI_API_KEY=your-openai-key
+export MISTRAL_API_KEY=your-mistral-key
+./mvnw verify -PITs
+----
 
 === Deploying / Publishing
 

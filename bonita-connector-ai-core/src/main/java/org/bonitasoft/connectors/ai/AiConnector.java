@@ -82,7 +82,7 @@ public abstract class AiConnector extends AbstractConnector {
     @Override
     protected void executeBusinessLogic() throws ConnectorException {
         var aiResponse = doExecute();
-        log.debug("Open AI connector output: {}", aiResponse);
+        log.debug("AI connector output: {}", aiResponse);
         setOutputParameter(OUTPUT, aiResponse);
     }
 
