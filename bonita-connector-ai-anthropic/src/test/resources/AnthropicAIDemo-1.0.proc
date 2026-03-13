@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xmi:XMI xmi:version="2.0"
+    xmlns:xmi="http://www.omg.org/XMI"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:connectorconfiguration="http://www.bonitasoft.org/ns/studio/connector/configuration"
+    xmlns:definition="http://www.bonitasoft.org/ns/connector/definition/6.1"
+    xmlns:expression="http://www.bonitasoft.org/ns/studio/expression"
+    xmlns:notation="http://www.eclipse.org/gmf/runtime/1.0.3/notation"
+    xmlns:process="http://www.bonitasoft.org/ns/studio/process">
+  <!-- ============================================================ -->
+  <!-- Anthropic Claude AI Demo Process                             -->
+  <!-- 3 service tasks: Ask, Classify, Extract                      -->
+  <!-- Each task has an Anthropic connector configured               -->
+  <!-- ============================================================ -->
+  <process:MainProcess xmi:id="_mainProcess" name="AnthropicAIDemo" version="1.0" bonitaModelVersion="7.12.1">
+    <elements xsi:type="process:Pool" xmi:id="_pool1" name="Anthropic AI Demo Pool">
+      <elements xsi:type="process:Lane" xmi:id="_lane1" name="Employee lane">
+
+        <!-- Start Event -->
+        <elements xsi:type="process:StartEvent" xmi:id="_start" name="Start"/>
+
+        <!-- Task 1: Ask Claude -->
+        <elements xsi:type="process:ServiceTask" xmi:id="_taskAsk" name="Ask Claude a Question">
+          <data xsi:type="process:Data" xmi:id="_varAskResult" name="askResult" dataType="_stringType" multiple="false"/>
+          <connectors xmi:id="_connAsk" name="Anthropic Ask" definitionId="anthropic-ask" definitionVersion="1.0.0" event="ON_ENTER">
+            <configuration xmi:id="_confAsk">
+              <parameters xmi:id="_confAskParam1" key="userPrompt">
+                <value xmi:id="_confAskVal1" content="What are the key principles of BPM? List 3 principles." type="TYPE_CONSTANT" returnType="java.lang.String" name="userPrompt"/>
+              </parameters>
+              <parameters xmi:id="_confAskParam2" key="systemPrompt">
+                <value xmi:id="_confAskVal2" content="You are a BPM expert consultant." type="TYPE_CONSTANT" returnType="java.lang.String" name="systemPrompt"/>
+              </parameters>
+            </configuration>
+            <outputs xmi:id="_outAsk" name="askResult"/>
+          </connectors>
+        </elements>
+
+        <!-- Task 2: Classify Document -->
+        <elements xsi:type="process:ServiceTask" xmi:id="_taskClassify" name="Classify Document">
+          <data xsi:type="process:Data" xmi:id="_varClassifyResult" name="classifyResult" dataType="_stringType" multiple="false"/>
+          <connectors xmi:id="_connClassify" name="Anthropic Classify" definitionId="anthropic-classify" definitionVersion="1.0.0" event="ON_ENTER">
+            <configuration xmi:id="_confClassify">
+              <parameters xmi:id="_confClassifyParam1" key="sourceDocumentRef">
+                <value xmi:id="_confClassifyVal1" content="uploadedDoc" type="TYPE_CONSTANT" returnType="java.lang.String" name="sourceDocumentRef"/>
+              </parameters>
+              <parameters xmi:id="_confClassifyParam2" key="categories">
+                <value xmi:id="_confClassifyVal2" content="[&quot;INVOICE&quot;, &quot;CONTRACT&quot;, &quot;ID_DOCUMENT&quot;, &quot;OTHER&quot;]" type="TYPE_CONSTANT" returnType="java.util.List" name="categories"/>
+              </parameters>
+            </configuration>
+            <outputs xmi:id="_outClassify" name="classifyResult"/>
+          </connectors>
+        </elements>
+
+        <!-- Task 3: Extract Data from Document -->
+        <elements xsi:type="process:ServiceTask" xmi:id="_taskExtract" name="Extract Document Data">
+          <data xsi:type="process:Data" xmi:id="_varExtractResult" name="extractResult" dataType="_stringType" multiple="false"/>
+          <connectors xmi:id="_connExtract" name="Anthropic Extract" definitionId="anthropic-extract" definitionVersion="1.0.0" event="ON_ENTER">
+            <configuration xmi:id="_confExtract">
+              <parameters xmi:id="_confExtractParam1" key="sourceDocumentRef">
+                <value xmi:id="_confExtractVal1" content="uploadedDoc" type="TYPE_CONSTANT" returnType="java.lang.String" name="sourceDocumentRef"/>
+              </parameters>
+              <parameters xmi:id="_confExtractParam2" key="fieldsToExtract">
+                <value xmi:id="_confExtractVal2" content="[&quot;firstName&quot;, &quot;lastName&quot;, &quot;address&quot;, &quot;documentType&quot;]" type="TYPE_CONSTANT" returnType="java.util.List" name="fieldsToExtract"/>
+              </parameters>
+            </configuration>
+            <outputs xmi:id="_outExtract" name="extractResult"/>
+          </connectors>
+        </elements>
+
+        <!-- User Task: Review Results -->
+        <elements xsi:type="process:Task" xmi:id="_taskReview" name="Review AI Results"/>
+
+        <!-- End Event -->
+        <elements xsi:type="process:EndEvent" xmi:id="_end" name="End"/>
+
+        <!-- Transitions -->
+        <connections xsi:type="process:SequenceFlow" xmi:id="_flow1" name="" source="_start" target="_taskAsk"/>
+        <connections xsi:type="process:SequenceFlow" xmi:id="_flow2" name="" source="_taskAsk" target="_taskClassify"/>
+        <connections xsi:type="process:SequenceFlow" xmi:id="_flow3" name="" source="_taskClassify" target="_taskExtract"/>
+        <connections xsi:type="process:SequenceFlow" xmi:id="_flow4" name="" source="_taskExtract" target="_taskReview"/>
+        <connections xsi:type="process:SequenceFlow" xmi:id="_flow5" name="" source="_taskReview" target="_end"/>
+
+      </elements>
+
+      <!-- Actor -->
+      <actors xmi:id="_actor1" name="Employee" initiator="true"/>
+    </elements>
+
+    <!-- Data Types -->
+    <datatypes xsi:type="process:StringType" xmi:id="_stringType" name="String"/>
+    <datatypes xsi:type="process:IntegerType" xmi:id="_intType" name="Integer"/>
+    <datatypes xsi:type="process:BooleanType" xmi:id="_boolType" name="Boolean"/>
+  </process:MainProcess>
+</xmi:XMI>
