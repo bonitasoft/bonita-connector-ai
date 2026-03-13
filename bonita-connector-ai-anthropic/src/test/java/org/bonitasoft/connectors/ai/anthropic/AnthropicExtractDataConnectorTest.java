@@ -18,22 +18,84 @@ package org.bonitasoft.connectors.ai.anthropic;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import dev.langchain4j.model.anthropic.AnthropicChatModel;
 import org.bonitasoft.connectors.ai.AiConfiguration;
+import org.bonitasoft.engine.connector.ConnectorException;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 class AnthropicExtractDataConnectorTest {
 
-    @Test
-    void should_create_connector() {
-        AnthropicExtractDataConnector connector = new AnthropicExtractDataConnector();
-        assertThat(connector).isNotNull();
+    @Nested
+    class ConnectorInstantiation {
+
+        @Test
+        void should_create_connector() {
+            AnthropicExtractDataConnector connector = new AnthropicExtractDataConnector();
+            assertThat(connector).isNotNull();
+        }
+
+        @Test
+        void should_connect_without_error() throws ConnectorException {
+            AnthropicExtractDataConnector connector = new AnthropicExtractDataConnector();
+            connector.setConfiguration(
+                    AiConfiguration.builder().apiKey("test-key").build());
+
+            connector.connect();
+
+            assertThat(connector).isNotNull();
+        }
     }
 
-    @Test
-    void should_create_extract_chat() {
-        AiConfiguration config = AiConfiguration.builder().apiKey("test-key").build();
-        AnthropicExtractChat chat = new AnthropicExtractChat(config);
+    @Nested
+    class ChatModelCreation {
 
-        assertThat(chat.getChatModel()).isNotNull();
+        @Test
+        void should_create_extract_chat() {
+            AiConfiguration config =
+                    AiConfiguration.builder().apiKey("test-key").build();
+            AnthropicExtractChat chat = new AnthropicExtractChat(config);
+
+            assertThat(chat.getChatModel()).isNotNull();
+        }
+
+        @Test
+        void should_create_extract_chat_with_all_options() {
+            AiConfiguration config = AiConfiguration.builder()
+                    .apiKey("test-key")
+                    .chatModelName("claude-sonnet-4-6")
+                    .modelTemperature(0.2)
+                    .requestTimeout(90000)
+                    .baseUrl("https://extract-proxy.example.com")
+                    .build();
+            AnthropicExtractChat chat = new AnthropicExtractChat(config);
+
+            AnthropicChatModel model = chat.getChatModel();
+
+            assertThat(model).isNotNull();
+            assertThat(chat.getConfiguration().getChatModelName()).hasValue("claude-sonnet-4-6");
+        }
+
+        @Test
+        void should_create_extract_chat_with_no_optional_fields() {
+            AiConfiguration config =
+                    AiConfiguration.builder().apiKey("test-key").build();
+            AnthropicExtractChat chat = new AnthropicExtractChat(config);
+
+            assertThat(chat.getChatModel()).isNotNull();
+            assertThat(chat.getConfiguration().getBaseUrl()).isEmpty();
+            assertThat(chat.getConfiguration().getChatModelName()).isEmpty();
+            assertThat(chat.getConfiguration().getModelTemperature()).isEmpty();
+            assertThat(chat.getConfiguration().getRequestTimeout()).isEmpty();
+        }
+
+        @Test
+        void should_return_configuration() {
+            AiConfiguration config =
+                    AiConfiguration.builder().apiKey("test-key").build();
+            AnthropicExtractChat chat = new AnthropicExtractChat(config);
+
+            assertThat(chat.getConfiguration()).isSameAs(config);
+        }
     }
 }
