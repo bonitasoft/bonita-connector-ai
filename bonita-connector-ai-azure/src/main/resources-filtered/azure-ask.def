@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definition:ConnectorDefinition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:definition="http://www.bonitasoft.org/ns/connector/definition/6.1">
+    <id>${azure.ask.def.id}</id>
+    <version>${azure.ask.def.version}</version>
+    <icon>azure.png</icon>
+    <category id="AI" icon="AI.png" />
+    <category id="Azure OpenAI" icon="azure.png" parentCategoryId="AI"/>
+
+    <input name="url" type="java.lang.String" mandatory="true"/>
+    <input name="apiKey" type="java.lang.String"/>
+
+    <input name="chatModelName" type="java.lang.String" mandatory="true"/>
+    <input name="userPrompt" type="java.lang.String" mandatory="true"/>
+    <input name="systemPrompt" type="java.lang.String" defaultValue="You are a polite assistant."/>
+
+    <input name="apiVersion" type="java.lang.String" defaultValue="2024-10-21"/>
+    <input name="modelTemperature" type="java.lang.Double"/>
+    <input name="requestTimeout" type="java.lang.Integer"/>
+
+    <input name="sourceDocumentRef" type="java.lang.String"/>
+
+    <input name="outputJsonSchema" type="java.lang.String"/>
+    <input name="fieldsToExtract" type="java.lang.String"/>
+
+    <output name="output" type="java.lang.String"/>
+
+    <page id="defaultPage">
+        <widget xsi:type="definition:TextArea" id="systemPromptWidget" inputName="systemPrompt"/>
+        <widget xsi:type="definition:TextArea" id="userPromptWidget" inputName="userPrompt"/>
+        <widget xsi:type="definition:TextArea" id="outputJsonSchemaWidget" inputName="outputJsonSchema"/>
+        <widget xsi:type="definition:Text" id="sourceDocumentRefWidget" inputName="sourceDocumentRef" showDocuments="true"/>
+    </page>
+    <page id="advancedPage">
+        <widget xsi:type="definition:Text" id="apiKeyWidget" inputName="apiKey"/>
+        <widget xsi:type="definition:Text" id="urlWidget" inputName="url"/>
+        <widget xsi:type="definition:Text" id="apiVersionWidget" inputName="apiVersion"/>
+        <widget xsi:type="definition:Text" id="requestTimeoutWidget" inputName="requestTimeout"/>
+        <widget xsi:type="definition:Text" id="chatModelNameWidget" inputName="chatModelName"/>
+        <widget xsi:type="definition:Text" id="modelTemperatureWidget" inputName="modelTemperature"/>
+    </page>
+</definition:ConnectorDefinition>
