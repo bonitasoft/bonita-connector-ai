@@ -26,10 +26,23 @@ import lombok.Data;
 public class ClassifyConfiguration {
 
     public static final String SOURCE_DOCUMENT_REF = "sourceDocumentRef";
+    public static final String SOURCE_DOCUMENT_REFS = "sourceDocumentRefs";
     public static final String CATEGORY_LIST = "categories";
 
     private final String sourceDocumentRef;
+    private List<String> sourceDocumentRefs;
 
     @Builder.Default
     private List<String> categories = new ArrayList<>();
+
+    public List<String> getAllDocumentRefs() {
+        var refs = new ArrayList<String>();
+        if (sourceDocumentRef != null && !sourceDocumentRef.isBlank()) {
+            refs.add(sourceDocumentRef);
+        }
+        if (sourceDocumentRefs != null) {
+            refs.addAll(sourceDocumentRefs);
+        }
+        return refs.stream().distinct().toList();
+    }
 }

@@ -21,6 +21,7 @@ import dev.langchain4j.model.chat.ChatModel;
 import dev.langchain4j.model.chat.request.ChatRequest;
 import dev.langchain4j.model.chat.response.ChatResponse;
 import java.util.ArrayList;
+import java.util.List;
 import org.bonitasoft.connectors.ai.AbstractAiChat;
 import org.bonitasoft.connectors.ai.AiChat;
 import org.bonitasoft.connectors.ai.AiConfiguration;
@@ -41,7 +42,7 @@ public abstract class AskAiChat<T extends ChatModel> extends AbstractAiChat<T> i
     }
 
     @Override
-    public String ask(String systemPrompt, String userPrompt, String jsonSchema, UserDocument document) {
+    public String ask(String systemPrompt, String userPrompt, String jsonSchema, List<UserDocument> documents) {
 
         var messages = new ArrayList<ChatMessage>();
 
@@ -70,9 +71,8 @@ public abstract class AskAiChat<T extends ChatModel> extends AbstractAiChat<T> i
         var userMessage = UserMessage.from(userPromptText.toString());
         messages.add(userMessage);
 
-        if (document != null) {
-            var docMessage = newDocMessage(document);
-            messages.add(docMessage);
+        if (documents != null) {
+            messages.addAll(newDocMessages(documents));
         }
 
         var chatRequest = ChatRequest.builder().messages(messages).build();

@@ -16,8 +16,7 @@
  */
 package org.bonitasoft.connectors.ai.classify;
 
-import static org.bonitasoft.connectors.ai.classify.ClassifyConfiguration.CATEGORY_LIST;
-import static org.bonitasoft.connectors.ai.classify.ClassifyConfiguration.SOURCE_DOCUMENT_REF;
+import static org.bonitasoft.connectors.ai.classify.ClassifyConfiguration.*;
 
 import java.util.List;
 import org.bonitasoft.connectors.ai.AiConnector;
@@ -34,11 +33,11 @@ public class ClassifyAiConnector<T extends ClassifyChat> extends AiConnector {
         if (classifyConfiguration == null) {
             var builder = ClassifyConfiguration.builder();
             getInputValue(SOURCE_DOCUMENT_REF, String.class).ifPresent(builder::sourceDocumentRef);
+            getInputValue(SOURCE_DOCUMENT_REFS, List.class).ifPresent(builder::sourceDocumentRefs);
             getInputValue(CATEGORY_LIST, List.class).ifPresent(builder::categories);
             classifyConfiguration = builder.build();
         }
-        if (classifyConfiguration.getSourceDocumentRef() == null
-                || classifyConfiguration.getSourceDocumentRef().isEmpty()) {
+        if (classifyConfiguration.getAllDocumentRefs().isEmpty()) {
             throw new ConnectorValidationException("Source document ref is empty");
         }
         if (classifyConfiguration.getCategories() == null
@@ -49,7 +48,7 @@ public class ClassifyAiConnector<T extends ClassifyChat> extends AiConnector {
 
     @Override
     protected Object doExecute() {
-        UserDocument userDocument = getUserDocument(classifyConfiguration.getSourceDocumentRef());
-        return chat.classify(classifyConfiguration.getCategories(), userDocument);
+        List<UserDocument> userDocuments = getUserDocuments(classifyConfiguration.getAllDocumentRefs());
+        return chat.classify(classifyConfiguration.getCategories(), userDocuments);
     }
 }

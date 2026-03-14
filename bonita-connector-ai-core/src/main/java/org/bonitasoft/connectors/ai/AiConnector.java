@@ -19,6 +19,7 @@ package org.bonitasoft.connectors.ai;
 import static org.bonitasoft.connectors.ai.AiConfiguration.*;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Optional;
 import lombok.Getter;
 import lombok.Setter;
@@ -87,6 +88,13 @@ public abstract class AiConnector extends AbstractConnector {
     }
 
     protected abstract Object doExecute() throws ConnectorException;
+
+    protected List<UserDocument> getUserDocuments(List<String> docRefs) {
+        if (docRefs == null || docRefs.isEmpty()) {
+            return List.of();
+        }
+        return docRefs.stream().map(this::getUserDocument).toList();
+    }
 
     protected UserDocument getUserDocument(String docRef) {
         long processInstanceId = getExecutionContext().getProcessInstanceId();
