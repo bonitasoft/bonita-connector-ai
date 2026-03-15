@@ -31,6 +31,7 @@ public class AiConfiguration {
     public static final String AI_API_KEY = "AI_API_KEY";
     public static final String CHAT_MODEL_NAME = "chatModelName";
     public static final String MODEL_TEMPERATURE = "modelTemperature";
+    public static final String API_VERSION = "apiVersion";
 
     private String baseUrl;
 
@@ -41,6 +42,7 @@ public class AiConfiguration {
 
     private Double modelTemperature;
     private Integer requestTimeout;
+    private String apiVersion;
 
     public Optional<String> getBaseUrl() {
         return Optional.ofNullable(baseUrl);
@@ -56,5 +58,9 @@ public class AiConfiguration {
 
     public Optional<Integer> getRequestTimeout() {
         return Optional.ofNullable(requestTimeout);
+    }
+
+    public Optional<String> getApiVersion() {
+        return Optional.ofNullable(apiVersion);
     }
 }

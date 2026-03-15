@@ -67,6 +67,7 @@ public abstract class AiConnector extends AbstractConnector {
             getInputValue(CHAT_MODEL_NAME, String.class).ifPresent(builder::chatModelName);
             getInputValue(TIMEOUT_MS, Integer.class).ifPresent(builder::requestTimeout);
             getInputValue(MODEL_TEMPERATURE, Double.class).ifPresent(builder::modelTemperature);
+            getInputValue(API_VERSION, String.class).ifPresent(builder::apiVersion);
             this.configuration = builder.build();
         }
         // delegate validation to concrete classes
