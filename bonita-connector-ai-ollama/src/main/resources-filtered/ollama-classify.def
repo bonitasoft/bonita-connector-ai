@@ -13,6 +13,7 @@
     <input name="requestTimeout" type="java.lang.Integer"/>
 
     <input name="sourceDocumentRef" type="java.lang.String" mandatory="true"/>
+    <input name="sourceDocumentRefs" type="java.util.List"/>
     <input name="categories" type="java.util.List" mandatory="true"/>
 
     <!-- Connector outputs -->
@@ -27,6 +28,7 @@
     -->
     <page id="defaultPage">
         <widget xsi:type="definition:Text" id="sourceDocumentRefWidget" inputName="sourceDocumentRef" showDocuments="true"/>
+        <widget xsi:type="definition:List" id="sourceDocumentRefsWidget" inputName="sourceDocumentRefs"/>
         <widget xsi:type="definition:List" id="categoriesWidget" inputName="categories"/>
     </page>
     <page id="advancedPage">

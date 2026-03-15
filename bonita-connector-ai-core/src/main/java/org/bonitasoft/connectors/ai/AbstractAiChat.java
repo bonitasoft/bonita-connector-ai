@@ -21,6 +21,7 @@ import dev.langchain4j.data.document.parser.apache.tika.ApacheTikaDocumentParser
 import dev.langchain4j.data.message.*;
 import dev.langchain4j.model.chat.ChatModel;
 import java.util.Base64;
+import java.util.List;
 import org.bonitasoft.connectors.ai.langchain4j.UserDocumentSource;
 
 public abstract class AbstractAiChat<T extends ChatModel> implements AiChat<T> {
@@ -36,5 +37,12 @@ public abstract class AbstractAiChat<T extends ChatModel> implements AiChat<T> {
                         yield TextContent.from(doc.text());
                     }
                 });
+    }
+
+    protected List<ChatMessage> newDocMessages(List<UserDocument> documents) {
+        if (documents == null) {
+            return List.of();
+        }
+        return documents.stream().map(this::newDocMessage).toList();
     }
 }

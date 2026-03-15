@@ -54,19 +54,19 @@ public abstract class ExtractAiChat<T extends ChatModel> extends AbstractAiChat<
     }
 
     @Override
-    public String extract(UserDocument document, List<String> fields) {
+    public String extract(List<UserDocument> documents, List<String> fields) {
         var fieldsToExtractForPrompt = String.join("\n   - ", fields);
         Prompt prompt = PromptTemplate.from(userPrompt).apply(Map.of("fieldsToExtract", fieldsToExtractForPrompt));
-        return doExtract(document, prompt.text());
+        return doExtract(documents, prompt.text());
     }
 
     @Override
-    public String extract(UserDocument document, String jsonSchema) {
+    public String extract(List<UserDocument> documents, String jsonSchema) {
         Prompt prompt = PromptTemplate.from(userPromptWthJsonSchema).apply(Map.of("jsonSchema", jsonSchema));
-        return doExtract(document, prompt.text());
+        return doExtract(documents, prompt.text());
     }
 
-    String doExtract(UserDocument document, String userText) {
+    String doExtract(List<UserDocument> documents, String userText) {
         var messages = new ArrayList<ChatMessage>();
         // System prompt
         var systemMessage = SystemMessage.from(systemPrompt);
@@ -74,9 +74,10 @@ public abstract class ExtractAiChat<T extends ChatModel> extends AbstractAiChat<
         // User message
         var userMessage = UserMessage.from(userText);
         messages.add(userMessage);
-        // Doc
-        var docMessage = newDocMessage(document);
-        messages.add(docMessage);
+        // Docs
+        if (documents != null) {
+            messages.addAll(newDocMessages(documents));
+        }
         var chatRequest = ChatRequest.builder().messages(messages).build();
         ChatResponse chatResponse = getChatModel().chat(chatRequest);
         return AiResponse.ensureJson(chatResponse.aiMessage().text());
