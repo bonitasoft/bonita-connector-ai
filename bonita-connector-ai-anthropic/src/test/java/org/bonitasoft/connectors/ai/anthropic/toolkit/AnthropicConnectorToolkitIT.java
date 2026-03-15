@@ -67,7 +67,7 @@ class AnthropicConnectorToolkitIT {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AnthropicConnectorToolkitIT.class);
     private static final String BONITA_VERSION =
-            System.getProperty("bonita.version", Objects.requireNonNullElse(System.getenv("BONITA_VERSION"), "2025.1"));
+            System.getProperty("bonita.version", Objects.requireNonNullElse(System.getenv("BONITA_VERSION"), "2025.2"));
 
     @Container
     static GenericContainer<?> BONITA_CONTAINER = new GenericContainer<>(
