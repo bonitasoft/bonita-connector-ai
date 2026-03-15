@@ -1,94 +1,158 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xmi:XMI xmi:version="2.0"
-    xmlns:xmi="http://www.omg.org/XMI"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xmlns:connectorconfiguration="http://www.bonitasoft.org/ns/studio/connector/configuration"
-    xmlns:definition="http://www.bonitasoft.org/ns/connector/definition/6.1"
-    xmlns:expression="http://www.bonitasoft.org/ns/studio/expression"
-    xmlns:notation="http://www.eclipse.org/gmf/runtime/1.0.3/notation"
-    xmlns:process="http://www.bonitasoft.org/ns/studio/process">
-  <!-- ============================================================ -->
-  <!-- Anthropic Claude AI Demo Process                             -->
-  <!-- 3 service tasks: Ask, Classify, Extract                      -->
-  <!-- Each task has an Anthropic connector configured               -->
-  <!-- ============================================================ -->
-  <process:MainProcess xmi:id="_mainProcess" name="AnthropicAIDemo" version="1.0" bonitaModelVersion="7.12.1">
-    <elements xsi:type="process:Pool" xmi:id="_pool1" name="Anthropic AI Demo Pool">
-      <elements xsi:type="process:Lane" xmi:id="_lane1" name="Employee lane">
-
-        <!-- Start Event -->
-        <elements xsi:type="process:StartEvent" xmi:id="_start" name="Start"/>
-
-        <!-- Task 1: Ask Claude -->
-        <elements xsi:type="process:ServiceTask" xmi:id="_taskAsk" name="Ask Claude a Question">
-          <data xsi:type="process:Data" xmi:id="_varAskResult" name="askResult" dataType="_stringType" multiple="false"/>
-          <connectors xmi:id="_connAsk" name="Anthropic Ask" definitionId="anthropic-ask" definitionVersion="1.0.0" event="ON_ENTER">
-            <configuration xmi:id="_confAsk">
-              <parameters xmi:id="_confAskParam1" key="userPrompt">
-                <value xmi:id="_confAskVal1" content="What are the key principles of BPM? List 3 principles." type="TYPE_CONSTANT" returnType="java.lang.String" name="userPrompt"/>
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:actormapping="http://www.bonitasoft.org/ns/actormapping/6.0" xmlns:configuration="http://www.bonitasoft.org/ns/bpm/configuration" xmlns:connectorconfiguration="http://www.bonitasoft.org/model/connector/configuration" xmlns:decision="http://www.bonitasoft.org/ns/bpm/process/decision" xmlns:definition="http://www.bonitasoft.org/ns/connector/definition/6.1" xmlns:expression="http://www.bonitasoft.org/ns/bpm/expression" xmlns:notation="http://www.eclipse.org/gmf/runtime/1.0.3/notation" xmlns:process="http://www.bonitasoft.org/ns/bpm/process">
+  <process:MainProcess xmi:id="_AiDemoMp01" name="AnthropicAIDemo" bonitaModelVersion="9">
+    <elements xmi:type="process:Pool" xmi:id="_AiDemoPool01" name="Anthropic AI Demo">
+      <elements xmi:type="process:Lane" xmi:id="_AiDemoLane01" name="Employee lane" actor="_AiDemoActor01">
+        <elements xmi:type="process:StartEvent" xmi:id="_AiDemoStart01" name="Start" outgoing="_AiDemoFlow01">
+          <dynamicLabel xmi:type="expression:Expression" xmi:id="_AiDemoStart01dl" name="" content="" returnTypeFixed="true"/>
+          <dynamicDescription xmi:type="expression:Expression" xmi:id="_AiDemoStart01dd" name="" content="" returnTypeFixed="true"/>
+          <stepSummary xmi:type="expression:Expression" xmi:id="_AiDemoStart01ss" name="" content="" returnTypeFixed="true"/>
+        </elements>
+        <elements xmi:type="process:ServiceTask" xmi:id="_AiDemoTaskAsk01" name="Ask Claude" incoming="_AiDemoFlow01" outgoing="_AiDemoFlow02">
+          <dynamicLabel xmi:type="expression:Expression" xmi:id="_AiDemoTaskAsk01dl" name="" content="" returnTypeFixed="true"/>
+          <dynamicDescription xmi:type="expression:Expression" xmi:id="_AiDemoTaskAsk01dd" name="" content="" returnTypeFixed="true"/>
+          <stepSummary xmi:type="expression:Expression" xmi:id="_AiDemoTaskAsk01ss" name="" content="" returnTypeFixed="true"/>
+          <connectors xmi:type="process:Connector" xmi:id="_AiDemoConn01" name="Anthropic Ask" definitionId="anthropic-ask" event="ON_ENTER" definitionVersion="1.0.0">
+            <configuration xmi:type="connectorconfiguration:ConnectorConfiguration" xmi:id="_AiDemoConf01" definitionId="anthropic-ask" version="1.0.0" modelVersion="9">
+              <parameters xmi:type="connectorconfiguration:ConnectorParameter" xmi:id="_AiDemoConfP01" key="userPrompt">
+                <expression xmi:type="expression:Expression" xmi:id="_AiDemoConfE01" name="userPrompt" content="What is the capital of France? Answer with just the city name." type="TYPE_CONSTANT" returnType="java.lang.String"/>
               </parameters>
-              <parameters xmi:id="_confAskParam2" key="systemPrompt">
-                <value xmi:id="_confAskVal2" content="You are a BPM expert consultant." type="TYPE_CONSTANT" returnType="java.lang.String" name="systemPrompt"/>
+              <parameters xmi:type="connectorconfiguration:ConnectorParameter" xmi:id="_AiDemoConfP02" key="systemPrompt">
+                <expression xmi:type="expression:Expression" xmi:id="_AiDemoConfE02" name="systemPrompt" content="You are a helpful assistant." type="TYPE_CONSTANT" returnType="java.lang.String"/>
               </parameters>
             </configuration>
-            <outputs xmi:id="_outAsk" name="askResult"/>
+            <outputs xmi:type="expression:Operation" xmi:id="_AiDemoOut01">
+              <leftOperand xmi:type="expression:Expression" xmi:id="_AiDemoOutL01" name="askResult" content="askResult" type="TYPE_VARIABLE" returnType="java.lang.String">
+                <referencedElements xmi:type="process:Data" xmi:id="_AiDemoOutLR01" name="askResult" dataType="_AiDemoStringType"/>
+              </leftOperand>
+              <rightOperand xmi:type="expression:Expression" xmi:id="_AiDemoOutR01" name="output" content="output" type="CONNECTOR_OUTPUT_TYPE" returnType="java.lang.String">
+                <referencedElements xmi:type="definition:Output" xmi:id="_AiDemoOutRR01" name="output" type="java.lang.String"/>
+              </rightOperand>
+              <operator xmi:type="expression:Operator" xmi:id="_AiDemoOutOp01" type="ASSIGNMENT"/>
+            </outputs>
           </connectors>
+          <loopCondition xmi:type="expression:Expression" xmi:id="_AiDemoTaskAsk01lc" name="" content="" returnType="java.lang.Boolean" returnTypeFixed="true"/>
+          <loopMaximum xmi:type="expression:Expression" xmi:id="_AiDemoTaskAsk01lm" name="" content="" returnType="java.lang.Integer" returnTypeFixed="true"/>
+          <cardinalityExpression xmi:type="expression:Expression" xmi:id="_AiDemoTaskAsk01ce" name="" content="" returnType="java.lang.Integer" returnTypeFixed="true"/>
+          <iteratorExpression xmi:type="expression:Expression" xmi:id="_AiDemoTaskAsk01ie" name="multiInstanceIterator" content="multiInstanceIterator" type="MULTIINSTANCE_ITERATOR_TYPE" returnType="java.lang.Object" returnTypeFixed="true"/>
+          <completionCondition xmi:type="expression:Expression" xmi:id="_AiDemoTaskAsk01cc" name="" content="" returnType="java.lang.Boolean" returnTypeFixed="true"/>
         </elements>
-
-        <!-- Task 2: Classify Document -->
-        <elements xsi:type="process:ServiceTask" xmi:id="_taskClassify" name="Classify Document">
-          <data xsi:type="process:Data" xmi:id="_varClassifyResult" name="classifyResult" dataType="_stringType" multiple="false"/>
-          <connectors xmi:id="_connClassify" name="Anthropic Classify" definitionId="anthropic-classify" definitionVersion="1.0.0" event="ON_ENTER">
-            <configuration xmi:id="_confClassify">
-              <parameters xmi:id="_confClassifyParam1" key="sourceDocumentRef">
-                <value xmi:id="_confClassifyVal1" content="uploadedDoc" type="TYPE_CONSTANT" returnType="java.lang.String" name="sourceDocumentRef"/>
-              </parameters>
-              <parameters xmi:id="_confClassifyParam2" key="categories">
-                <value xmi:id="_confClassifyVal2" content="[&quot;INVOICE&quot;, &quot;CONTRACT&quot;, &quot;ID_DOCUMENT&quot;, &quot;OTHER&quot;]" type="TYPE_CONSTANT" returnType="java.util.List" name="categories"/>
-              </parameters>
-            </configuration>
-            <outputs xmi:id="_outClassify" name="classifyResult"/>
-          </connectors>
+        <elements xmi:type="process:Task" xmi:id="_AiDemoTaskRev01" name="Review Results" incoming="_AiDemoFlow02" outgoing="_AiDemoFlow03" overrideActorsOfTheLane="false">
+          <dynamicLabel xmi:type="expression:Expression" xmi:id="_AiDemoTaskRev01dl" name="" content="" returnTypeFixed="true"/>
+          <dynamicDescription xmi:type="expression:Expression" xmi:id="_AiDemoTaskRev01dd" name="" content="" returnTypeFixed="true"/>
+          <stepSummary xmi:type="expression:Expression" xmi:id="_AiDemoTaskRev01ss" name="" content="" returnTypeFixed="true"/>
+          <loopCondition xmi:type="expression:Expression" xmi:id="_AiDemoTaskRev01lc" name="" content="" returnType="java.lang.Boolean" returnTypeFixed="true"/>
+          <loopMaximum xmi:type="expression:Expression" xmi:id="_AiDemoTaskRev01lm" name="" content="" returnType="java.lang.Integer" returnTypeFixed="true"/>
+          <cardinalityExpression xmi:type="expression:Expression" xmi:id="_AiDemoTaskRev01ce" name="" content="" returnType="java.lang.Integer" returnTypeFixed="true"/>
+          <iteratorExpression xmi:type="expression:Expression" xmi:id="_AiDemoTaskRev01ie" name="multiInstanceIterator" content="multiInstanceIterator" type="MULTIINSTANCE_ITERATOR_TYPE" returnType="java.lang.Object" returnTypeFixed="true"/>
+          <completionCondition xmi:type="expression:Expression" xmi:id="_AiDemoTaskRev01cc" name="" content="" returnType="java.lang.Boolean" returnTypeFixed="true"/>
+          <formMapping xmi:type="process:FormMapping" xmi:id="_AiDemoTaskRev01fm" type="NONE">
+            <targetForm xmi:type="expression:Expression" xmi:id="_AiDemoTaskRev01tf" name="" content="" type="FORM_REFERENCE_TYPE" returnTypeFixed="true"/>
+          </formMapping>
+          <contract xmi:type="process:Contract" xmi:id="_AiDemoTaskRev01ct"/>
+          <expectedDuration xmi:type="expression:Expression" xmi:id="_AiDemoTaskRev01ed" name="" content="" returnType="java.lang.Long" returnTypeFixed="true"/>
         </elements>
-
-        <!-- Task 3: Extract Data from Document -->
-        <elements xsi:type="process:ServiceTask" xmi:id="_taskExtract" name="Extract Document Data">
-          <data xsi:type="process:Data" xmi:id="_varExtractResult" name="extractResult" dataType="_stringType" multiple="false"/>
-          <connectors xmi:id="_connExtract" name="Anthropic Extract" definitionId="anthropic-extract" definitionVersion="1.0.0" event="ON_ENTER">
-            <configuration xmi:id="_confExtract">
-              <parameters xmi:id="_confExtractParam1" key="sourceDocumentRef">
-                <value xmi:id="_confExtractVal1" content="uploadedDoc" type="TYPE_CONSTANT" returnType="java.lang.String" name="sourceDocumentRef"/>
-              </parameters>
-              <parameters xmi:id="_confExtractParam2" key="fieldsToExtract">
-                <value xmi:id="_confExtractVal2" content="[&quot;firstName&quot;, &quot;lastName&quot;, &quot;address&quot;, &quot;documentType&quot;]" type="TYPE_CONSTANT" returnType="java.util.List" name="fieldsToExtract"/>
-              </parameters>
-            </configuration>
-            <outputs xmi:id="_outExtract" name="extractResult"/>
-          </connectors>
+        <elements xmi:type="process:EndEvent" xmi:id="_AiDemoEnd01" name="End" incoming="_AiDemoFlow03">
+          <dynamicLabel xmi:type="expression:Expression" xmi:id="_AiDemoEnd01dl" name="" content="" returnTypeFixed="true"/>
+          <dynamicDescription xmi:type="expression:Expression" xmi:id="_AiDemoEnd01dd" name="" content="" returnTypeFixed="true"/>
+          <stepSummary xmi:type="expression:Expression" xmi:id="_AiDemoEnd01ss" name="" content="" returnTypeFixed="true"/>
         </elements>
-
-        <!-- User Task: Review Results -->
-        <elements xsi:type="process:Task" xmi:id="_taskReview" name="Review AI Results"/>
-
-        <!-- End Event -->
-        <elements xsi:type="process:EndEvent" xmi:id="_end" name="End"/>
-
-        <!-- Transitions -->
-        <connections xsi:type="process:SequenceFlow" xmi:id="_flow1" name="" source="_start" target="_taskAsk"/>
-        <connections xsi:type="process:SequenceFlow" xmi:id="_flow2" name="" source="_taskAsk" target="_taskClassify"/>
-        <connections xsi:type="process:SequenceFlow" xmi:id="_flow3" name="" source="_taskClassify" target="_taskExtract"/>
-        <connections xsi:type="process:SequenceFlow" xmi:id="_flow4" name="" source="_taskExtract" target="_taskReview"/>
-        <connections xsi:type="process:SequenceFlow" xmi:id="_flow5" name="" source="_taskReview" target="_end"/>
-
       </elements>
-
-      <!-- Actor -->
-      <actors xmi:id="_actor1" name="Employee" initiator="true"/>
+      <data xmi:type="process:Data" xmi:id="_AiDemoVarAsk01" name="askResult" dataType="_AiDemoStringType">
+        <defaultValue xmi:type="expression:Expression" xmi:id="_AiDemoVarAsk01dv" name="" content="" returnType="java.lang.String"/>
+      </data>
+      <formMapping xmi:type="process:FormMapping" xmi:id="_AiDemoPool01fm" type="NONE">
+        <targetForm xmi:type="expression:Expression" xmi:id="_AiDemoPool01tf" name="" content="" type="FORM_REFERENCE_TYPE" returnTypeFixed="true"/>
+      </formMapping>
+      <overviewFormMapping xmi:type="process:FormMapping" xmi:id="_AiDemoPool01ofm" type="NONE">
+        <targetForm xmi:type="expression:Expression" xmi:id="_AiDemoPool01otf" name="" content="" type="FORM_REFERENCE_TYPE" returnTypeFixed="true"/>
+      </overviewFormMapping>
+      <connections xmi:type="process:SequenceFlow" xmi:id="_AiDemoFlow01" target="_AiDemoTaskAsk01" source="_AiDemoStart01">
+        <decisionTable xmi:type="decision:DecisionTable" xmi:id="_AiDemoFlow01dt"/>
+        <condition xmi:type="expression:Expression" xmi:id="_AiDemoFlow01cond" name="" returnType="java.lang.Boolean" returnTypeFixed="true"/>
+      </connections>
+      <connections xmi:type="process:SequenceFlow" xmi:id="_AiDemoFlow02" target="_AiDemoTaskRev01" source="_AiDemoTaskAsk01">
+        <decisionTable xmi:type="decision:DecisionTable" xmi:id="_AiDemoFlow02dt"/>
+        <condition xmi:type="expression:Expression" xmi:id="_AiDemoFlow02cond" name="" returnType="java.lang.Boolean" returnTypeFixed="true"/>
+      </connections>
+      <connections xmi:type="process:SequenceFlow" xmi:id="_AiDemoFlow03" target="_AiDemoEnd01" source="_AiDemoTaskRev01">
+        <decisionTable xmi:type="decision:DecisionTable" xmi:id="_AiDemoFlow03dt"/>
+        <condition xmi:type="expression:Expression" xmi:id="_AiDemoFlow03cond" name="" returnType="java.lang.Boolean" returnTypeFixed="true"/>
+      </connections>
+      <actors xmi:type="process:Actor" xmi:id="_AiDemoActor01" name="Employee" initiator="true"/>
     </elements>
-
-    <!-- Data Types -->
-    <datatypes xsi:type="process:StringType" xmi:id="_stringType" name="String"/>
-    <datatypes xsi:type="process:IntegerType" xmi:id="_intType" name="Integer"/>
-    <datatypes xsi:type="process:BooleanType" xmi:id="_boolType" name="Boolean"/>
+    <datatypes xmi:type="process:StringType" xmi:id="_AiDemoStringType" name="String"/>
+    <datatypes xmi:type="process:IntegerType" xmi:id="_AiDemoIntType" name="Integer"/>
+    <datatypes xmi:type="process:BooleanType" xmi:id="_AiDemoBoolType" name="Boolean"/>
   </process:MainProcess>
+  <notation:Diagram xmi:id="_AiDemoDiag01" type="Process" element="_AiDemoMp01" name="AnthropicAIDemo" measurementUnit="Pixel">
+    <children xmi:type="notation:Node" xmi:id="_AiDemoNPool01" type="2007" element="_AiDemoPool01">
+      <children xmi:type="notation:DecorationNode" xmi:id="_AiDemoNPool01lbl" type="5008"/>
+      <children xmi:type="notation:DecorationNode" xmi:id="_AiDemoNPool01comp" type="7001">
+        <children xmi:type="notation:Node" xmi:id="_AiDemoNLane01" type="3007" element="_AiDemoLane01">
+          <children xmi:type="notation:DecorationNode" xmi:id="_AiDemoNLane01lbl" type="5007"/>
+          <children xmi:type="notation:DecorationNode" xmi:id="_AiDemoNLane01comp" type="7002">
+            <children xmi:type="notation:Shape" xmi:id="_AiDemoSStart01" type="3002" element="_AiDemoStart01" fontName="Segoe UI">
+              <children xmi:type="notation:DecorationNode" xmi:id="_AiDemoSStart01lbl" type="5024">
+                <layoutConstraint xmi:type="notation:Location" xmi:id="_AiDemoSStart01loc" y="5"/>
+              </children>
+              <layoutConstraint xmi:type="notation:Bounds" xmi:id="_AiDemoSStart01bnd" x="48" y="75"/>
+            </children>
+            <children xmi:type="notation:Shape" xmi:id="_AiDemoSTaskAsk01" type="3027" element="_AiDemoTaskAsk01" fontName="Segoe UI" fillColor="14334392" lineColor="10710316">
+              <children xmi:type="notation:DecorationNode" xmi:id="_AiDemoSTaskAsk01lbl" type="5017"/>
+              <layoutConstraint xmi:type="notation:Bounds" xmi:id="_AiDemoSTaskAsk01bnd" x="180" y="60" width="120" height="60"/>
+            </children>
+            <children xmi:type="notation:Shape" xmi:id="_AiDemoSTaskRev01" type="3005" element="_AiDemoTaskRev01" fontName="Segoe UI">
+              <children xmi:type="notation:DecorationNode" xmi:id="_AiDemoSTaskRev01lbl" type="5005"/>
+              <layoutConstraint xmi:type="notation:Bounds" xmi:id="_AiDemoSTaskRev01bnd" x="380" y="60" width="120" height="60"/>
+            </children>
+            <children xmi:type="notation:Shape" xmi:id="_AiDemoSEnd01" type="3003" element="_AiDemoEnd01" fontName="Segoe UI">
+              <children xmi:type="notation:DecorationNode" xmi:id="_AiDemoSEnd01lbl" type="5025">
+                <layoutConstraint xmi:type="notation:Location" xmi:id="_AiDemoSEnd01loc" y="5"/>
+              </children>
+              <layoutConstraint xmi:type="notation:Bounds" xmi:id="_AiDemoSEnd01bnd" x="580" y="75" width="30" height="30"/>
+            </children>
+          </children>
+          <styles xmi:type="notation:DescriptionStyle" xmi:id="_AiDemoNLane01ds"/>
+          <styles xmi:type="notation:FontStyle" xmi:id="_AiDemoNLane01fs" fontName="Segoe UI"/>
+          <styles xmi:type="notation:LineStyle" xmi:id="_AiDemoNLane01ls"/>
+          <styles xmi:type="notation:FillStyle" xmi:id="_AiDemoNLane01fls"/>
+          <layoutConstraint xmi:type="notation:Bounds" xmi:id="_AiDemoNLane01bnd"/>
+        </children>
+      </children>
+      <styles xmi:type="notation:DescriptionStyle" xmi:id="_AiDemoNPool01ds"/>
+      <styles xmi:type="notation:FontStyle" xmi:id="_AiDemoNPool01fs" fontName="Segoe UI"/>
+      <styles xmi:type="notation:LineStyle" xmi:id="_AiDemoNPool01ls"/>
+      <styles xmi:type="notation:FillStyle" xmi:id="_AiDemoNPool01fls"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_AiDemoNPool01bnd" width="800" height="250"/>
+    </children>
+    <styles xmi:type="notation:DiagramStyle" xmi:id="_AiDemoDiag01sty"/>
+    <edges xmi:type="notation:Connector" xmi:id="_AiDemoEFlow01" type="4001" element="_AiDemoFlow01" source="_AiDemoSStart01" target="_AiDemoSTaskAsk01" roundedBendpointsRadius="10" routing="Rectilinear">
+      <children xmi:type="notation:DecorationNode" xmi:id="_AiDemoEFlow01lbl" type="6001">
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_AiDemoEFlow01loc" y="-10"/>
+      </children>
+      <styles xmi:type="notation:FontStyle" xmi:id="_AiDemoEFlow01fs" fontName="Segoe UI"/>
+      <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_AiDemoEFlow01bp" points="[15, 0, -110, 0]$[65, 0, -60, 0]"/>
+      <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_AiDemoEFlow01sa" id="(1.0,0.5)"/>
+      <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_AiDemoEFlow01ta" id="(0.0,0.5)"/>
+    </edges>
+    <edges xmi:type="notation:Connector" xmi:id="_AiDemoEFlow02" type="4001" element="_AiDemoFlow02" source="_AiDemoSTaskAsk01" target="_AiDemoSTaskRev01" roundedBendpointsRadius="10" routing="Rectilinear">
+      <children xmi:type="notation:DecorationNode" xmi:id="_AiDemoEFlow02lbl" type="6001">
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_AiDemoEFlow02loc" y="-10"/>
+      </children>
+      <styles xmi:type="notation:FontStyle" xmi:id="_AiDemoEFlow02fs" fontName="Segoe UI"/>
+      <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_AiDemoEFlow02bp" points="[60, 0, -100, 0]$[100, 0, -60, 0]"/>
+      <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_AiDemoEFlow02sa" id="(1.0,0.5)"/>
+      <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_AiDemoEFlow02ta" id="(0.0,0.5)"/>
+    </edges>
+    <edges xmi:type="notation:Connector" xmi:id="_AiDemoEFlow03" type="4001" element="_AiDemoFlow03" source="_AiDemoSTaskRev01" target="_AiDemoSEnd01" roundedBendpointsRadius="10" routing="Rectilinear">
+      <children xmi:type="notation:DecorationNode" xmi:id="_AiDemoEFlow03lbl" type="6001">
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_AiDemoEFlow03loc" y="-10"/>
+      </children>
+      <styles xmi:type="notation:FontStyle" xmi:id="_AiDemoEFlow03fs" fontName="Segoe UI"/>
+      <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_AiDemoEFlow03bp" points="[60, 0, -100, 0]$[100, 0, -60, 0]"/>
+      <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_AiDemoEFlow03sa" id="(1.0,0.5)"/>
+      <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_AiDemoEFlow03ta" id="(0.0,0.5)"/>
+    </edges>
+  </notation:Diagram>
 </xmi:XMI>

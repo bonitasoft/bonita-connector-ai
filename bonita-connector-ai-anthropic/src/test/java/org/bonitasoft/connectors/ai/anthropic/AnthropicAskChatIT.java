@@ -68,7 +68,7 @@ class AnthropicAskChatIT extends AskChatIT {
         String userPrompt = "What is the capital of France? Answer with just the city name.";
 
         // When
-        String response = askChat.ask(systemPrompt, userPrompt, null, null);
+        String response = askChat.ask(systemPrompt, userPrompt, null, (UserDocument) null);
 
         // Then
         assertThat(response).isNotEmpty().containsIgnoringCase("Paris");
@@ -103,7 +103,7 @@ class AnthropicAskChatIT extends AskChatIT {
                 """;
 
         // When
-        String json = askChat.ask(systemPrompt, userPrompt, jsonSchema, null);
+        String json = askChat.ask(systemPrompt, userPrompt, jsonSchema, (UserDocument) null);
 
         // Then
         assertThat(json).isNotEmpty();
@@ -147,7 +147,7 @@ class AnthropicAskChatIT extends AskChatIT {
         String userPrompt = "What is 2 + 2? Answer with just the number.";
 
         // When
-        String response = askChat.ask("You are a helpful assistant.", userPrompt, null, null);
+        String response = askChat.ask("You are a helpful assistant.", userPrompt, null, (UserDocument) null);
 
         // Then
         assertThat(response).isNotEmpty().contains("4");
