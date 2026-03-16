@@ -8,8 +8,8 @@
   </parent>
   <artifactId>bonita-connector-ai-azure</artifactId>
   <version>1.1.1-SNAPSHOT</version>
-  <name>Bonita AI Connectors - Azure OpenAI</name>
-  <description>Bonita connectors for interacting with Azure OpenAI chat models.</description>
+  <name>Bonita AI Connectors - Azure AI Foundry</name>
+  <description>Bonita connectors for interacting with Azure AI Foundry models.</description>
   <properties>
     <license-header-file>${project.parent.basedir}/src/format/header.txt</license-header-file>
     <!--Ask Connector -->

@@ -4,7 +4,7 @@
     <version>${azure.ask.def.version}</version>
     <icon>azure.png</icon>
     <category id="AI" icon="AI.png" />
-    <category id="Azure OpenAI" icon="azure.png" parentCategoryId="AI"/>
+    <category id="Azure AI Foundry" icon="azure.png" parentCategoryId="AI"/>
 
     <input name="url" type="java.lang.String" mandatory="true"/>
     <input name="apiKey" type="java.lang.String"/>
