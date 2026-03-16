@@ -81,6 +81,8 @@
     <license-header-file>${project.basedir}/src/format/header.txt</license-header-file>
     <versions-maven-plugin.version>2.18.0</versions-maven-plugin.version>
     <gitflow-maven-plugin.version>1.21.0</gitflow-maven-plugin.version>
+    <!-- Mutation testing -->
+    <pitest.version>1.15.8</pitest.version>
   </properties>
   <dependencyManagement>
     <dependencies>
@@ -404,6 +406,34 @@
       <plugin>
         <groupId>org.sonatype.central</groupId>
         <artifactId>central-publishing-maven-plugin</artifactId>
+      </plugin>
+      <plugin>
+        <groupId>org.pitest</groupId>
+        <artifactId>pitest-maven</artifactId>
+        <version>${pitest.version}</version>
+        <configuration>
+          <targetClasses>
+            <param>com.bonitasoft.connector.*</param>
+          </targetClasses>
+          <targetTests>
+            <param>com.bonitasoft.connector.*</param>
+          </targetTests>
+          <mutators>
+            <mutator>DEFAULTS</mutator>
+          </mutators>
+          <outputFormats>
+            <outputFormat>HTML</outputFormat>
+            <outputFormat>CSV</outputFormat>
+          </outputFormats>
+          <timestampedReports>false</timestampedReports>
+        </configuration>
+        <dependencies>
+          <dependency>
+            <groupId>org.pitest</groupId>
+            <artifactId>pitest-junit5-plugin</artifactId>
+            <version>1.2.1</version>
+          </dependency>
+        </dependencies>
       </plugin>
     </plugins>
   </build>
