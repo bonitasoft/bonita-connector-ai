@@ -55,6 +55,7 @@ import org.junit.jupiter.api.*;
  * <p>Requires: Bonita Studio running at localhost:8080, AZURE_OPENAI_API_KEY and AZURE_OPENAI_ENDPOINT env vars set
  */
 @Slf4j
+@Tag("btt")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class AzureConnectorStudioIT {
 

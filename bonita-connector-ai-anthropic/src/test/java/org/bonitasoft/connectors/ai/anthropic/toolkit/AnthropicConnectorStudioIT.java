@@ -54,6 +54,7 @@ import org.junit.jupiter.api.*;
  * <p>Requires: Bonita Studio running at localhost:8080, ANTHROPIC_API_KEY env var set
  */
 @Slf4j
+@Tag("btt")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class AnthropicConnectorStudioIT {
 

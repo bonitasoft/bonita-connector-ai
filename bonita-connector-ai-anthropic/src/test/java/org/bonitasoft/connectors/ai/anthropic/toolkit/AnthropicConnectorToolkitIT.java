@@ -56,6 +56,7 @@ import org.testcontainers.utility.DockerImageName;
  * - bonita.version system property set (e.g. -Dbonita.version=2025.1)
  */
 @Slf4j
+@Tag("btt")
 @Testcontainers
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class AnthropicConnectorToolkitIT {

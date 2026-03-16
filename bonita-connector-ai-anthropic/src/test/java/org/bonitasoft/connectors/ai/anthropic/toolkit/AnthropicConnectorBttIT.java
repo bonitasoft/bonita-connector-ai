@@ -70,6 +70,7 @@ import org.testcontainers.utility.DockerImageName;
  * @see AnthropicConnectorStudioIT for running against Bonita Studio
  */
 @Slf4j
+@Tag("btt")
 @Testcontainers
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class AnthropicConnectorBttIT {

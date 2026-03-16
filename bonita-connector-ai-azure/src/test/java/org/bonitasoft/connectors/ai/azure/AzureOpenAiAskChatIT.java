@@ -27,9 +27,11 @@ import org.bonitasoft.connectors.ai.ask.AskChat;
 import org.bonitasoft.connectors.ai.ask.AskChatIT;
 import org.bonitasoft.connectors.utils.IOs;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 @Slf4j
+@Tag("provider-api")
 class AzureOpenAiAskChatIT extends AskChatIT {
 
     ObjectMapper mapper = new ObjectMapper().findAndRegisterModules();

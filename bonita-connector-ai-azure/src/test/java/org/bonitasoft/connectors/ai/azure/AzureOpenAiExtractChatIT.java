@@ -28,9 +28,11 @@ import org.bonitasoft.connectors.ai.extract.ExtractChat;
 import org.bonitasoft.connectors.ai.extract.ExtractChatIT;
 import org.bonitasoft.connectors.utils.IOs;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 @Slf4j
+@Tag("provider-api")
 class AzureOpenAiExtractChatIT extends ExtractChatIT {
 
     ObjectMapper mapper = new ObjectMapper().findAndRegisterModules();

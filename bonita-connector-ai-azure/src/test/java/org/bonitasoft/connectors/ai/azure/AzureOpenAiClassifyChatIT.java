@@ -28,9 +28,11 @@ import org.bonitasoft.connectors.ai.classify.ClassifyChat;
 import org.bonitasoft.connectors.ai.classify.ClassifyChatIT;
 import org.bonitasoft.connectors.utils.IOs;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 @Slf4j
+@Tag("provider-api")
 class AzureOpenAiClassifyChatIT extends ClassifyChatIT {
 
     ObjectMapper objectMapper = new ObjectMapper().findAndRegisterModules();
