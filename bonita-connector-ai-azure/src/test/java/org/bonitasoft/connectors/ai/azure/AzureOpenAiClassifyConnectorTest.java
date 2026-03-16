@@ -20,6 +20,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import dev.langchain4j.model.azure.AzureOpenAiChatModel;
 import org.bonitasoft.connectors.ai.AiConfiguration;
+import org.bonitasoft.engine.connector.ConnectorException;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
@@ -32,21 +33,47 @@ class AzureOpenAiClassifyConnectorTest {
             var connector = new AzureOpenAiClassifyConnector();
             assertThat(connector).isNotNull();
         }
+
+        @Test
+        void should_connect_without_error() throws ConnectorException {
+            AzureOpenAiClassifyConnector connector = new AzureOpenAiClassifyConnector();
+            connector.setConfiguration(AiConfiguration.builder()
+                    .apiKey("test-key")
+                    .baseUrl("https://test.openai.azure.com")
+                    .chatModelName("gpt-4o")
+                    .build());
+            connector.connect();
+            assertThat(connector).isNotNull();
+        }
     }
 
     @Nested
     class ChatModelCreation {
         @Test
         void should_create_chat_model_with_configuration() {
-            var configuration = AiConfiguration.builder()
+            var config = AiConfiguration.builder()
                     .apiKey("test-key")
                     .baseUrl("https://test.openai.azure.com")
                     .chatModelName("gpt-4o")
                     .apiVersion("2024-10-21")
                     .build();
-            var chat = new AzureOpenAiClassifyChat(configuration);
+            var chat = new AzureOpenAiClassifyChat(config);
             AzureOpenAiChatModel model = chat.getChatModel();
             assertThat(model).isNotNull();
+        }
+
+        @Test
+        void should_create_chat_with_all_options() {
+            var config = AiConfiguration.builder()
+                    .apiKey("test-key")
+                    .baseUrl("https://test.openai.azure.com")
+                    .chatModelName("gpt-4o")
+                    .apiVersion("2024-10-21")
+                    .modelTemperature(0.0)
+                    .requestTimeout(30000)
+                    .build();
+            var chat = new AzureOpenAiClassifyChat(config);
+            assertThat(chat.getChatModel()).isNotNull();
         }
     }
 }
