@@ -8,7 +8,7 @@
   </parent>
   <artifactId>bonita-connector-ai-azure</artifactId>
   <version>1.1.1-SNAPSHOT</version>
-  <name>Bonita AI Connectors - Azure AI Foundry</name>
+  <name>Azure AI Foundry</name>
   <description>Bonita connectors for interacting with Azure AI Foundry models.</description>
   <properties>
     <license-header-file>${project.parent.basedir}/src/format/header.txt</license-header-file>

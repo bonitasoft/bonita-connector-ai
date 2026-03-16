@@ -8,7 +8,7 @@
   </parent>
   <artifactId>bonita-connector-ai-anthropic</artifactId>
   <version>1.1.1-SNAPSHOT</version>
-  <name>Bonita AI Connectors - AnthropicAI</name>
+  <name>AnthropicAI</name>
   <description>Bonita connectors for interacting with Anthropic Claude AI models by sending prompt and documents and returning the generated output.</description>
   <properties>
     <license-header-file>${project.parent.basedir}/src/format/header.txt</license-header-file>
