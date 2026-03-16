@@ -178,7 +178,7 @@
           <mutators>
             <mutator>STRONGER</mutator>
           </mutators>
-          <mutationThreshold>80</mutationThreshold>
+          <mutationThreshold>85</mutationThreshold>
           <coverageThreshold>90</coverageThreshold>
           <timestampedReports>false</timestampedReports>
           <jvmArgs>
