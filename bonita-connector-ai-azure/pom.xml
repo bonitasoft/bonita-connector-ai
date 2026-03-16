@@ -56,6 +56,38 @@
       <type>test-jar</type>
       <scope>test</scope>
     </dependency>
+    <!-- Toolkit IT: Testcontainers + Bonita client -->
+    <dependency>
+      <groupId>org.testcontainers</groupId>
+      <artifactId>testcontainers</artifactId>
+      <version>1.20.4</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.testcontainers</groupId>
+      <artifactId>junit-jupiter</artifactId>
+      <version>1.20.4</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.bonitasoft.web</groupId>
+      <artifactId>bonita-java-client</artifactId>
+      <version>1.0.1</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.awaitility</groupId>
+      <artifactId>awaitility</artifactId>
+      <version>4.2.2</version>
+      <scope>test</scope>
+    </dependency>
+    <!-- Bonita Test Toolkit (BTT) -->
+    <dependency>
+      <groupId>com.bonitasoft</groupId>
+      <artifactId>bonita-test-toolkit</artifactId>
+      <version>3.1.0</version>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
   <build>
     <plugins>
@@ -84,4 +116,31 @@
       </plugin>
     </plugins>
   </build>
+  <profiles>
+    <profile>
+      <id>ITs</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-failsafe-plugin</artifactId>
+            <configuration>
+              <systemPropertyVariables>
+                <bonita.target>${bonita.target}</bonita.target>
+                <bonita.url>${bonita.url}</bonita.url>
+                <bonita.tech.user>${bonita.tech.user}</bonita.tech.user>
+                <bonita.tech.password>${bonita.tech.password}</bonita.tech.password>
+                <bonita.version>${bonita.version}</bonita.version>
+              </systemPropertyVariables>
+              <environmentVariables>
+                <AZURE_OPENAI_API_KEY>${env.AZURE_OPENAI_API_KEY}</AZURE_OPENAI_API_KEY>
+                <AZURE_OPENAI_ENDPOINT>${env.AZURE_OPENAI_ENDPOINT}</AZURE_OPENAI_ENDPOINT>
+                <AZURE_OPENAI_MODEL>${env.AZURE_OPENAI_MODEL}</AZURE_OPENAI_MODEL>
+              </environmentVariables>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
 </project>

@@ -8,7 +8,7 @@
   </parent>
   <artifactId>bonita-connector-ai-anthropic</artifactId>
   <version>1.1.1-SNAPSHOT</version>
-  <name>Bonita AI Connectors - Anthropic</name>
+  <name>Bonita AI Connectors - AnthropicAI</name>
   <description>Bonita connectors for interacting with Anthropic Claude AI models by sending prompt and documents and returning the generated output.</description>
   <properties>
     <license-header-file>${project.parent.basedir}/src/format/header.txt</license-header-file>
@@ -191,4 +191,29 @@
       </plugin>
     </plugins>
   </build>
+  <profiles>
+    <profile>
+      <id>ITs</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-failsafe-plugin</artifactId>
+            <configuration>
+              <systemPropertyVariables>
+                <bonita.target>${bonita.target}</bonita.target>
+                <bonita.url>${bonita.url}</bonita.url>
+                <bonita.tech.user>${bonita.tech.user}</bonita.tech.user>
+                <bonita.tech.password>${bonita.tech.password}</bonita.tech.password>
+                <bonita.version>${bonita.version}</bonita.version>
+              </systemPropertyVariables>
+              <environmentVariables>
+                <ANTHROPIC_API_KEY>${env.ANTHROPIC_API_KEY}</ANTHROPIC_API_KEY>
+              </environmentVariables>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
 </project>

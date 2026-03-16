@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.connectors.ai.anthropic.toolkit;
+package org.bonitasoft.connectors.ai.azure.toolkit;
 
 import static com.bonitasoft.test.toolkit.predicate.ConnectorPredicates.*;
 import static com.bonitasoft.test.toolkit.predicate.ProcessInstancePredicates.*;
@@ -33,81 +33,81 @@ import java.time.Duration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.IntStream;
 import lombok.extern.slf4j.Slf4j;
 import org.bonitasoft.engine.bpm.bar.BusinessArchiveFactory;
 import org.bonitasoft.web.client.BonitaClient;
+import org.bonitasoft.web.client.services.policies.OrganizationImportPolicy;
 import org.bonitasoft.web.client.services.policies.ProcessImportPolicy;
 import org.junit.jupiter.api.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.testcontainers.containers.GenericContainer;
+import org.testcontainers.containers.output.Slf4jLogConsumer;
+import org.testcontainers.containers.wait.strategy.Wait;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
+import org.testcontainers.utility.DockerImageName;
 
 /**
- * Integration tests using BTT against Bonita Studio runtime (localhost:8080).
+ * Integration tests using Bonita Test Toolkit (BTT) 3.1.0 against a real Bonita runtime
+ * deployed via Testcontainers (Docker).
  *
- * <p>Automatically builds a BAR with the Anthropic connector, deploys it to the Studio,
- * and runs the tests using BTT.
+ * <p>Run with: {@code mvn verify -PITs}
  *
- * <p>Run with:
- * <pre>{@code
- * mvn verify -PITs -Dbonita.target=studio
- * }</pre>
+ * <p>Requires: Docker running, AZURE_OPENAI_API_KEY and AZURE_OPENAI_ENDPOINT env vars set
  *
- * <p>Requires: Bonita Studio running at localhost:8080, ANTHROPIC_API_KEY env var set
+ * @see AzureConnectorStudioIT for running against Bonita Studio
  */
 @Slf4j
+@Testcontainers
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-class AnthropicConnectorStudioIT {
+class AzureConnectorBttIT {
 
     private static final String PROCESS_NAME = "AI_CONNECTOR_TEST";
-    private static final String CONNECTOR_DEF_ID = "anthropic-ask";
+    private static final String CONNECTOR_DEF_ID = "azure-ask";
     private static final String CONNECTOR_DEF_VERSION = "1.0.0";
-    private static final String ARTIFACT_ID = "bonita-connector-ai-anthropic";
+    private static final String ARTIFACT_ID = "bonita-connector-ai-azure";
 
-    private static final String DEFAULT_STUDIO_URL = "http://localhost:8080/bonita";
-    private static final String DEFAULT_TECH_USER = "install";
-    private static final String DEFAULT_TECH_PASSWORD = "install";
+    private static final Logger LOGGER = LoggerFactory.getLogger(AzureConnectorBttIT.class);
+    private static final String BONITA_VERSION =
+            System.getProperty("bonita.version", Objects.requireNonNullElse(System.getenv("BONITA_VERSION"), "2025.2"));
 
-    private static String studioUrl() {
-        String url = System.getProperty("bonita.url", "");
-        return url.isEmpty() || url.startsWith("$") ? DEFAULT_STUDIO_URL : url;
-    }
-
-    private static String techUser() {
-        String user = System.getProperty("bonita.tech.user", "");
-        return user.isEmpty() || user.startsWith("$") ? DEFAULT_TECH_USER : user;
-    }
-
-    private static String techPassword() {
-        String pass = System.getProperty("bonita.tech.password", "");
-        return pass.isEmpty() || pass.startsWith("$") ? DEFAULT_TECH_PASSWORD : pass;
-    }
+    @Container
+    static GenericContainer<?> BONITA_CONTAINER = new GenericContainer<>(
+                    DockerImageName.parse(String.format("bonita:%s", BONITA_VERSION)))
+            .withExposedPorts(8080)
+            .waitingFor(Wait.forHttp("/bonita").withStartupTimeout(Duration.ofMinutes(3)))
+            .withLogConsumer(new Slf4jLogConsumer(LOGGER));
 
     private static BonitaClient bonitaClient;
     private static BonitaTestToolkit toolkit;
 
     @BeforeAll
     static void setUp() throws Exception {
-        Assumptions.assumeTrue(System.getenv("ANTHROPIC_API_KEY") != null, "ANTHROPIC_API_KEY env var required");
-        // Verify Studio is reachable
-        String url = studioUrl();
-        String user = techUser();
-        String pass = techPassword();
-        try {
-            bonitaClient = BonitaClient.builder(url).build();
-            bonitaClient.login(user, pass);
-        } catch (Exception e) {
-            Assumptions.abort("Studio not reachable at " + url + ": " + e.getMessage());
-            return;
+        String bonitaUrl =
+                String.format("http://%s:%s/bonita", BONITA_CONTAINER.getHost(), BONITA_CONTAINER.getFirstMappedPort());
+
+        bonitaClient = BonitaClient.builder(bonitaUrl).build();
+        bonitaClient.login("install", "install");
+
+        // Import ACME organization (provides walter.bates user)
+        var orgFile = AzureConnectorBttIT.class.getResource("/ACME.xml");
+        if (orgFile != null) {
+            bonitaClient
+                    .users()
+                    .importOrganization(new File(orgFile.getFile()), OrganizationImportPolicy.IGNORE_DUPLICATES);
         }
 
-        log.info("Deploying connector process to Studio at {}", url);
+        // Build BAR and deploy
         deployConnectorProcess(bonitaClient);
-        log.info("Connector process deployed successfully");
 
         // Initialize BTT
-        System.setProperty("bonita.url", url);
-        System.setProperty("bonita.tech.user", user);
-        System.setProperty("bonita.tech.password", pass);
-        toolkit = BonitaTestToolkitFactory.INSTANCE.get(AnthropicConnectorStudioIT.class);
+        System.setProperty("bonita.url", bonitaUrl);
+        System.setProperty("bonita.tech.user", "install");
+        System.setProperty("bonita.tech.password", "install");
+        toolkit = BonitaTestToolkitFactory.INSTANCE.get(AzureConnectorBttIT.class);
     }
 
     @AfterAll
@@ -119,29 +119,47 @@ class AnthropicConnectorStudioIT {
 
     @Test
     @Order(1)
-    @DisplayName("[Studio] Connector should execute and produce output")
-    void should_execute_ask_connector_in_studio() {
+    @DisplayName("Connector should execute successfully in a Bonita process")
+    void should_execute_ask_connector_and_complete_process() {
         ProcessDefinition processDef = toolkit.getProcessDefinition(PROCESS_NAME);
         User user = toolkit.getUser("walter.bates");
 
         ProcessInstance processInstance = processDef.startProcessFor(user);
 
-        await("Process started").atMost(Duration.ofMinutes(3)).until(processInstance, processInstanceStarted());
+        await("Process started and connector executed")
+                .atMost(Duration.ofMinutes(3))
+                .until(processInstance, processInstanceStarted());
 
-        await("Connector completed")
+        await("Ask connector completed")
                 .atMost(Duration.ofMinutes(3))
                 .until(processInstance.getConnector("ai-connector-under-test"), connectorIsDone());
 
         var askResult = processInstance.getVariable("askResult");
         assertThat(askResult).isNotNull();
-        log.info("[Studio] Connector output: {}", askResult.getValue());
-        assertThat(askResult.getValue()).asString().isNotEmpty().contains("4");
+        log.info("Connector output (askResult): {}", askResult.getValue());
+        assertThat(askResult.getValue()).asString().isNotEmpty();
     }
 
     @Test
     @Order(2)
-    @DisplayName("[Studio] Process tasks should be tracked")
-    void should_track_tasks_in_studio() {
+    @DisplayName("Connector output should contain expected answer")
+    void should_return_correct_answer() {
+        ProcessDefinition processDef = toolkit.getProcessDefinition(PROCESS_NAME);
+        User user = toolkit.getUser("walter.bates");
+
+        ProcessInstance processInstance = processDef.startProcessFor(user);
+        await().atMost(Duration.ofMinutes(3)).until(processInstance, processInstanceStarted());
+        await().atMost(Duration.ofMinutes(3))
+                .until(processInstance.getConnector("ai-connector-under-test"), connectorIsDone());
+
+        var askResult = processInstance.getVariable("askResult");
+        assertThat(askResult.getValue()).asString().contains("4");
+    }
+
+    @Test
+    @Order(3)
+    @DisplayName("Process tasks should be tracked correctly")
+    void should_track_process_tasks() {
         ProcessDefinition processDef = toolkit.getProcessDefinition(PROCESS_NAME);
         User user = toolkit.getUser("walter.bates");
 
@@ -150,16 +168,16 @@ class AnthropicConnectorStudioIT {
 
         List<Task> tasks = processInstance.searchTasks();
         assertThat(tasks).isNotEmpty();
-        log.info("[Studio] Tasks: {}", tasks.stream().map(Task::getName).toList());
+        log.info("Tasks found: {}", tasks.stream().map(Task::getName).toList());
     }
 
     @Test
     @Order(10)
-    @DisplayName("[Studio] Load test: 5 concurrent instances")
-    void should_handle_concurrent_executions_in_studio() {
+    @DisplayName("Load test: 10 concurrent process instances")
+    void should_handle_concurrent_process_executions() {
         ProcessDefinition processDef = toolkit.getProcessDefinition(PROCESS_NAME);
         User user = toolkit.getUser("walter.bates");
-        int concurrentInstances = 5;
+        int concurrentInstances = 10;
 
         long startTime = System.currentTimeMillis();
         List<ProcessInstance> instances = IntStream.range(0, concurrentInstances)
@@ -174,7 +192,7 @@ class AnthropicConnectorStudioIT {
 
         long totalTime = System.currentTimeMillis() - startTime;
         log.info(
-                "[Studio] Load test: {} instances in {} ms (avg {} ms/instance)",
+                "Load test: {} instances started in {} ms (avg {} ms/instance)",
                 concurrentInstances,
                 totalTime,
                 totalTime / concurrentInstances);
@@ -182,10 +200,11 @@ class AnthropicConnectorStudioIT {
 
     @Test
     @Order(11)
-    @DisplayName("[Studio] Performance: connector within 30s threshold")
-    void should_execute_within_threshold_in_studio() {
+    @DisplayName("Performance: connector execution time within threshold")
+    void should_execute_connector_within_time_threshold() {
         ProcessDefinition processDef = toolkit.getProcessDefinition(PROCESS_NAME);
         User user = toolkit.getUser("walter.bates");
+        long maxExecutionTimeMs = 30_000;
 
         long startTime = System.currentTimeMillis();
         ProcessInstance processInstance = processDef.startProcessFor(user);
@@ -194,15 +213,22 @@ class AnthropicConnectorStudioIT {
                 .until(processInstance.getConnector("ai-connector-under-test"), connectorIsDone());
         long executionTime = System.currentTimeMillis() - startTime;
 
-        log.info("[Studio] Connector execution time: {} ms", executionTime);
-        assertThat(executionTime).isLessThan(30_000);
+        log.info("Connector execution time: {} ms", executionTime);
+        assertThat(executionTime)
+                .as("Connector execution should complete within %d ms", maxExecutionTimeMs)
+                .isLessThan(maxExecutionTimeMs);
     }
 
-    private static void deployConnectorProcess(BonitaClient client) throws Exception {
+    /**
+     * Builds a BAR with the Azure Ask connector and deploys it to the target Bonita runtime.
+     */
+    static void deployConnectorProcess(BonitaClient client) throws Exception {
         Map<String, String> inputs = new HashMap<>();
         inputs.put("userPrompt", "What is 2+2? Answer with just the number.");
         inputs.put("systemPrompt", "You are a helpful assistant. Be concise.");
-        inputs.put("apiKey", System.getenv("ANTHROPIC_API_KEY"));
+        inputs.put("url", System.getenv("AZURE_OPENAI_ENDPOINT"));
+        inputs.put("apiKey", System.getenv("AZURE_OPENAI_API_KEY"));
+        inputs.put("chatModelName", Objects.requireNonNullElse(System.getenv("AZURE_OPENAI_MODEL"), "gpt-4o"));
 
         Map<String, AiConnectorTestToolkit.Output> outputs = new HashMap<>();
         outputs.put("askResult", AiConnectorTestToolkit.Output.create("output", String.class.getName()));
@@ -212,11 +238,10 @@ class AnthropicConnectorStudioIT {
 
         File barFile = null;
         try {
-            barFile = Files.createTempFile("anthropic-studio-test", ".bar").toFile();
+            barFile = Files.createTempFile("azure-btt-test", ".bar").toFile();
             barFile.delete();
             BusinessArchiveFactory.writeBusinessArchiveToFile(barArchive, barFile);
             client.processes().importProcess(barFile, ProcessImportPolicy.REPLACE_DUPLICATES);
-            log.info("BAR deployed: {}", barFile.getName());
         } finally {
             if (barFile != null) {
                 barFile.delete();

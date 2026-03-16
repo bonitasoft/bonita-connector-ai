@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.connectors.ai.anthropic.toolkit;
+package org.bonitasoft.connectors.ai.azure.toolkit;
 
 import static com.bonitasoft.test.toolkit.predicate.ConnectorPredicates.*;
 import static com.bonitasoft.test.toolkit.predicate.ProcessInstancePredicates.*;
@@ -33,6 +33,7 @@ import java.time.Duration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.IntStream;
 import lombok.extern.slf4j.Slf4j;
 import org.bonitasoft.engine.bpm.bar.BusinessArchiveFactory;
@@ -43,7 +44,7 @@ import org.junit.jupiter.api.*;
 /**
  * Integration tests using BTT against Bonita Studio runtime (localhost:8080).
  *
- * <p>Automatically builds a BAR with the Anthropic connector, deploys it to the Studio,
+ * <p>Automatically builds a BAR with the Azure OpenAI connector, deploys it to the Studio,
  * and runs the tests using BTT.
  *
  * <p>Run with:
@@ -51,16 +52,16 @@ import org.junit.jupiter.api.*;
  * mvn verify -PITs -Dbonita.target=studio
  * }</pre>
  *
- * <p>Requires: Bonita Studio running at localhost:8080, ANTHROPIC_API_KEY env var set
+ * <p>Requires: Bonita Studio running at localhost:8080, AZURE_OPENAI_API_KEY and AZURE_OPENAI_ENDPOINT env vars set
  */
 @Slf4j
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-class AnthropicConnectorStudioIT {
+class AzureConnectorStudioIT {
 
     private static final String PROCESS_NAME = "AI_CONNECTOR_TEST";
-    private static final String CONNECTOR_DEF_ID = "anthropic-ask";
+    private static final String CONNECTOR_DEF_ID = "azure-ask";
     private static final String CONNECTOR_DEF_VERSION = "1.0.0";
-    private static final String ARTIFACT_ID = "bonita-connector-ai-anthropic";
+    private static final String ARTIFACT_ID = "bonita-connector-ai-azure";
 
     private static final String DEFAULT_STUDIO_URL = "http://localhost:8080/bonita";
     private static final String DEFAULT_TECH_USER = "install";
@@ -86,7 +87,9 @@ class AnthropicConnectorStudioIT {
 
     @BeforeAll
     static void setUp() throws Exception {
-        Assumptions.assumeTrue(System.getenv("ANTHROPIC_API_KEY") != null, "ANTHROPIC_API_KEY env var required");
+        Assumptions.assumeTrue(System.getenv("AZURE_OPENAI_API_KEY") != null, "AZURE_OPENAI_API_KEY env var required");
+        Assumptions.assumeTrue(
+                System.getenv("AZURE_OPENAI_ENDPOINT") != null, "AZURE_OPENAI_ENDPOINT env var required");
         // Verify Studio is reachable
         String url = studioUrl();
         String user = techUser();
@@ -107,7 +110,7 @@ class AnthropicConnectorStudioIT {
         System.setProperty("bonita.url", url);
         System.setProperty("bonita.tech.user", user);
         System.setProperty("bonita.tech.password", pass);
-        toolkit = BonitaTestToolkitFactory.INSTANCE.get(AnthropicConnectorStudioIT.class);
+        toolkit = BonitaTestToolkitFactory.INSTANCE.get(AzureConnectorStudioIT.class);
     }
 
     @AfterAll
@@ -202,7 +205,9 @@ class AnthropicConnectorStudioIT {
         Map<String, String> inputs = new HashMap<>();
         inputs.put("userPrompt", "What is 2+2? Answer with just the number.");
         inputs.put("systemPrompt", "You are a helpful assistant. Be concise.");
-        inputs.put("apiKey", System.getenv("ANTHROPIC_API_KEY"));
+        inputs.put("url", System.getenv("AZURE_OPENAI_ENDPOINT"));
+        inputs.put("apiKey", System.getenv("AZURE_OPENAI_API_KEY"));
+        inputs.put("chatModelName", Objects.requireNonNullElse(System.getenv("AZURE_OPENAI_MODEL"), "gpt-4o"));
 
         Map<String, AiConnectorTestToolkit.Output> outputs = new HashMap<>();
         outputs.put("askResult", AiConnectorTestToolkit.Output.create("output", String.class.getName()));
@@ -212,7 +217,7 @@ class AnthropicConnectorStudioIT {
 
         File barFile = null;
         try {
-            barFile = Files.createTempFile("anthropic-studio-test", ".bar").toFile();
+            barFile = Files.createTempFile("azure-studio-test", ".bar").toFile();
             barFile.delete();
             BusinessArchiveFactory.writeBusinessArchiveToFile(barArchive, barFile);
             client.processes().importProcess(barFile, ProcessImportPolicy.REPLACE_DUPLICATES);
