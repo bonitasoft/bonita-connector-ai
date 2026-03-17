@@ -35,14 +35,22 @@ jobs:
           cache: "maven"
 
       - name: Configure Maven Settings
+        if: ${{ secrets.KSM_CONFIG != '' }}
         uses: bonitasoft/maven-settings-action@v1
         with:
           keeper-secret-config: ${{ secrets.KSM_CONFIG }}
 
-      - name: Build
+      - name: Build (with JFrog credentials)
+        if: ${{ secrets.KSM_CONFIG != '' }}
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Needed to get PR information, if any
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: ./mvnw -B -ntp clean verify
+
+      - name: Build (without JFrog - fork PRs)
+        if: ${{ secrets.KSM_CONFIG == '' }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: ./mvnw -B -ntp clean verify -pl '!bonita-connector-ai-anthropic,!bonita-connector-ai-azure'
 
       - name: Publish Test Report
         uses: mikepenz/action-junit-report@v6
