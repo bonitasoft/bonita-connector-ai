@@ -66,6 +66,11 @@ jobs:
           distribution: 'temurin'
           java-version: 17
 
+      - name: Configure Maven Settings
+        uses: bonitasoft/maven-settings-action@v1
+        with:
+          keeper-secret-config: ${{ secrets.KSM_CONFIG }}
+
       # Autobuild attempts to build any compiled languages (C/C++, C#, Go, Java, or Swift).
       # If this step fails, then you should remove it and run the build manually (see below)
       # - name: Autobuild

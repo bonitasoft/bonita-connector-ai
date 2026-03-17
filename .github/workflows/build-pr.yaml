@@ -34,6 +34,11 @@ jobs:
           java-version: 17
           cache: "maven"
 
+      - name: Configure Maven Settings
+        uses: bonitasoft/maven-settings-action@v1
+        with:
+          keeper-secret-config: ${{ secrets.KSM_CONFIG }}
+
       - name: Build
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Needed to get PR information, if any
