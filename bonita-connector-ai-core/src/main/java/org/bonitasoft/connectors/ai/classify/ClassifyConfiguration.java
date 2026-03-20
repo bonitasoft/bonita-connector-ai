@@ -20,16 +20,23 @@ import java.util.ArrayList;
 import java.util.List;
 import lombok.Builder;
 import lombok.Data;
+import org.bonitasoft.connectors.ai.DocumentRefUtils;
 
 @Data
 @Builder
 public class ClassifyConfiguration {
 
     public static final String SOURCE_DOCUMENT_REF = "sourceDocumentRef";
+    public static final String SOURCE_DOCUMENT_REFS = "sourceDocumentRefs";
     public static final String CATEGORY_LIST = "categories";
 
     private final String sourceDocumentRef;
+    private List<String> sourceDocumentRefs;
 
     @Builder.Default
     private List<String> categories = new ArrayList<>();
+
+    public List<String> getAllDocumentRefs() {
+        return DocumentRefUtils.getAllDocumentRefs(sourceDocumentRef, sourceDocumentRefs);
+    }
 }

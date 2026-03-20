@@ -16,9 +16,14 @@
  */
 package org.bonitasoft.connectors.ai.ask;
 
+import java.util.List;
 import org.bonitasoft.connectors.ai.UserDocument;
 
 public interface AskChat {
 
-    String ask(String systemPrompt, String userPrompt, String jsonSchema, UserDocument document);
+    String ask(String systemPrompt, String userPrompt, String jsonSchema, List<UserDocument> documents);
+
+    default String ask(String systemPrompt, String userPrompt, String jsonSchema, UserDocument document) {
+        return ask(systemPrompt, userPrompt, jsonSchema, document != null ? List.of(document) : List.of());
+    }
 }

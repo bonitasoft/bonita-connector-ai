@@ -50,7 +50,7 @@ public abstract class ClassifyAiChat<T extends ChatModel> extends AbstractAiChat
     }
 
     @Override
-    public String classify(List<String> categories, UserDocument document) {
+    public String classify(List<String> categories, List<UserDocument> documents) {
 
         var messages = new ArrayList<ChatMessage>();
         // System prompt
@@ -61,9 +61,10 @@ public abstract class ClassifyAiChat<T extends ChatModel> extends AbstractAiChat
         Prompt prompt = PromptTemplate.from(userPrompt).apply(Map.of("categories", categoriesForPrompt));
         var userMessage = prompt.toUserMessage();
         messages.add(userMessage);
-        // Doc
-        var docMessage = newDocMessage(document);
-        messages.add(docMessage);
+        // Docs
+        if (documents != null) {
+            messages.addAll(newDocMessages(documents));
+        }
 
         var chatRequest = ChatRequest.builder().messages(messages).build();
         ChatResponse chatResponse = getChatModel().chat(chatRequest);

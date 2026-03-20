@@ -1,0 +1,156 @@
+# NOTE: The pitest-maven plugin is NOT yet configured in pom.xml.
+# Before running this workflow, add the following plugin to pom.xml <build><plugins>:
+#
+# <plugin>
+#     <groupId>org.pitest</groupId>
+#     <artifactId>pitest-maven</artifactId>
+#     <version>1.15.3</version>
+#     <dependencies>
+#         <dependency>
+#             <groupId>org.pitest</groupId>
+#             <artifactId>pitest-junit5-plugin</artifactId>
+#             <version>1.2.1</version>
+#         </dependency>
+#     </dependencies>
+#     <configuration>
+#         <targetClasses>
+#             <param>com.bonitasoft.connector.ai.*</param>
+#         </targetClasses>
+#         <targetTests>
+#             <param>com.bonitasoft.connector.ai.*Test</param>
+#         </targetTests>
+#         <mutators>
+#             <mutator>DEFAULTS</mutator>
+#         </mutators>
+#         <outputFormats>
+#             <param>HTML</param>
+#             <param>CSV</param>
+#             <param>XML</param>
+#         </outputFormats>
+#         <timestampedReports>false</timestampedReports>
+#     </configuration>
+# </plugin>
+
+name: Mutation Testing (PIT)
+
+on:
+  workflow_dispatch:
+    inputs:
+      mutators:
+        description: 'Mutator group'
+        required: true
+        default: 'DEFAULTS'
+        type: choice
+        options:
+          - DEFAULTS
+          - STRONGER
+
+jobs:
+  mutation-testing:
+    name: PIT Mutation Testing
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: 17
+          cache: maven
+
+      - name: Run PIT Mutation Tests
+        run: |
+          ./mvnw -B -ntp org.pitest:pitest-maven:mutationCoverage \
+            -Dmutators="${{ inputs.mutators }}" \
+            -DoutputFormats=HTML,CSV,XML \
+            -DtimestampedReports=false
+
+      - name: Generate GitHub Summary
+        if: always()
+        run: |
+          echo "## Mutation Testing Report" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Mutator group:** \`${{ inputs.mutators }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          # Find the pit-reports directory
+          PIT_DIR=$(find . -type d -name "pit-reports" | head -1)
+
+          if [ -z "$PIT_DIR" ]; then
+            echo "> No PIT reports found. The mutation testing may have failed." >> $GITHUB_STEP_SUMMARY
+            exit 0
+          fi
+
+          # Parse HTML report for summary statistics
+          INDEX_HTML="$PIT_DIR/index.html"
+          if [ -f "$INDEX_HTML" ]; then
+            echo "### Summary" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+
+            # Extract mutation score from HTML
+            MUTATION_COVERAGE=$(grep -oP '(?<=<td>)\d+%(?=</td>)' "$INDEX_HTML" | tail -1 || echo "N/A")
+            LINE_COVERAGE=$(grep -oP '(?<=<td>)\d+%(?=</td>)' "$INDEX_HTML" | head -1 || echo "N/A")
+
+            echo "| Metric | Value |" >> $GITHUB_STEP_SUMMARY
+            echo "|--------|-------|" >> $GITHUB_STEP_SUMMARY
+            echo "| Line Coverage | $LINE_COVERAGE |" >> $GITHUB_STEP_SUMMARY
+            echo "| Mutation Coverage | $MUTATION_COVERAGE |" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+          fi
+
+          # Parse CSV for detailed breakdown
+          CSV_FILE=$(find "$PIT_DIR" -name "mutations.csv" | head -1)
+          if [ -f "$CSV_FILE" ]; then
+            TOTAL=$(wc -l < "$CSV_FILE")
+            TOTAL=$((TOTAL - 0))  # CSV has no header in PIT
+            KILLED=$(grep -c ",KILLED," "$CSV_FILE" || echo 0)
+            SURVIVED=$(grep -c ",SURVIVED," "$CSV_FILE" || echo 0)
+            NO_COVERAGE=$(grep -c ",NO_COVERAGE," "$CSV_FILE" || echo 0)
+            TIMED_OUT=$(grep -c ",TIMED_OUT," "$CSV_FILE" || echo 0)
+
+            if [ "$TOTAL" -gt 0 ]; then
+              SCORE=$((KILLED * 100 / TOTAL))
+            else
+              SCORE=0
+            fi
+
+            echo "### Detailed Breakdown" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "| Status | Count |" >> $GITHUB_STEP_SUMMARY
+            echo "|--------|-------|" >> $GITHUB_STEP_SUMMARY
+            echo "| Killed | $KILLED |" >> $GITHUB_STEP_SUMMARY
+            echo "| Survived | $SURVIVED |" >> $GITHUB_STEP_SUMMARY
+            echo "| No Coverage | $NO_COVERAGE |" >> $GITHUB_STEP_SUMMARY
+            echo "| Timed Out | $TIMED_OUT |" >> $GITHUB_STEP_SUMMARY
+            echo "| **Total** | **$TOTAL** |" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "**Mutation Score: ${SCORE}%** ($KILLED killed / $TOTAL total)" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+
+            # List surviving mutants if any
+            if [ "$SURVIVED" -gt 0 ]; then
+              echo "### Surviving Mutants" >> $GITHUB_STEP_SUMMARY
+              echo "" >> $GITHUB_STEP_SUMMARY
+              echo "<details>" >> $GITHUB_STEP_SUMMARY
+              echo "<summary>Click to expand ($SURVIVED surviving mutants)</summary>" >> $GITHUB_STEP_SUMMARY
+              echo "" >> $GITHUB_STEP_SUMMARY
+              echo '```' >> $GITHUB_STEP_SUMMARY
+              grep ",SURVIVED," "$CSV_FILE" | while IFS=',' read -r FILE CLASS MUTATOR METHOD LINE_NUM STATUS KILLING_TEST; do
+                echo "- $CLASS:$LINE_NUM ($MUTATOR) in $METHOD"
+              done >> $GITHUB_STEP_SUMMARY
+              echo '```' >> $GITHUB_STEP_SUMMARY
+              echo "" >> $GITHUB_STEP_SUMMARY
+              echo "</details>" >> $GITHUB_STEP_SUMMARY
+            fi
+          fi
+
+      - name: Upload PIT Reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pit-reports
+          path: '**/target/pit-reports/'
+          retention-days: 30

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<implementation:connectorImplementation xmlns:implementation="http://www.bonitasoft.org/ns/connector/implementation/6.0">
+  <implementationId>${azure.extract.impl.id}</implementationId>
+  <implementationVersion>${azure.extract.impl.version}</implementationVersion>
+  <definitionId>${azure.extract.def.id}</definitionId>
+  <definitionVersion>${azure.extract.def.version}</definitionVersion>
+  <implementationClassname>${azure.extract.main-class}</implementationClassname>
+  <description>Default ${azure.extract.def.id} implementation</description>
+
+${connector-dependencies}
+
+</implementation:connectorImplementation>

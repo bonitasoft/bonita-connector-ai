@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:actormapping="http://www.bonitasoft.org/ns/actormapping/6.0" xmlns:configuration="http://www.bonitasoft.org/ns/bpm/configuration" xmlns:connectorconfiguration="http://www.bonitasoft.org/model/connector/configuration" xmlns:decision="http://www.bonitasoft.org/ns/bpm/process/decision" xmlns:definition="http://www.bonitasoft.org/ns/connector/definition/6.1" xmlns:expression="http://www.bonitasoft.org/ns/bpm/expression" xmlns:notation="http://www.eclipse.org/gmf/runtime/1.0.3/notation" xmlns:process="http://www.bonitasoft.org/ns/bpm/process">
+  <process:MainProcess xmi:id="_AzDemoMp01" name="AzureOpenAIDemo" bonitaModelVersion="9">
+    <elements xmi:type="process:Pool" xmi:id="_AzDemoPool01" name="Azure OpenAI Demo">
+      <elements xmi:type="process:Lane" xmi:id="_AzDemoLane01" name="Employee lane" actor="_AzDemoActor01">
+        <elements xmi:type="process:StartEvent" xmi:id="_AzDemoStart01" name="Start" outgoing="_AzDemoFlow01">
+          <dynamicLabel xmi:type="expression:Expression" xmi:id="_AzDemoStart01dl" name="" content="" returnTypeFixed="true"/>
+          <dynamicDescription xmi:type="expression:Expression" xmi:id="_AzDemoStart01dd" name="" content="" returnTypeFixed="true"/>
+          <stepSummary xmi:type="expression:Expression" xmi:id="_AzDemoStart01ss" name="" content="" returnTypeFixed="true"/>
+        </elements>
+        <elements xmi:type="process:ServiceTask" xmi:id="_AzDemoTaskAsk01" name="Ask Azure" incoming="_AzDemoFlow01" outgoing="_AzDemoFlow02">
+          <dynamicLabel xmi:type="expression:Expression" xmi:id="_AzDemoTaskAsk01dl" name="" content="" returnTypeFixed="true"/>
+          <dynamicDescription xmi:type="expression:Expression" xmi:id="_AzDemoTaskAsk01dd" name="" content="" returnTypeFixed="true"/>
+          <stepSummary xmi:type="expression:Expression" xmi:id="_AzDemoTaskAsk01ss" name="" content="" returnTypeFixed="true"/>
+          <connectors xmi:type="process:Connector" xmi:id="_AzDemoConn01" name="Azure Ask" definitionId="azure-ask" event="ON_ENTER" definitionVersion="1.0.0">
+            <configuration xmi:type="connectorconfiguration:ConnectorConfiguration" xmi:id="_AzDemoConf01" definitionId="azure-ask" version="1.0.0" modelVersion="9">
+              <parameters xmi:type="connectorconfiguration:ConnectorParameter" xmi:id="_AzDemoConfP01" key="userPrompt">
+                <expression xmi:type="expression:Expression" xmi:id="_AzDemoConfE01" name="userPrompt" content="What is the capital of France? Answer with just the city name." type="TYPE_CONSTANT" returnType="java.lang.String"/>
+              </parameters>
+              <parameters xmi:type="connectorconfiguration:ConnectorParameter" xmi:id="_AzDemoConfP02" key="systemPrompt">
+                <expression xmi:type="expression:Expression" xmi:id="_AzDemoConfE02" name="systemPrompt" content="You are a helpful assistant." type="TYPE_CONSTANT" returnType="java.lang.String"/>
+              </parameters>
+            </configuration>
+            <outputs xmi:type="expression:Operation" xmi:id="_AzDemoOut01">
+              <leftOperand xmi:type="expression:Expression" xmi:id="_AzDemoOutL01" name="askResult" content="askResult" type="TYPE_VARIABLE" returnType="java.lang.String">
+                <referencedElements xmi:type="process:Data" xmi:id="_AzDemoOutLR01" name="askResult" dataType="_AzDemoStringType"/>
+              </leftOperand>
+              <rightOperand xmi:type="expression:Expression" xmi:id="_AzDemoOutR01" name="output" content="output" type="CONNECTOR_OUTPUT_TYPE" returnType="java.lang.String">
+                <referencedElements xmi:type="definition:Output" xmi:id="_AzDemoOutRR01" name="output" type="java.lang.String"/>
+              </rightOperand>
+              <operator xmi:type="expression:Operator" xmi:id="_AzDemoOutOp01" type="ASSIGNMENT"/>
+            </outputs>
+          </connectors>
+          <loopCondition xmi:type="expression:Expression" xmi:id="_AzDemoTaskAsk01lc" name="" content="" returnType="java.lang.Boolean" returnTypeFixed="true"/>
+          <loopMaximum xmi:type="expression:Expression" xmi:id="_AzDemoTaskAsk01lm" name="" content="" returnType="java.lang.Integer" returnTypeFixed="true"/>
+          <cardinalityExpression xmi:type="expression:Expression" xmi:id="_AzDemoTaskAsk01ce" name="" content="" returnType="java.lang.Integer" returnTypeFixed="true"/>
+          <iteratorExpression xmi:type="expression:Expression" xmi:id="_AzDemoTaskAsk01ie" name="multiInstanceIterator" content="multiInstanceIterator" type="MULTIINSTANCE_ITERATOR_TYPE" returnType="java.lang.Object" returnTypeFixed="true"/>
+          <completionCondition xmi:type="expression:Expression" xmi:id="_AzDemoTaskAsk01cc" name="" content="" returnType="java.lang.Boolean" returnTypeFixed="true"/>
+        </elements>
+        <elements xmi:type="process:Task" xmi:id="_AzDemoTaskRev01" name="Review Results" incoming="_AzDemoFlow02" outgoing="_AzDemoFlow03" overrideActorsOfTheLane="false">
+          <dynamicLabel xmi:type="expression:Expression" xmi:id="_AzDemoTaskRev01dl" name="" content="" returnTypeFixed="true"/>
+          <dynamicDescription xmi:type="expression:Expression" xmi:id="_AzDemoTaskRev01dd" name="" content="" returnTypeFixed="true"/>
+          <stepSummary xmi:type="expression:Expression" xmi:id="_AzDemoTaskRev01ss" name="" content="" returnTypeFixed="true"/>
+          <loopCondition xmi:type="expression:Expression" xmi:id="_AzDemoTaskRev01lc" name="" content="" returnType="java.lang.Boolean" returnTypeFixed="true"/>
+          <loopMaximum xmi:type="expression:Expression" xmi:id="_AzDemoTaskRev01lm" name="" content="" returnType="java.lang.Integer" returnTypeFixed="true"/>
+          <cardinalityExpression xmi:type="expression:Expression" xmi:id="_AzDemoTaskRev01ce" name="" content="" returnType="java.lang.Integer" returnTypeFixed="true"/>
+          <iteratorExpression xmi:type="expression:Expression" xmi:id="_AzDemoTaskRev01ie" name="multiInstanceIterator" content="multiInstanceIterator" type="MULTIINSTANCE_ITERATOR_TYPE" returnType="java.lang.Object" returnTypeFixed="true"/>
+          <completionCondition xmi:type="expression:Expression" xmi:id="_AzDemoTaskRev01cc" name="" content="" returnType="java.lang.Boolean" returnTypeFixed="true"/>
+          <formMapping xmi:type="process:FormMapping" xmi:id="_AzDemoTaskRev01fm" type="NONE">
+            <targetForm xmi:type="expression:Expression" xmi:id="_AzDemoTaskRev01tf" name="" content="" type="FORM_REFERENCE_TYPE" returnTypeFixed="true"/>
+          </formMapping>
+          <contract xmi:type="process:Contract" xmi:id="_AzDemoTaskRev01ct"/>
+          <expectedDuration xmi:type="expression:Expression" xmi:id="_AzDemoTaskRev01ed" name="" content="" returnType="java.lang.Long" returnTypeFixed="true"/>
+        </elements>
+        <elements xmi:type="process:EndEvent" xmi:id="_AzDemoEnd01" name="End" incoming="_AzDemoFlow03">
+          <dynamicLabel xmi:type="expression:Expression" xmi:id="_AzDemoEnd01dl" name="" content="" returnTypeFixed="true"/>
+          <dynamicDescription xmi:type="expression:Expression" xmi:id="_AzDemoEnd01dd" name="" content="" returnTypeFixed="true"/>
+          <stepSummary xmi:type="expression:Expression" xmi:id="_AzDemoEnd01ss" name="" content="" returnTypeFixed="true"/>
+        </elements>
+      </elements>
+      <data xmi:type="process:Data" xmi:id="_AzDemoVarAsk01" name="askResult" dataType="_AzDemoStringType">
+        <defaultValue xmi:type="expression:Expression" xmi:id="_AzDemoVarAsk01dv" name="" content="" returnType="java.lang.String"/>
+      </data>
+      <formMapping xmi:type="process:FormMapping" xmi:id="_AzDemoPool01fm" type="NONE">
+        <targetForm xmi:type="expression:Expression" xmi:id="_AzDemoPool01tf" name="" content="" type="FORM_REFERENCE_TYPE" returnTypeFixed="true"/>
+      </formMapping>
+      <overviewFormMapping xmi:type="process:FormMapping" xmi:id="_AzDemoPool01ofm" type="NONE">
+        <targetForm xmi:type="expression:Expression" xmi:id="_AzDemoPool01otf" name="" content="" type="FORM_REFERENCE_TYPE" returnTypeFixed="true"/>
+      </overviewFormMapping>
+      <connections xmi:type="process:SequenceFlow" xmi:id="_AzDemoFlow01" target="_AzDemoTaskAsk01" source="_AzDemoStart01">
+        <decisionTable xmi:type="decision:DecisionTable" xmi:id="_AzDemoFlow01dt"/>
+        <condition xmi:type="expression:Expression" xmi:id="_AzDemoFlow01cond" name="" returnType="java.lang.Boolean" returnTypeFixed="true"/>
+      </connections>
+      <connections xmi:type="process:SequenceFlow" xmi:id="_AzDemoFlow02" target="_AzDemoTaskRev01" source="_AzDemoTaskAsk01">
+        <decisionTable xmi:type="decision:DecisionTable" xmi:id="_AzDemoFlow02dt"/>
+        <condition xmi:type="expression:Expression" xmi:id="_AzDemoFlow02cond" name="" returnType="java.lang.Boolean" returnTypeFixed="true"/>
+      </connections>
+      <connections xmi:type="process:SequenceFlow" xmi:id="_AzDemoFlow03" target="_AzDemoEnd01" source="_AzDemoTaskRev01">
+        <decisionTable xmi:type="decision:DecisionTable" xmi:id="_AzDemoFlow03dt"/>
+        <condition xmi:type="expression:Expression" xmi:id="_AzDemoFlow03cond" name="" returnType="java.lang.Boolean" returnTypeFixed="true"/>
+      </connections>
+      <actors xmi:type="process:Actor" xmi:id="_AzDemoActor01" name="Employee" initiator="true"/>
+    </elements>
+    <datatypes xmi:type="process:StringType" xmi:id="_AzDemoStringType" name="String"/>
+    <datatypes xmi:type="process:IntegerType" xmi:id="_AzDemoIntType" name="Integer"/>
+    <datatypes xmi:type="process:BooleanType" xmi:id="_AzDemoBoolType" name="Boolean"/>
+  </process:MainProcess>
+  <notation:Diagram xmi:id="_AzDemoDiag01" type="Process" element="_AzDemoMp01" name="AzureOpenAIDemo" measurementUnit="Pixel">
+    <children xmi:type="notation:Node" xmi:id="_AzDemoNPool01" type="2007" element="_AzDemoPool01">
+      <children xmi:type="notation:DecorationNode" xmi:id="_AzDemoNPool01lbl" type="5008"/>
+      <children xmi:type="notation:DecorationNode" xmi:id="_AzDemoNPool01comp" type="7001">
+        <children xmi:type="notation:Node" xmi:id="_AzDemoNLane01" type="3007" element="_AzDemoLane01">
+          <children xmi:type="notation:DecorationNode" xmi:id="_AzDemoNLane01lbl" type="5007"/>
+          <children xmi:type="notation:DecorationNode" xmi:id="_AzDemoNLane01comp" type="7002">
+            <children xmi:type="notation:Shape" xmi:id="_AzDemoSStart01" type="3002" element="_AzDemoStart01" fontName="Segoe UI">
+              <children xmi:type="notation:DecorationNode" xmi:id="_AzDemoSStart01lbl" type="5024">
+                <layoutConstraint xmi:type="notation:Location" xmi:id="_AzDemoSStart01loc" y="5"/>
+              </children>
+              <layoutConstraint xmi:type="notation:Bounds" xmi:id="_AzDemoSStart01bnd" x="48" y="75"/>
+            </children>
+            <children xmi:type="notation:Shape" xmi:id="_AzDemoSTaskAsk01" type="3027" element="_AzDemoTaskAsk01" fontName="Segoe UI" fillColor="14334392" lineColor="10710316">
+              <children xmi:type="notation:DecorationNode" xmi:id="_AzDemoSTaskAsk01lbl" type="5017"/>
+              <layoutConstraint xmi:type="notation:Bounds" xmi:id="_AzDemoSTaskAsk01bnd" x="180" y="60" width="120" height="60"/>
+            </children>
+            <children xmi:type="notation:Shape" xmi:id="_AzDemoSTaskRev01" type="3005" element="_AzDemoTaskRev01" fontName="Segoe UI">
+              <children xmi:type="notation:DecorationNode" xmi:id="_AzDemoSTaskRev01lbl" type="5005"/>
+              <layoutConstraint xmi:type="notation:Bounds" xmi:id="_AzDemoSTaskRev01bnd" x="380" y="60" width="120" height="60"/>
+            </children>
+            <children xmi:type="notation:Shape" xmi:id="_AzDemoSEnd01" type="3003" element="_AzDemoEnd01" fontName="Segoe UI">
+              <children xmi:type="notation:DecorationNode" xmi:id="_AzDemoSEnd01lbl" type="5025">
+                <layoutConstraint xmi:type="notation:Location" xmi:id="_AzDemoSEnd01loc" y="5"/>
+              </children>
+              <layoutConstraint xmi:type="notation:Bounds" xmi:id="_AzDemoSEnd01bnd" x="580" y="75" width="30" height="30"/>
+            </children>
+          </children>
+          <styles xmi:type="notation:DescriptionStyle" xmi:id="_AzDemoNLane01ds"/>
+          <styles xmi:type="notation:FontStyle" xmi:id="_AzDemoNLane01fs" fontName="Segoe UI"/>
+          <styles xmi:type="notation:LineStyle" xmi:id="_AzDemoNLane01ls"/>
+          <styles xmi:type="notation:FillStyle" xmi:id="_AzDemoNLane01fls"/>
+          <layoutConstraint xmi:type="notation:Bounds" xmi:id="_AzDemoNLane01bnd"/>
+        </children>
+      </children>
+      <styles xmi:type="notation:DescriptionStyle" xmi:id="_AzDemoNPool01ds"/>
+      <styles xmi:type="notation:FontStyle" xmi:id="_AzDemoNPool01fs" fontName="Segoe UI"/>
+      <styles xmi:type="notation:LineStyle" xmi:id="_AzDemoNPool01ls"/>
+      <styles xmi:type="notation:FillStyle" xmi:id="_AzDemoNPool01fls"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_AzDemoNPool01bnd" width="800" height="250"/>
+    </children>
+    <styles xmi:type="notation:DiagramStyle" xmi:id="_AzDemoDiag01sty"/>
+    <edges xmi:type="notation:Connector" xmi:id="_AzDemoEFlow01" type="4001" element="_AzDemoFlow01" source="_AzDemoSStart01" target="_AzDemoSTaskAsk01" roundedBendpointsRadius="10" routing="Rectilinear">
+      <children xmi:type="notation:DecorationNode" xmi:id="_AzDemoEFlow01lbl" type="6001">
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_AzDemoEFlow01loc" y="-10"/>
+      </children>
+      <styles xmi:type="notation:FontStyle" xmi:id="_AzDemoEFlow01fs" fontName="Segoe UI"/>
+      <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_AzDemoEFlow01bp" points="[15, 0, -110, 0]$[65, 0, -60, 0]"/>
+      <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_AzDemoEFlow01sa" id="(1.0,0.5)"/>
+      <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_AzDemoEFlow01ta" id="(0.0,0.5)"/>
+    </edges>
+    <edges xmi:type="notation:Connector" xmi:id="_AzDemoEFlow02" type="4001" element="_AzDemoFlow02" source="_AzDemoSTaskAsk01" target="_AzDemoSTaskRev01" roundedBendpointsRadius="10" routing="Rectilinear">
+      <children xmi:type="notation:DecorationNode" xmi:id="_AzDemoEFlow02lbl" type="6001">
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_AzDemoEFlow02loc" y="-10"/>
+      </children>
+      <styles xmi:type="notation:FontStyle" xmi:id="_AzDemoEFlow02fs" fontName="Segoe UI"/>
+      <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_AzDemoEFlow02bp" points="[60, 0, -100, 0]$[100, 0, -60, 0]"/>
+      <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_AzDemoEFlow02sa" id="(1.0,0.5)"/>
+      <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_AzDemoEFlow02ta" id="(0.0,0.5)"/>
+    </edges>
+    <edges xmi:type="notation:Connector" xmi:id="_AzDemoEFlow03" type="4001" element="_AzDemoFlow03" source="_AzDemoSTaskRev01" target="_AzDemoSEnd01" roundedBendpointsRadius="10" routing="Rectilinear">
+      <children xmi:type="notation:DecorationNode" xmi:id="_AzDemoEFlow03lbl" type="6001">
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_AzDemoEFlow03loc" y="-10"/>
+      </children>
+      <styles xmi:type="notation:FontStyle" xmi:id="_AzDemoEFlow03fs" fontName="Segoe UI"/>
+      <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_AzDemoEFlow03bp" points="[60, 0, -100, 0]$[100, 0, -60, 0]"/>
+      <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_AzDemoEFlow03sa" id="(1.0,0.5)"/>
+      <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_AzDemoEFlow03ta" id="(0.0,0.5)"/>
+    </edges>
+  </notation:Diagram>
+</xmi:XMI>
