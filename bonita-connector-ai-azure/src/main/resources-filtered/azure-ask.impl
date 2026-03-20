@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<implementation:connectorImplementation xmlns:implementation="http://www.bonitasoft.org/ns/connector/implementation/6.0">
+  <implementationId>${azure.ask.impl.id}</implementationId>
+  <implementationVersion>${azure.ask.impl.version}</implementationVersion>
+  <definitionId>${azure.ask.def.id}</definitionId>
+  <definitionVersion>${azure.ask.def.version}</definitionVersion>
+  <implementationClassname>${azure.ask.main-class}</implementationClassname>
+  <description>Default ${azure.ask.def.id} implementation</description>
+
+${connector-dependencies}
+
+</implementation:connectorImplementation>

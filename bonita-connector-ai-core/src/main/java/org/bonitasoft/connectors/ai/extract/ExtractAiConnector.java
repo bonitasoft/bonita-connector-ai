@@ -34,11 +34,12 @@ public abstract class ExtractAiConnector<T extends ExtractChat> extends AiConnec
     protected void validateConfiguration() throws ConnectorValidationException {
         var builder = ExtractConfiguration.builder();
         getInputValue(SOURCE_DOCUMENT_REF, String.class).ifPresent(builder::sourceDocumentRef);
+        getInputValue(SOURCE_DOCUMENT_REFS, List.class).ifPresent(builder::sourceDocumentRefs);
         getInputValue(OUTPUT_JSON_SCHEMA, String.class).ifPresent(builder::outputJsonSchema);
         getInputValue(FIELD_LIST, List.class).ifPresent(builder::fieldsToExtract);
         extractConfiguration = builder.build();
 
-        if (extractConfiguration.getSourceDocumentRef().isEmpty()) {
+        if (extractConfiguration.getAllDocumentRefs().isEmpty()) {
             throw new ConnectorValidationException("Source document ref is empty");
         }
         if (extractConfiguration.getFieldsToExtract().isEmpty()
@@ -53,13 +54,12 @@ public abstract class ExtractAiConnector<T extends ExtractChat> extends AiConnec
      */
     @Override
     protected Object doExecute() throws ConnectorException {
-        // Read doc
-        UserDocument userDocument = getUserDocument(extractConfiguration.getSourceDocumentRef());
+        List<UserDocument> userDocuments = getUserDocuments(extractConfiguration.getAllDocumentRefs());
 
         var output = extractConfiguration
                 .getOutputJsonSchema()
-                .map(jsonSchema -> chat.extract(userDocument, jsonSchema))
-                .or(() -> extractConfiguration.getFieldsToExtract().map(fields -> chat.extract(userDocument, fields)));
+                .map(jsonSchema -> chat.extract(userDocuments, jsonSchema))
+                .or(() -> extractConfiguration.getFieldsToExtract().map(fields -> chat.extract(userDocuments, fields)));
 
         return output.orElseThrow(() -> new AiConnectorException("Fields to extract or JSON schema is missing."));
     }

@@ -21,7 +21,15 @@ import org.bonitasoft.connectors.ai.UserDocument;
 
 public interface ExtractChat {
 
-    String extract(UserDocument document, List<String> fields);
+    String extract(List<UserDocument> documents, List<String> fields);
 
-    String extract(UserDocument document, String jsonSchema);
+    String extract(List<UserDocument> documents, String jsonSchema);
+
+    default String extract(UserDocument document, List<String> fields) {
+        return extract(List.of(document), fields);
+    }
+
+    default String extract(UserDocument document, String jsonSchema) {
+        return extract(List.of(document), jsonSchema);
+    }
 }

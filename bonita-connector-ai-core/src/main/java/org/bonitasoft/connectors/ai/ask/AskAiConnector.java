@@ -18,6 +18,7 @@ package org.bonitasoft.connectors.ai.ask;
 
 import static org.bonitasoft.connectors.ai.ask.AskConfiguration.*;
 
+import java.util.List;
 import org.bonitasoft.connectors.ai.AiConnector;
 import org.bonitasoft.connectors.ai.UserDocument;
 import org.bonitasoft.engine.connector.ConnectorException;
@@ -34,6 +35,7 @@ public abstract class AskAiConnector extends AiConnector {
         getInputValue(SYSTEM_PROMPT, String.class).ifPresent(builder::systemPrompt);
         getInputValue(USER_PROMPT, String.class).ifPresent(builder::userPrompt);
         getInputValue(SOURCE_DOCUMENT_REF, String.class).ifPresent(builder::sourceDocumentRef);
+        getInputValue(SOURCE_DOCUMENT_REFS, List.class).ifPresent(builder::sourceDocumentRefs);
         getInputValue(OUTPUT_JSON_SCHEMA, String.class).ifPresent(builder::outputJsonSchema);
         this.askConfiguration = builder.build();
 
@@ -52,17 +54,11 @@ public abstract class AskAiConnector extends AiConnector {
      */
     @Override
     protected Object doExecute() throws ConnectorException {
-
-        // Try to read doc if any
-        UserDocument userDocument = askConfiguration
-                .getSourceDocumentRef()
-                .map(this::getUserDocument)
-                .orElse(null);
-
+        List<UserDocument> userDocuments = getUserDocuments(askConfiguration.getAllDocumentRefs());
         return chat.ask(
                 askConfiguration.getSystemPrompt(),
                 askConfiguration.getUserPrompt(),
                 askConfiguration.getOutputJsonSchema().orElse(null),
-                userDocument);
+                userDocuments);
     }
 }
