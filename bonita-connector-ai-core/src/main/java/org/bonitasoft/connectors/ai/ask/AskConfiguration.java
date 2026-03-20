@@ -16,11 +16,11 @@
  */
 package org.bonitasoft.connectors.ai.ask;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import lombok.Builder;
 import lombok.Data;
+import org.bonitasoft.connectors.ai.DocumentRefUtils;
 
 @Data
 @Builder
@@ -49,13 +49,6 @@ public class AskConfiguration {
     }
 
     public List<String> getAllDocumentRefs() {
-        var refs = new ArrayList<String>();
-        if (sourceDocumentRef != null && !sourceDocumentRef.isBlank()) {
-            refs.add(sourceDocumentRef);
-        }
-        if (sourceDocumentRefs != null) {
-            refs.addAll(sourceDocumentRefs);
-        }
-        return refs.stream().distinct().toList();
+        return DocumentRefUtils.getAllDocumentRefs(sourceDocumentRef, sourceDocumentRefs);
     }
 }

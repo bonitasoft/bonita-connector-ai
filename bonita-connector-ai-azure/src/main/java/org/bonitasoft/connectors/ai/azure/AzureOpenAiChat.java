@@ -29,7 +29,8 @@ public interface AzureOpenAiChat extends AiChat<AzureOpenAiChatModel> {
     @Override
     default AzureOpenAiChatModel getChatModel() {
         AiConfiguration configuration = getConfiguration();
-        var chatModelBuilder = AzureOpenAiChatModel.builder().logRequestsAndResponses(true);
+        boolean enableDebugLogging = configuration.isEnableDebugLogging();
+        var chatModelBuilder = AzureOpenAiChatModel.builder().logRequestsAndResponses(enableDebugLogging);
         // API Key
         chatModelBuilder.apiKey(configuration.getApiKey());
         // Endpoint (mandatory for Azure - uses baseUrl field)

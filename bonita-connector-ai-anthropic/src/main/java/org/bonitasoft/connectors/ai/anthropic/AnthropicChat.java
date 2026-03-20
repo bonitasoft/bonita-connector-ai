@@ -29,7 +29,9 @@ public interface AnthropicChat extends AiChat<AnthropicChatModel> {
     @Override
     default AnthropicChatModel getChatModel() {
         AiConfiguration configuration = getConfiguration();
-        var chatModelBuilder = AnthropicChatModel.builder().logRequests(true).logResponses(true);
+        boolean enableDebugLogging = configuration.isEnableDebugLogging();
+        var chatModelBuilder =
+                AnthropicChatModel.builder().logRequests(enableDebugLogging).logResponses(enableDebugLogging);
         // API Key
         chatModelBuilder.apiKey(configuration.getApiKey());
         // Base URL override

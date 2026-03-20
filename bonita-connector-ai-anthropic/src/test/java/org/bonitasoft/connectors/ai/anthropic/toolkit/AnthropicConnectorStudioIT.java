@@ -35,6 +35,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.IntStream;
 import lombok.extern.slf4j.Slf4j;
+import org.bonitasoft.connectors.ai.toolkit.AiConnectorTestToolkit;
 import org.bonitasoft.engine.bpm.bar.BusinessArchiveFactory;
 import org.bonitasoft.web.client.BonitaClient;
 import org.bonitasoft.web.client.services.policies.ProcessImportPolicy;

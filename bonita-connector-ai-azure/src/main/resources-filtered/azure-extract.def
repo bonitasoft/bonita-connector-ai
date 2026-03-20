@@ -12,6 +12,7 @@
     <input name="apiVersion" type="java.lang.String" defaultValue="2024-10-21"/>
     <input name="modelTemperature" type="java.lang.Double"/>
     <input name="requestTimeout" type="java.lang.Integer"/>
+    <input name="enableDebugLogging" type="java.lang.Boolean" mandatory="false" defaultValue="false"/>
 
     <input name="sourceDocumentRef" type="java.lang.String" mandatory="true"/>
     <input name="sourceDocumentRefs" type="java.util.List"/>
@@ -33,5 +34,6 @@
         <widget xsi:type="definition:Text" id="requestTimeoutWidget" inputName="requestTimeout"/>
         <widget xsi:type="definition:Text" id="chatModelNameWidget" inputName="chatModelName"/>
         <widget xsi:type="definition:Text" id="modelTemperatureWidget" inputName="modelTemperature"/>
+        <widget xsi:type="definition:Checkbox" id="enableDebugLoggingWidget" inputName="enableDebugLogging"/>
     </page>
 </definition:ConnectorDefinition>
