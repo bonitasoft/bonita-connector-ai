@@ -78,6 +78,19 @@ class GeminiConnectorPropertyTest {
     }
 
     @Property(tries = 50)
+    @Label("Debug logging flag should always be preserved in configuration")
+    void should_preserve_debug_logging_flag(@ForAll boolean debugLogging) {
+        AiConfiguration config = AiConfiguration.builder()
+                .apiKey("test-key")
+                .enableDebugLogging(debugLogging)
+                .build();
+        GeminiAskAiChat chat = new GeminiAskAiChat(config);
+
+        assertThat(chat.getChatModel()).isNotNull();
+        assertThat(config.isEnableDebugLogging()).isEqualTo(debugLogging);
+    }
+
+    @Property(tries = 50)
     @Label("All chat types should create models with same configuration")
     void should_create_all_chat_types_with_same_config(
             @ForAll @AlphaChars @StringLength(min = 1, max = 50) String apiKey) {

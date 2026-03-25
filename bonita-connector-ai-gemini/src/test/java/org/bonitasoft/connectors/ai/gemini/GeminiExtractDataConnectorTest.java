@@ -48,6 +48,36 @@ class GeminiExtractDataConnectorTest {
     }
 
     @Nested
+    class ConnectVariations {
+
+        @Test
+        void should_connect_with_debug_logging() throws ConnectorException {
+            GeminiExtractDataConnector connector = new GeminiExtractDataConnector();
+            connector.setConfiguration(AiConfiguration.builder()
+                    .apiKey("test-key")
+                    .enableDebugLogging(true)
+                    .build());
+
+            connector.connect();
+
+            assertThat(connector).isNotNull();
+        }
+
+        @Test
+        void should_connect_with_custom_model() throws ConnectorException {
+            GeminiExtractDataConnector connector = new GeminiExtractDataConnector();
+            connector.setConfiguration(AiConfiguration.builder()
+                    .apiKey("test-key")
+                    .chatModelName("gemini-2.0-flash")
+                    .build());
+
+            connector.connect();
+
+            assertThat(connector).isNotNull();
+        }
+    }
+
+    @Nested
     class ChatModelCreation {
 
         @Test

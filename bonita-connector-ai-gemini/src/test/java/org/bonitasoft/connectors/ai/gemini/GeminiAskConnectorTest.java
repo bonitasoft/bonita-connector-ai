@@ -140,6 +140,18 @@ class GeminiAskConnectorTest {
         }
 
         @Test
+        void should_create_chat_with_debug_logging_enabled() {
+            AiConfiguration config = AiConfiguration.builder()
+                    .apiKey("test-key")
+                    .enableDebugLogging(true)
+                    .build();
+            GeminiAskAiChat chat = new GeminiAskAiChat(config);
+
+            assertThat(chat.getChatModel()).isNotNull();
+            assertThat(chat.getConfiguration().isEnableDebugLogging()).isTrue();
+        }
+
+        @Test
         void should_create_chat_with_all_options() {
             AiConfiguration config = AiConfiguration.builder()
                     .apiKey("test-key")
@@ -169,6 +181,65 @@ class GeminiAskConnectorTest {
             assertThat(chat.getConfiguration().getChatModelName()).isEmpty();
             assertThat(chat.getConfiguration().getModelTemperature()).isEmpty();
             assertThat(chat.getConfiguration().getRequestTimeout()).isEmpty();
+        }
+    }
+
+    @Nested
+    class CrossConnectorCreation {
+
+        @Test
+        void should_create_classifier_connector() {
+            GeminiClassifyConnector connector = new GeminiClassifyConnector();
+            assertThat(connector).isNotNull();
+        }
+
+        @Test
+        void should_create_extractor_connector() {
+            GeminiExtractDataConnector connector = new GeminiExtractDataConnector();
+            assertThat(connector).isNotNull();
+        }
+    }
+
+    @Nested
+    class ConnectVariations {
+
+        @Test
+        void should_connect_with_debug_logging_disabled() throws ConnectorException {
+            GeminiAskConnector connector = new GeminiAskConnector();
+            connector.setConfiguration(AiConfiguration.builder()
+                    .apiKey("test-key")
+                    .enableDebugLogging(false)
+                    .build());
+
+            connector.connect();
+
+            assertThat(connector).isNotNull();
+        }
+
+        @Test
+        void should_connect_with_custom_model_name() throws ConnectorException {
+            GeminiAskConnector connector = new GeminiAskConnector();
+            connector.setConfiguration(AiConfiguration.builder()
+                    .apiKey("test-key")
+                    .chatModelName("gemini-1.5-pro")
+                    .build());
+
+            connector.connect();
+
+            assertThat(connector).isNotNull();
+        }
+
+        @Test
+        void should_connect_with_custom_temperature() throws ConnectorException {
+            GeminiAskConnector connector = new GeminiAskConnector();
+            connector.setConfiguration(AiConfiguration.builder()
+                    .apiKey("test-key")
+                    .modelTemperature(0.5)
+                    .build());
+
+            connector.connect();
+
+            assertThat(connector).isNotNull();
         }
     }
 

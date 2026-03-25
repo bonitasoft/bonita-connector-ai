@@ -149,6 +149,41 @@ class GeminiChatTest {
         }
 
         @Test
+        void should_build_model_with_debug_logging_enabled() {
+            AiConfiguration config = AiConfiguration.builder()
+                    .apiKey("test-key")
+                    .enableDebugLogging(true)
+                    .build();
+            GeminiAskAiChat chat = new GeminiAskAiChat(config);
+
+            assertThat(chat.getChatModel()).isNotNull();
+            assertThat(config.isEnableDebugLogging()).isTrue();
+        }
+
+        @Test
+        void should_build_model_with_debug_logging_disabled() {
+            AiConfiguration config = AiConfiguration.builder()
+                    .apiKey("test-key")
+                    .enableDebugLogging(false)
+                    .build();
+            GeminiAskAiChat chat = new GeminiAskAiChat(config);
+
+            assertThat(chat.getChatModel()).isNotNull();
+            assertThat(config.isEnableDebugLogging()).isFalse();
+        }
+
+        @Test
+        void should_build_model_with_model_name_and_timeout() {
+            AiConfiguration config = AiConfiguration.builder()
+                    .apiKey("test-key")
+                    .chatModelName("gemini-1.5-pro")
+                    .requestTimeout(60000)
+                    .build();
+            GeminiAskAiChat chat = new GeminiAskAiChat(config);
+            assertThat(chat.getChatModel()).isNotNull();
+        }
+
+        @Test
         void should_build_model_with_all_options_present() {
             AiConfiguration config = AiConfiguration.builder()
                     .apiKey("AIza-full-config")
@@ -206,6 +241,126 @@ class GeminiChatTest {
                     .build();
             GeminiAskAiChat chat = new GeminiAskAiChat(config);
             assertThat(chat.getChatModel()).isNotNull();
+        }
+
+        @Test
+        void should_build_model_with_model_and_temperature() {
+            AiConfiguration config = AiConfiguration.builder()
+                    .apiKey("test-key")
+                    .chatModelName("gemini-2.0-flash")
+                    .modelTemperature(0.9)
+                    .build();
+            GeminiAskAiChat chat = new GeminiAskAiChat(config);
+
+            assertThat(chat.getChatModel()).isNotNull();
+            assertThat(config.getChatModelName()).hasValue("gemini-2.0-flash");
+            assertThat(config.getModelTemperature()).hasValue(0.9);
+        }
+
+        @Test
+        void should_build_model_with_model_timeout_and_temperature() {
+            AiConfiguration config = AiConfiguration.builder()
+                    .apiKey("test-key")
+                    .chatModelName("gemini-1.5-pro")
+                    .requestTimeout(45000)
+                    .modelTemperature(0.4)
+                    .build();
+            GeminiAskAiChat chat = new GeminiAskAiChat(config);
+
+            assertThat(chat.getChatModel()).isNotNull();
+            assertThat(config.getChatModelName()).hasValue("gemini-1.5-pro");
+            assertThat(config.getRequestTimeout()).hasValue(45000);
+            assertThat(config.getModelTemperature()).hasValue(0.4);
+        }
+
+        @Test
+        void should_build_model_with_empty_string_model_name() {
+            AiConfiguration config = AiConfiguration.builder()
+                    .apiKey("test-key")
+                    .chatModelName("")
+                    .build();
+            GeminiAskAiChat chat = new GeminiAskAiChat(config);
+
+            // Empty string is not null, so getChatModelName() returns Optional of empty string
+            assertThat(chat.getChatModel()).isNotNull();
+        }
+
+        @Test
+        void should_build_model_with_zero_temperature() {
+            AiConfiguration config = AiConfiguration.builder()
+                    .apiKey("test-key")
+                    .modelTemperature(0.0)
+                    .build();
+            GeminiAskAiChat chat = new GeminiAskAiChat(config);
+
+            assertThat(chat.getChatModel()).isNotNull();
+            assertThat(config.getModelTemperature()).hasValue(0.0);
+        }
+
+        @Test
+        void should_build_model_with_very_large_timeout() {
+            AiConfiguration config = AiConfiguration.builder()
+                    .apiKey("test-key")
+                    .requestTimeout(300_000)
+                    .build();
+            GeminiAskAiChat chat = new GeminiAskAiChat(config);
+
+            assertThat(chat.getChatModel()).isNotNull();
+            assertThat(config.getRequestTimeout()).hasValue(300_000);
+        }
+
+        @Test
+        void should_build_model_with_minimum_timeout() {
+            AiConfiguration config = AiConfiguration.builder()
+                    .apiKey("test-key")
+                    .requestTimeout(1)
+                    .build();
+            GeminiAskAiChat chat = new GeminiAskAiChat(config);
+
+            assertThat(chat.getChatModel()).isNotNull();
+            assertThat(config.getRequestTimeout()).hasValue(1);
+        }
+
+        @Test
+        void should_build_model_with_debug_and_model_name() {
+            AiConfiguration config = AiConfiguration.builder()
+                    .apiKey("test-key")
+                    .chatModelName("gemini-1.5-pro")
+                    .enableDebugLogging(true)
+                    .build();
+            GeminiAskAiChat chat = new GeminiAskAiChat(config);
+
+            assertThat(chat.getChatModel()).isNotNull();
+            assertThat(config.isEnableDebugLogging()).isTrue();
+            assertThat(config.getChatModelName()).hasValue("gemini-1.5-pro");
+        }
+
+        @Test
+        void should_build_model_with_debug_and_temperature() {
+            AiConfiguration config = AiConfiguration.builder()
+                    .apiKey("test-key")
+                    .modelTemperature(0.6)
+                    .enableDebugLogging(true)
+                    .build();
+            GeminiAskAiChat chat = new GeminiAskAiChat(config);
+
+            assertThat(chat.getChatModel()).isNotNull();
+            assertThat(config.isEnableDebugLogging()).isTrue();
+            assertThat(config.getModelTemperature()).hasValue(0.6);
+        }
+
+        @Test
+        void should_build_model_with_debug_and_timeout() {
+            AiConfiguration config = AiConfiguration.builder()
+                    .apiKey("test-key")
+                    .requestTimeout(15000)
+                    .enableDebugLogging(false)
+                    .build();
+            GeminiAskAiChat chat = new GeminiAskAiChat(config);
+
+            assertThat(chat.getChatModel()).isNotNull();
+            assertThat(config.isEnableDebugLogging()).isFalse();
+            assertThat(config.getRequestTimeout()).hasValue(15000);
         }
     }
 
