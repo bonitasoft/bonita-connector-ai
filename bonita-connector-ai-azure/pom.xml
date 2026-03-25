@@ -106,7 +106,6 @@
             </goals>
             <phase>generate-resources</phase>
             <configuration>
-          <skip>false</skip>
               <source>${project.basedir}/src/script/dependencies-as-var.groovy</source>
             </configuration>
           </execution>
@@ -143,7 +142,7 @@
               <goal>check</goal>
             </goals>
             <configuration>
-          <skip>false</skip>
+              <skip>false</skip>
               <rules>
                 <rule>
                   <element>BUNDLE</element>
@@ -223,7 +222,7 @@
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-failsafe-plugin</artifactId>
             <configuration>
-          <skip>false</skip>
+              <skip>false</skip>
               <groups>provider-api</groups>
               <systemPropertyVariables>
                 <bonita.target>${bonita.target}</bonita.target>
@@ -250,7 +249,7 @@
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-failsafe-plugin</artifactId>
             <configuration>
-          <skip>false</skip>
+              <skip>false</skip>
               <groups>btt</groups>
               <systemPropertyVariables>
                 <bonita.target>${bonita.target}</bonita.target>
