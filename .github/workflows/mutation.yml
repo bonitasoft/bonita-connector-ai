@@ -61,12 +61,18 @@ jobs:
           java-version: 17
           cache: maven
 
+      - name: Make Maven Wrapper executable
+        run: chmod +x mvnw
+
       - name: Run PIT Mutation Tests
         run: |
-          ./mvnw -B -ntp org.pitest:pitest-maven:mutationCoverage \
+          ./mvnw -B -ntp clean test org.pitest:pitest-maven:mutationCoverage \
+            -pl bonita-connector-ai-anthropic,bonita-connector-ai-gemini,bonita-connector-ai-openai,bonita-connector-ai-mistral,bonita-connector-ai-ollama,bonita-connector-ai-azure \
+            -am \
             -Dmutators="${{ inputs.mutators }}" \
             -DoutputFormats=HTML,CSV,XML \
-            -DtimestampedReports=false
+            -DtimestampedReports=false \
+            -Dpitest.failWhenNoMutations=false
 
       - name: Generate GitHub Summary
         if: always()
