@@ -438,11 +438,12 @@
         <artifactId>pitest-maven</artifactId>
         <version>${pitest.version}</version>
         <configuration>
+          <skip>true</skip>
           <targetClasses>
-            <param>com.bonitasoft.connector.*</param>
+            <param>org.bonitasoft.connectors.ai.*</param>
           </targetClasses>
           <targetTests>
-            <param>com.bonitasoft.connector.*</param>
+            <param>org.bonitasoft.connectors.ai.*</param>
           </targetTests>
           <mutators>
             <mutator>DEFAULTS</mutator>

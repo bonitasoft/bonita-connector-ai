@@ -106,6 +106,7 @@
             </goals>
             <phase>generate-resources</phase>
             <configuration>
+          <skip>false</skip>
               <source>${project.basedir}/src/script/dependencies-as-var.groovy</source>
             </configuration>
           </execution>
@@ -142,6 +143,7 @@
               <goal>check</goal>
             </goals>
             <configuration>
+          <skip>false</skip>
               <rules>
                 <rule>
                   <element>BUNDLE</element>
@@ -167,6 +169,7 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-failsafe-plugin</artifactId>
         <configuration>
+          <skip>false</skip>
           <groups>integration</groups>
         </configuration>
         <executions>
@@ -184,6 +187,7 @@
         <artifactId>pitest-maven</artifactId>
         <version>1.17.4</version>
         <configuration>
+          <skip>false</skip>
           <targetClasses>
             <param>org.bonitasoft.connectors.ai.azure.*</param>
           </targetClasses>
@@ -219,6 +223,7 @@
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-failsafe-plugin</artifactId>
             <configuration>
+          <skip>false</skip>
               <groups>provider-api</groups>
               <systemPropertyVariables>
                 <bonita.target>${bonita.target}</bonita.target>
@@ -245,6 +250,7 @@
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-failsafe-plugin</artifactId>
             <configuration>
+          <skip>false</skip>
               <groups>btt</groups>
               <systemPropertyVariables>
                 <bonita.target>${bonita.target}</bonita.target>

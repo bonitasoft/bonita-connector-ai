@@ -185,6 +185,7 @@
         <artifactId>pitest-maven</artifactId>
         <version>1.17.4</version>
         <configuration>
+          <skip>false</skip>
           <targetClasses>
             <param>org.bonitasoft.connectors.ai.gemini.*</param>
           </targetClasses>
