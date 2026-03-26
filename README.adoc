@@ -35,7 +35,7 @@ image:https://img.shields.io/maven-central/v/{project-group-id}/{project-artifac
 image:https://sonarcloud.io/api/project_badges/measure?project={orga}_{project-artifact-id}&metric=alert_status[Sonar,link=https://sonarcloud.io/dashboard?id={orga}_{project-artifact-id}]
 image:https://img.shields.io/badge/License-GPL%20v2-yellow.svg[License,link="{uri-license}"]
 
-The connectors allow interacting with OpenAI, MistralAI, and Ollama (local LLMs) chat models by sending prompt and documents and returning the generated output.
+Multi-provider AI connectors for the https://www.bonitasoft.com[Bonita] platform. Interact with OpenAI, Anthropic (Claude), Google Gemini, Mistral AI, Azure AI Foundry, and Ollama (local LLMs) chat models by sending prompts and documents and returning structured output.
 
 The Bonita AI Connectors are available for **Bonita {short-bonita-version} Community ({year-bonita-version})** version and above.
 
@@ -45,17 +45,79 @@ toc::[]
 
 '''
 
+== Architecture
+
+The project follows a modular architecture with a shared core and provider-specific modules:
+
+[source]
+----
+bonita-connector-ai (parent)
+|
++-- bonita-connector-ai-core        Core abstractions, shared logic
+|
++-- bonita-connector-ai-openai      OpenAI provider (GPT-4o, GPT-4o-mini)
++-- bonita-connector-ai-anthropic   Anthropic provider (Claude Sonnet, Opus, Haiku)
++-- bonita-connector-ai-gemini      Google Gemini provider (Gemini 2.0 Flash, 1.5 Pro)
++-- bonita-connector-ai-mistral     Mistral AI provider (Pixtral, Mistral Large)
++-- bonita-connector-ai-azure       Azure AI Foundry provider (Azure-hosted OpenAI models)
++-- bonita-connector-ai-ollama      Ollama provider (local LLMs: Llama, Mistral, etc.)
+----
+
+Each provider module contains three connector implementations:
+
+* **Ask** -- Send a user prompt and get a response (with optional documents and JSON schema)
+* **Extract** -- Extract structured data from documents
+* **Classify** -- Classify documents into predefined categories
+
+The core module defines the template method pattern with abstract base classes (`AskAiConnector`, `ExtractAiConnector`, `ClassifyAiConnector`) and the `AiChat` interface that each provider implements using https://docs.langchain4j.dev/[LangChain4j].
+
+== Modules
+
+[caption=Modules]
+|===
+|Module |Provider |Default Model |API Docs
+
+|`bonita-connector-ai-core`
+|_(shared abstractions)_
+|N/A
+|N/A
+
+|`bonita-connector-ai-openai`
+|https://openai.com[OpenAI]
+|`gpt-4o`
+|https://platform.openai.com/docs/models[Models]
+
+|`bonita-connector-ai-anthropic`
+|https://www.anthropic.com[Anthropic (Claude)]
+|`claude-sonnet-4-6`
+|https://docs.anthropic.com/en/docs/about-claude/models[Models]
+
+|`bonita-connector-ai-gemini`
+|https://ai.google.dev[Google Gemini]
+|`gemini-2.0-flash`
+|https://ai.google.dev/gemini-api/docs/models[Models]
+
+|`bonita-connector-ai-mistral`
+|https://mistral.ai[Mistral AI]
+|`pixtral-12b-2409`
+|https://docs.mistral.ai/getting-started/models/models_overview[Models]
+
+|`bonita-connector-ai-azure`
+|https://azure.microsoft.com/en-us/products/ai-services/openai-service[Azure AI Foundry]
+|_(depends on deployment)_
+|https://learn.microsoft.com/en-us/azure/ai-services/openai/concepts/models[Models]
+
+|`bonita-connector-ai-ollama`
+|https://ollama.com[Ollama (local)]
+|`llama3.1`
+|https://ollama.com/library[Model Library]
+|===
+
 == Getting started
 
-To use a connector, add it as a dependency to your Bonita process. Choose the one related to your AI provider.
+To use a connector, add it as a dependency to your Bonita process. Choose the module for your AI provider.
 
-Currently supported providers:
-
-* image:bonita-connector-ai-openai/src/main/resources/openai.png[OpenAI] OpenAI
-* image:bonita-connector-ai-mistral/src/main/resources/mistral.png[MistralAI] Mistral AI
-* Ollama (for running local LLMs)
-
-==== OpenAI
+=== OpenAI
 
 [source,xml,subs="attributes+"]
 ----
@@ -66,7 +128,35 @@ Currently supported providers:
 </dependency>
 ----
 
-==== MistralAI
+API key: https://platform.openai.com/api-keys[OpenAI API Keys]
+
+=== Anthropic (Claude)
+
+[source,xml,subs="attributes+"]
+----
+<dependency>
+    <groupId>org.bonitasoft.connectors</groupId>
+    <artifactId>bonita-connector-ai-anthropic</artifactId>
+    <version>x.y.z</version>
+</dependency>
+----
+
+API key: https://console.anthropic.com/settings/keys[Anthropic Console]
+
+=== Google Gemini
+
+[source,xml,subs="attributes+"]
+----
+<dependency>
+    <groupId>org.bonitasoft.connectors</groupId>
+    <artifactId>bonita-connector-ai-gemini</artifactId>
+    <version>x.y.z</version>
+</dependency>
+----
+
+API key: https://aistudio.google.com/apikey[Google AI Studio]
+
+=== Mistral AI
 
 [source,xml,subs="attributes+"]
 ----
@@ -77,7 +167,26 @@ Currently supported providers:
 </dependency>
 ----
 
-==== Ollama (Local LLMs)
+API key: https://console.mistral.ai/api-keys[Mistral Console]
+
+WARNING: Image documents are not supported yet for the Mistral connector due to a limitation of the underlying library.
+
+=== Azure AI Foundry
+
+[source,xml,subs="attributes+"]
+----
+<dependency>
+    <groupId>org.bonitasoft.connectors</groupId>
+    <artifactId>bonita-connector-ai-azure</artifactId>
+    <version>x.y.z</version>
+</dependency>
+----
+
+API key: Azure Portal > Azure AI Foundry > Keys and Endpoint
+
+NOTE: Azure AI Foundry requires setting the `url` parameter to your Azure endpoint and the `chatModelName` to your deployment name.
+
+=== Ollama (Local LLMs)
 
 [source,xml,subs="attributes+"]
 ----
@@ -88,7 +197,7 @@ Currently supported providers:
 </dependency>
 ----
 
-NOTE: Ollama allows you to run large language models locally on your infrastructure. This is ideal for on-premises deployments, data privacy requirements, or cost optimization.
+NOTE: Ollama allows you to run large language models locally on your infrastructure. No API key required. Ideal for on-premises deployments, data privacy requirements, or cost optimization.
 
 === Common configuration
 
@@ -98,7 +207,7 @@ NOTE: Ollama allows you to run large language models locally on your infrastruct
 
 |*apiKey*
 |false
-|The AI provider API key. Parameter is optional for testing purpose but obviously required with official OpenAI endpoint. The connector will use the system environment variable named `AI_API_KEY` or the same JVM property (`-DAI_API_KEY=xxx`) or the provided connector parameter and at last a dummy `changeMe` value.
+|The AI provider API key. The connector will use the system environment variable named `AI_API_KEY` or the same JVM property (`-DAI_API_KEY=xxx`) or the provided connector parameter and at last a dummy `changeMe` value.
 | changeMe
 
 |*url*
@@ -106,32 +215,105 @@ NOTE: Ollama allows you to run large language models locally on your infrastruct
 |The AI provider endpoint url. This parameter allows to use an alternate endpoint for tests or custom deployments.
 a|
 - OpenAI: Official OpenAI endpoint
+- Anthropic: Official Anthropic endpoint
+- Gemini: Google AI Studio (automatic)
 - MistralAI: Official Mistral AI endpoint
+- Azure: Your Azure AI Foundry endpoint (required)
 - Ollama: `http://localhost:11434` (default local installation)
 
 |*requestTimeout*
 |false
-|The request timeout in milliseconds for OpenAI calls.
+|The request timeout in milliseconds for AI provider calls.
 |null
 
 |*chatModelName*
 |false
-|The model to use for chat like `gpt-4o`, `gpt-4o-mini`, `llama3.1`, `pixtral`, ... See OpenAI documentation at https://platform.openai.com/docs/models/models, Mistral AI documentation at https://docs.mistral.ai/getting-started/models/models_overview/, and Ollama models at https://ollama.com/library for detailed information about models.
+|The model to use for chat. See the Modules table above for default values per provider.
 a|
-- OpenAI : `gpt-4o`
-- MistralAI : `pixtral-12b-2409`
-- Ollama : `llama3.1`
+- OpenAI: `gpt-4o`
+- Anthropic: `claude-sonnet-4-6`
+- Gemini: `gemini-2.0-flash`
+- MistralAI: `pixtral-12b-2409`
+- Azure: _(your deployment name)_
+- Ollama: `llama3.1`
 
 |*modelTemperature*
 |false
-|The temperature to use for the model. Higher values will result in more creative responses. Must be between 0 and 1. Leave blank if the selected model does not support this parameter. If parameter is not present, the temperature will not be set in chat context.
+|The temperature to use for the model. Higher values will result in more creative responses. Must be between 0 and 1. Leave blank if the selected model does not support this parameter.
 |null
 |===
 
+=== Configuration examples
+
+==== OpenAI
+[source,json]
+----
+{
+  "apiKey": "${AI_API_KEY}",
+  "chatModelName": "gpt-4o",
+  "systemPrompt": "You are a customer service analyst.",
+  "userPrompt": "Summarize this complaint: ${complaintText}"
+}
+----
+
+==== Anthropic (Claude)
+[source,json]
+----
+{
+  "apiKey": "${AI_API_KEY}",
+  "chatModelName": "claude-sonnet-4-6",
+  "systemPrompt": "You are a legal compliance analyst.",
+  "userPrompt": "Analyze this contract for GDPR compliance issues."
+}
+----
+
+==== Google Gemini
+[source,json]
+----
+{
+  "apiKey": "${AI_API_KEY}",
+  "chatModelName": "gemini-2.0-flash",
+  "categories": "INVOICE,CONTRACT,ID_CARD,PROOF_OF_ADDRESS,OTHER"
+}
+----
+
+==== Mistral AI
+[source,json]
+----
+{
+  "apiKey": "${AI_API_KEY}",
+  "chatModelName": "mistral-large-latest",
+  "categories": "BILLING,TECHNICAL_SUPPORT,ACCOUNT_MANAGEMENT,OTHER"
+}
+----
+
+==== Azure AI Foundry
+[source,json]
+----
+{
+  "apiKey": "${AZURE_OPENAI_API_KEY}",
+  "url": "https://my-company.openai.azure.com",
+  "chatModelName": "gpt-4o",
+  "systemPrompt": "You are a helpful assistant for HR processes.",
+  "userPrompt": "Evaluate this CV: ${cvText}"
+}
+----
+
+==== Ollama (local)
+[source,json]
+----
+{
+  "apiKey": "not-needed",
+  "url": "http://localhost:11434",
+  "chatModelName": "llama3.1",
+  "systemPrompt": "You are a document analysis assistant.",
+  "userPrompt": "Extract the key dates and amounts from this invoice."
+}
+----
 
 == Connectors
 
-AI connectors have the capability to retrun structured data in JSON format. It is possible to pass a https://json-schema.org/learn/getting-started-step-by-step[JSON schema] to tell the LLM how to format response data.
+AI connectors have the capability to return structured data in JSON format. It is possible to pass a https://json-schema.org/learn/getting-started-step-by-step[JSON schema] to tell the LLM how to format response data.
 
 When using a JSON schema, you **must** list in the `required` property, all the fields you want in the JSON response.
 
@@ -152,34 +334,20 @@ When using a JSON schema, you **must** list in the `required` property, all the 
     "identificationNumber"
   ],
   "properties": {
-    "firstName": {
-      "type": "string"
-    },
-    "lastName": {
-      "type": "string"
-    },
-    "fullName": {
-      "type": "string"
-    },
-    "fullAddress": {
-      "type": "string"
-    },
-    "emissionDate": {
-      "type": "string"
-    },
-    "issuerName": {
-      "type": "string"
-    },
-    "identificationNumber": {
-      "type": "string"
-    }
+    "firstName": { "type": "string" },
+    "lastName": { "type": "string" },
+    "fullName": { "type": "string" },
+    "fullAddress": { "type": "string" },
+    "emissionDate": { "type": "string" },
+    "issuerName": { "type": "string" },
+    "identificationNumber": { "type": "string" }
   }
 }
 ----
 
 === Ask connector
 
-Take a user prompt and send it to OpenAI then return the AI response. The prompt text can ask question about a provided process document.
+Take a user prompt and send it to the AI provider then return the response. The prompt text can ask questions about a provided process document.
 
 [caption=Configuration]
 |===
@@ -187,7 +355,7 @@ Take a user prompt and send it to OpenAI then return the AI response. The prompt
 
 |*systemPrompt*
 |false
-|The system prompt to pass to the OpenAI endpoint.  It helps to influence the behavior of the assistant and specify a default context. (ex: You are a personal finance advisor, providing guidance, etc.)
+|The system prompt to influence the behavior of the assistant and specify a default context.
 |"You are a polite Assistant"
 
 |*userPrompt*
@@ -197,7 +365,7 @@ Take a user prompt and send it to OpenAI then return the AI response. The prompt
 
 |*sourceDocumentRef*
 |false
-|The reference to the process document to load and add to the user prompt. If not null, the connector will try to read the specified document and send it as an attachment to the user prompt. Format supported are "doc", "docx", "pdf", ... (see https://tika.apache.org/3.1.0/formats.html)
+|The reference to the process document to load and add to the user prompt. Supported formats: "doc", "docx", "pdf", ... (see https://tika.apache.org/3.1.0/formats.html[Apache Tika formats])
 |null
 
 |*outputJsonSchema*
@@ -207,12 +375,11 @@ Take a user prompt and send it to OpenAI then return the AI response. The prompt
 
 |===
 
-The result can be a simple JSON object or one compliant with a provided JSON schema.
-This result will be placed as a map entry of type `java.lang.String` for the key named *output*.
+The result will be placed as a map entry of type `java.lang.String` for the key named *output*.
 
 === Extract connector
 
-This connector allow extracting information from a bonita document.
+This connector allows extracting information from a Bonita document.
 
 [caption=Configuration]
 |===
@@ -220,29 +387,26 @@ This connector allow extracting information from a bonita document.
 
 |*sourceDocumentRef*
 |*true*
-|The reference to the process document to load and add to the user prompt. If not null, the connector will try to read the specified document  and send it as an attachment to the user prompt. Format supported are "doc", "docx", "pdf", ... (see https://tika.apache.org/3.1.0/formats.html)
+|The reference to the process document to load. Supported formats: "doc", "docx", "pdf", ... (see https://tika.apache.org/3.1.0/formats.html[Apache Tika formats])
 |null
 
 |*fieldsToExtract*
 |false
-|The list of fields to extract from the given document. The connector expect a list of String (like `List.of("firstName","lastName","address")`.
+|The list of fields to extract from the given document (`List.of("firstName","lastName","address")`).
 |null
 
 |*outputJsonSchema*
 |false
-|The JSON schema that represent how to structure the JSON connector output. If a JSON schema is specified, the `fieldsToExtract` parameter is ignored.
+|The JSON schema that represent how to structure the JSON connector output. If specified, the `fieldsToExtract` parameter is ignored.
 |null
 
 |===
 
 IMPORTANT: You must provide at least one of `fieldsToExtract` or `outputJsonSchema` parameters.
 
-The result can be a simple JSON object or one compliant with a provided JSON schema.
-This connector result will be placed as a map entry of type `java.lang.String` for the key named *output*.
-
 === Classify connector
 
-This connector allow to classify a bonita process document according to a list of category provided by the user.
+This connector allows classifying a Bonita process document according to a list of categories provided by the user.
 
 [caption=Configuration]
 |===
@@ -250,21 +414,17 @@ This connector allow to classify a bonita process document according to a list o
 
 |*sourceDocumentRef*
 |*true*
-|The reference to the process document to load and add to the user prompt. If not null, the connector will try to read the specified document  and send it as an attachment to the user prompt. Format supported are "doc", "docx", "pdf", ... (see https://tika.apache.org/3.1.0/formats.html)
+|The reference to the process document to load. Supported formats: "doc", "docx", "pdf", ... (see https://tika.apache.org/3.1.0/formats.html[Apache Tika formats])
 |null
 
 |*categories*
 |*true*
-|The list of category used to classify the given document. The connector expect a list of String (like `List.of("RIB","ID",...)`.
-It is recommended to add a default category if none other matches such as `Unknown`
+|The list of categories used to classify the given document (`List.of("RIB","ID",...)`). It is recommended to add a default category such as `Unknown`.
 |null
 
 |===
 
-
-The result is a JSON String such as the following sample.
-
-.sample classification result
+.Sample classification result
 [source,json]
 ----
 {
@@ -273,17 +433,14 @@ The result is a JSON String such as the following sample.
 }
 ----
 
-The confidence score is defined as :
+The confidence score is defined as:
 
 - [0.0..0.3]: Very uncertain or guessing
 - [0.3..0.6]: Some uncertainty, potential ambiguity exists
 - [0.6..0.8]: Reasonably certain, minor doubt
 - [0.8..1.0]: Very certain, no doubt
 
-This connector result will be placed as a map entry of type `java.lang.String` for the key named *output*.
-
 == Developing
-// _**TODO**_: Here's a brief introduction about what a developer must do in order to start developing the project further:
 
 Prerequisite:
 
@@ -296,28 +453,49 @@ Prerequisite:
 
 This repository follows the https://gitversion.net/docs/learn/branching-strategies/gitflow/examples[GitFlow branching strategy].
 
-
 === Building
-// _**TODO**_: If your project needs some additional steps for the developer to build the project after some code changes, state them here:
+
 The project is a standard maven project. For more details about Apache Maven, please refer to the https://maven.apache.org/guides/getting-started/[documentation]
+
+==== Build all modules
 
 [source,bash,subs=attributes]
 ----
 git clone {uri-repo}.git
 cd {project-artifact-id}/
-./mwnw package
+./mvnw package
 ----
 
-The build should produce connector packages a jar and zip archives under the modules `target/` folders.
+==== Build a specific module
 
+[source,bash]
+----
+# Build only the OpenAI module (and core dependency)
+./mvnw clean package -pl bonita-connector-ai-openai -am
+
+# Build only the Anthropic module
+./mvnw clean package -pl bonita-connector-ai-anthropic -am
+
+# Build only the Gemini module
+./mvnw clean package -pl bonita-connector-ai-gemini -am
+
+# Build only the Mistral module
+./mvnw clean package -pl bonita-connector-ai-mistral -am
+
+# Build only the Azure module
+./mvnw clean package -pl bonita-connector-ai-azure -am
+
+# Build only the Ollama module
+./mvnw clean package -pl bonita-connector-ai-ollama -am
+----
+
+The build should produce connector packages as jar and zip archives under the modules `target/` folders.
 
 === Run integration tests
 
 Integration tests require actual AI provider endpoints. Here are the options for each provider:
 
-==== Option 1: OpenAI Integration Tests
-
-Set your OpenAI API key and run tests:
+==== OpenAI Integration Tests
 
 [source,bash]
 ----
@@ -325,16 +503,23 @@ export OPENAI_API_KEY=your-api-key-here
 ./mvnw verify -PITs -pl bonita-connector-ai-openai
 ----
 
-On Windows PowerShell:
-[source,powershell]
+==== Anthropic Integration Tests
+
+[source,bash]
 ----
-$env:OPENAI_API_KEY="your-api-key-here"
-.\mvnw.cmd verify -PITs -pl bonita-connector-ai-openai
+export ANTHROPIC_API_KEY=your-api-key-here
+./mvnw verify -PITs -pl bonita-connector-ai-anthropic
 ----
 
-==== Option 2: MistralAI Integration Tests
+==== Gemini Integration Tests
 
-Set your Mistral AI API key and run tests:
+[source,bash]
+----
+export GEMINI_API_KEY=your-api-key-here
+./mvnw verify -PITs -pl bonita-connector-ai-gemini
+----
+
+==== Mistral AI Integration Tests
 
 [source,bash]
 ----
@@ -342,9 +527,17 @@ export MISTRAL_API_KEY=your-api-key-here
 ./mvnw verify -PITs -pl bonita-connector-ai-mistral
 ----
 
-==== Option 3: Ollama Integration Tests (Local - No API Key Required)
+==== Azure AI Foundry Integration Tests
 
-Ollama allows running integration tests locally without any API keys or cloud services.
+[source,bash]
+----
+export AZURE_OPENAI_API_KEY=your-api-key-here
+export AZURE_OPENAI_ENDPOINT=https://your-resource.openai.azure.com
+export AZURE_OPENAI_MODEL=gpt-4o
+./mvnw verify -PITs -pl bonita-connector-ai-azure
+----
+
+==== Ollama Integration Tests (Local - No API Key Required)
 
 **Step 1: Start Ollama with Docker Compose**
 
@@ -364,18 +557,8 @@ docker exec -it ollama-test ollama pull llama3.1
 docker exec -it ollama-test ollama pull llama3.2:1b
 ----
 
-**Step 3: Verify Ollama is ready**
+**Step 3: Run integration tests**
 
-[source,bash]
-----
-docker exec -it ollama-test ollama list
-----
-
-You should see your pulled model listed.
-
-**Step 4: Run integration tests**
-
-On Linux/Mac:
 [source,bash]
 ----
 # Using default model (llama3.1)
@@ -386,82 +569,46 @@ export OLLAMA_MODEL_NAME="llama3.2:1b"
 ./mvnw verify -PITs -pl bonita-connector-ai-ollama
 ----
 
-On Windows:
-[source,powershell]
-----
-# Using default model (llama3.1)
-.\mvnw.cmd verify -PITs -pl bonita-connector-ai-ollama
-
-# Using smaller model (llama3.2:1b)
-$env:OLLAMA_MODEL_NAME="llama3.2:1b"
-.\mvnw.cmd verify -PITs -pl bonita-connector-ai-ollama
-----
-
-**Step 5: Stop Ollama when done**
+**Step 4: Stop Ollama when done**
 
 [source,bash]
 ----
 docker compose -f docker-compose-ollama.yml down
 ----
 
-NOTE: The Ollama Docker volume persists downloaded models between restarts. You only need to pull models once.
-
-**Important: Model Selection for Testing**
-
-Different Ollama models have varying levels of accuracy and capabilities:
-
-* **llama3.1** (~4.7GB): More accurate, better at following instructions, recommended for production use
-* **llama3.2:1b** (~1.3GB): Faster and smaller, but may produce less accurate results
-
-The integration tests are designed to be tolerant of model variations. Smaller models may:
-- Return variations of expected values (e.g., "Relevé d'Identité Bancaire" instead of "RIB")
-- Handle missing data differently (null vs "Absent" vs actual values)
-- Have lower confidence scores
-
-These variations are expected and the tests account for them. Choose your model based on your priorities:
-- Use **llama3.2:1b** for quick testing and CI/CD pipelines
-- Use **llama3.1** or larger for production-grade accuracy
-
-==== Configuration Options for Ollama Tests
-
-You can customize Ollama tests with environment variables:
-
-[caption=Environment Variables]
-|===
-|Variable |Description |Default
-
-|`OLLAMA_BASE_URL`
-|Custom Ollama server URL
-|`http://localhost:11434`
-
-|`OLLAMA_MODEL_NAME`
-|Specific model to use for tests
-|`llama3.1`
-|===
-
-Example with custom configuration:
-[source,bash]
-----
-export OLLAMA_BASE_URL="http://remote-server:11434"
-export OLLAMA_MODEL_NAME="mistral"
-./mvnw verify -PITs -pl bonita-connector-ai-ollama
-----
-
 ==== Run all integration tests
-
-To run integration tests for all providers at once:
 
 [source,bash]
 ----
 # Make sure Ollama is running and API keys are set
 export OPENAI_API_KEY=your-openai-key
+export ANTHROPIC_API_KEY=your-anthropic-key
+export GEMINI_API_KEY=your-gemini-key
 export MISTRAL_API_KEY=your-mistral-key
+export AZURE_OPENAI_API_KEY=your-azure-key
+export AZURE_OPENAI_ENDPOINT=https://your-resource.openai.azure.com
 ./mvnw verify -PITs
 ----
 
-=== Deploying / Publishing
+== Adding a new AI provider
 
-// _**TODO**_: In case there's some step you have to take that publishes this project to a server, this is the right time to state it.
+To add support for a new AI provider:
+
+1. Create a new module `bonita-connector-ai-{provider}` following the existing structure
+2. Add provider-specific LangChain4j dependency to the module `pom.xml`
+3. Create `{Provider}Chat` implementing the `AiChat` interface from the core module
+4. Create three connector classes extending the abstract connectors from core:
+   - `{Provider}AskConnector` extends `AskAiConnector`
+   - `{Provider}ExtractDataConnector` extends `ExtractAiConnector`
+   - `{Provider}ClassifyConnector` extends `ClassifyAiConnector`
+5. Create connector definition files in `src/main/resources-filtered/`:
+   - `{provider}-ask.def` / `{provider}-ask.impl` / `{provider}-ask.properties`
+   - `{provider}-extract.def` / `{provider}-extract.impl` / `{provider}-extract.properties`
+   - `{provider}-classify.def` / `{provider}-classify.impl` / `{provider}-classify.properties`
+6. Add the new module to the parent `pom.xml` `<modules>` section
+7. Configure maven properties for connector IDs and versions
+
+=== Deploying / Publishing
 
 {doc-url}/bonita-overview/managing-extension-studio[Install the connector in your Bonita project using the Studio, window = "_blank"].
 
@@ -475,30 +622,8 @@ To release a new version, maintainers may use the Release and Publication GitHub
 
 Once this is done, update the https://github.com/bonitasoft/bonita-marketplace[Bonita marketplace repository] with the new version of the connector.
 
-// == Contributing
-//
-// // _**TODO**_: Make easy to your team to jump in and start contributing to your project.
-//
-// These paragraphs are meant to welcome those kind souls to feel that they are
-// needed. You should state something like:
-//
-// "If you'd like to contribute, please fork the repository and use a feature
-// branch. Pull requests are warmly welcome."
-//
-// If there's anything else the developer needs to know (e.g. the code style
-// guide), you should link it here. If there's a lot of things to take into
-// consideration, it is common to separate this section to its own file called
-// `CONTRIBUTING.adoc` (or similar). If so, you should say that it exists here.
-
 == Links
-
-// _**TODO**_: Even though this information can be found inside the project on machine-readable
-// format like in a .json file, it's good to include a summary of most useful
-// links to humans using your project. You can include links like:
 
 . Project homepage: {uri-repo}
 . Repository: {uri-repo}.git
 . Issue tracker: {uri-repo}/issues
-// .. In case of sensitive bugs like security vulnerabilities, please contact
-//     my@email.com directly instead of using issue tracker. We value your effort
-//     to improve the security and privacy of this project!

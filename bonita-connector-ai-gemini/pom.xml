@@ -189,9 +189,6 @@
           <targetClasses>
             <param>org.bonitasoft.connectors.ai.gemini.*</param>
           </targetClasses>
-          <excludedClasses>
-            <param>org.bonitasoft.connectors.ai.gemini.GeminiChat</param>
-          </excludedClasses>
           <targetTests>
             <param>org.bonitasoft.connectors.ai.gemini.*Test</param>
             <param>org.bonitasoft.connectors.ai.gemini.*Test$*</param>
