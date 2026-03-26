@@ -79,6 +79,7 @@ jobs:
             -Dpitest.failWhenNoMutations=false \
             -Djacoco.skip=true \
             -DargLine=" " \
+            -Dpitest.verbose=true \
             -Dpitest.excludedTestClasses="*IT,*IT\$*,*MockIT,*MockIT\$*"
 
       - name: Generate GitHub Summary
