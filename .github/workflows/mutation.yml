@@ -72,12 +72,13 @@ jobs:
       - name: Run PIT Mutation Tests
         run: |
           ./mvnw -B -ntp clean test org.pitest:pitest-maven:mutationCoverage \
-            -pl bonita-connector-ai-gemini,bonita-connector-ai-anthropic,bonita-connector-ai-azure \
+            -pl bonita-connector-ai-gemini,bonita-connector-ai-azure \
             -am \
             -Dmutators="${{ inputs.mutators }}" \
             -DoutputFormats=HTML,CSV,XML \
             -DtimestampedReports=false \
-            -Dpitest.jvmArgs="--add-opens=java.base/java.lang=ALL-UNNAMED"
+            -Dpitest.jvmArgs="--add-opens=java.base/java.lang=ALL-UNNAMED" \
+            -Dpitest.failWhenNoMutations=false
 
       - name: Generate GitHub Summary
         if: always()

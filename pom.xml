@@ -168,6 +168,23 @@
         <artifactId>okio-jvm</artifactId>
         <version>3.9.1</version>
       </dependency>
+      <dependency>
+        <groupId>io.netty</groupId>
+        <artifactId>netty-bom</artifactId>
+        <version>4.1.124.Final</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+      <dependency>
+        <groupId>com.github.junrar</groupId>
+        <artifactId>junrar</artifactId>
+        <version>7.5.6</version>
+      </dependency>
+      <dependency>
+        <groupId>io.projectreactor.netty</groupId>
+        <artifactId>reactor-netty-http</artifactId>
+        <version>1.2.4</version>
+      </dependency>
     </dependencies>
   </dependencyManagement>
   <dependencies>
