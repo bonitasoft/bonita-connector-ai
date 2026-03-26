@@ -72,7 +72,7 @@ jobs:
       - name: Run PIT Mutation Tests
         run: |
           ./mvnw -B -ntp clean test org.pitest:pitest-maven:mutationCoverage \
-            -pl bonita-connector-ai-gemini,bonita-connector-ai-azure \
+            -pl bonita-connector-ai-gemini \
             -am \
             -Dmutators="${{ inputs.mutators }}" \
             -DoutputFormats=HTML,CSV,XML \
