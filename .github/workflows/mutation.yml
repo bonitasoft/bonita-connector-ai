@@ -71,14 +71,14 @@ jobs:
 
       - name: Run PIT Mutation Tests
         run: |
-          ./mvnw -B -ntp clean test-compile org.pitest:pitest-maven:mutationCoverage \
-            -pl bonita-connector-ai-gemini \
-            -am \
+          cd bonita-connector-ai-gemini
+          ../mvnw -B -ntp clean test-compile org.pitest:pitest-maven:mutationCoverage \
             -Dmutators="${{ inputs.mutators }}" \
             -DoutputFormats=HTML,CSV,XML \
             -DtimestampedReports=false \
             -Dpitest.failWhenNoMutations=false \
-            -Djacoco.skip=true
+            -Djacoco.skip=true \
+            -Dargline=" "
 
       - name: Generate GitHub Summary
         if: always()
