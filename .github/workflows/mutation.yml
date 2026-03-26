@@ -78,7 +78,8 @@ jobs:
             -DtimestampedReports=false \
             -Dpitest.failWhenNoMutations=false \
             -Djacoco.skip=true \
-            -DargLine=" "
+            -DargLine=" " \
+            -Dpitest.excludedTestClasses="*IT,*IT\$*,*MockIT,*MockIT\$*"
 
       - name: Generate GitHub Summary
         if: always()
