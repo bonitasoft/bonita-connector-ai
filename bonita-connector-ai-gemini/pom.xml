@@ -200,7 +200,9 @@
           <timestampedReports>false</timestampedReports>
           <jvmArgs>
             <jvmArg>--add-opens=java.base/java.lang=ALL-UNNAMED</jvmArg>
+            <jvmArg>-Xmx512m</jvmArg>
           </jvmArgs>
+          <useClasspathJar>true</useClasspathJar>
         </configuration>
         <dependencies>
           <dependency>
