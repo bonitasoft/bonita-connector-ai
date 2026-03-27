@@ -35,6 +35,7 @@ public class ClassifyAiConnector<T extends ClassifyChat> extends AiConnector {
             getInputValue(SOURCE_DOCUMENT_REF, String.class).ifPresent(builder::sourceDocumentRef);
             getInputValue(SOURCE_DOCUMENT_REFS, List.class).ifPresent(builder::sourceDocumentRefs);
             getInputValue(CATEGORY_LIST, List.class).ifPresent(builder::categories);
+            getInputValue(CATEGORY_DESCRIPTIONS, String.class).ifPresent(builder::categoryDescriptions);
             classifyConfiguration = builder.build();
         }
         if (classifyConfiguration.getAllDocumentRefs().isEmpty()) {
@@ -49,6 +50,28 @@ public class ClassifyAiConnector<T extends ClassifyChat> extends AiConnector {
     @Override
     protected Object doExecute() {
         List<UserDocument> userDocuments = getUserDocuments(classifyConfiguration.getAllDocumentRefs());
-        return chat.classify(classifyConfiguration.getCategories(), userDocuments);
+        List<String> categories = classifyConfiguration.getCategories();
+        String descriptions = classifyConfiguration.getCategoryDescriptions();
+        if (descriptions != null && !descriptions.isBlank()) {
+            // Enrich categories with descriptions for better classification
+            categories = enrichCategoriesWithDescriptions(categories, descriptions);
+        }
+        return chat.classify(categories, userDocuments);
+    }
+
+    private List<String> enrichCategoriesWithDescriptions(List<String> categories, String descriptionsJson) {
+        try {
+            var mapper = new com.fasterxml.jackson.databind.ObjectMapper();
+            var descriptionsMap = mapper.readValue(descriptionsJson, java.util.Map.class);
+            return categories.stream()
+                    .map(cat -> {
+                        Object desc = descriptionsMap.get(cat);
+                        return desc != null ? cat + " (" + desc + ")" : cat;
+                    })
+                    .collect(java.util.stream.Collectors.toList());
+        } catch (Exception e) {
+            // If parsing fails, return original categories
+            return categories;
+        }
     }
 }

@@ -16,6 +16,7 @@
     <input name="sourceDocumentRef" type="java.lang.String" mandatory="true"/>
     <input name="sourceDocumentRefs" type="java.util.List"/>
     <input name="categories" type="java.util.List" mandatory="true"/>
+    <input name="categoryDescriptions" type="java.lang.String"/>
 
     <!-- Connector outputs -->
     <output name="output" type="java.lang.String"/>
@@ -31,6 +32,7 @@
         <widget xsi:type="definition:Text" id="sourceDocumentRefWidget" inputName="sourceDocumentRef" showDocuments="true"/>
         <widget xsi:type="definition:List" id="sourceDocumentRefsWidget" inputName="sourceDocumentRefs"/>
         <widget xsi:type="definition:List" id="categoriesWidget" inputName="categories"/>
+        <widget xsi:type="definition:TextArea" id="categoryDescriptionsWidget" inputName="categoryDescriptions"/>
     </page>
     <page id="advancedPage">
         <widget xsi:type="definition:Text" id="apiKeyWidget" inputName="apiKey"/>

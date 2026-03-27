@@ -29,9 +29,11 @@ public class ClassifyConfiguration {
     public static final String SOURCE_DOCUMENT_REF = "sourceDocumentRef";
     public static final String SOURCE_DOCUMENT_REFS = "sourceDocumentRefs";
     public static final String CATEGORY_LIST = "categories";
+    public static final String CATEGORY_DESCRIPTIONS = "categoryDescriptions";
 
     private final String sourceDocumentRef;
     private List<String> sourceDocumentRefs;
+    private String categoryDescriptions;
 
     @Builder.Default
     private List<String> categories = new ArrayList<>();
