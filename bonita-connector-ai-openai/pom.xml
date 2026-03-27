@@ -82,6 +82,35 @@
         <groupId>org.sonatype.central</groupId>
         <artifactId>central-publishing-maven-plugin</artifactId>
       </plugin>
+      <plugin>
+        <groupId>org.pitest</groupId>
+        <artifactId>pitest-maven</artifactId>
+        <version>1.17.4</version>
+        <configuration>
+          <skip>false</skip>
+          <targetClasses>
+            <param>org.bonitasoft.connectors.ai.openai.*</param>
+          </targetClasses>
+          <targetTests>
+            <param>org.bonitasoft.connectors.ai.openai.*Test</param>
+          </targetTests>
+          <mutators>
+            <mutator>DEFAULTS</mutator>
+          </mutators>
+          <timestampedReports>false</timestampedReports>
+          <jvmArgs>
+            <jvmArg>--add-opens=java.base/java.lang=ALL-UNNAMED</jvmArg>
+          </jvmArgs>
+          <useClasspathJar>true</useClasspathJar>
+        </configuration>
+        <dependencies>
+          <dependency>
+            <groupId>org.pitest</groupId>
+            <artifactId>pitest-junit5-plugin</artifactId>
+            <version>1.2.1</version>
+          </dependency>
+        </dependencies>
+      </plugin>
     </plugins>
   </build>
 </project>
