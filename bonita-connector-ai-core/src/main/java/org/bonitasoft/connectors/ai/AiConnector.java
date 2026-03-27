@@ -69,6 +69,8 @@ public abstract class AiConnector extends AbstractConnector {
             getInputValue(MODEL_TEMPERATURE, Double.class).ifPresent(builder::modelTemperature);
             getInputValue(API_VERSION, String.class).ifPresent(builder::apiVersion);
             getInputValue(ENABLE_DEBUG_LOGGING, Boolean.class).ifPresent(builder::enableDebugLogging);
+            getInputValue(MAX_OUTPUT_TOKENS, Integer.class).ifPresent(builder::maxOutputTokens);
+            getInputValue(TOP_P, Double.class).ifPresent(builder::topP);
             this.configuration = builder.build();
         }
         // delegate validation to concrete classes

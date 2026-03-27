@@ -17,6 +17,8 @@
     <input name="modelTemperature" type="java.lang.Double"/>
     <input name="requestTimeout" type="java.lang.Integer"/>
     <input name="enableDebugLogging" type="java.lang.Boolean" mandatory="false" defaultValue="false"/>
+    <input name="maxOutputTokens" type="java.lang.Integer"/>
+    <input name="topP" type="java.lang.Double"/>
 
     <input name="sourceDocumentRef" type="java.lang.String"/>
     <input name="sourceDocumentRefs" type="java.util.List"/>
@@ -41,5 +43,7 @@
         <widget xsi:type="definition:Text" id="chatModelNameWidget" inputName="chatModelName"/>
         <widget xsi:type="definition:Text" id="modelTemperatureWidget" inputName="modelTemperature"/>
         <widget xsi:type="definition:Checkbox" id="enableDebugLoggingWidget" inputName="enableDebugLogging"/>
+        <widget xsi:type="definition:Text" id="maxOutputTokensWidget" inputName="maxOutputTokens"/>
+        <widget xsi:type="definition:Text" id="topPWidget" inputName="topP"/>
     </page>
 </definition:ConnectorDefinition>
