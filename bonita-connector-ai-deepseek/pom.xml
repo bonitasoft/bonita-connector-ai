@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>org.bonitasoft.connectors</groupId>
+    <artifactId>bonita-connector-ai</artifactId>
+    <version>1.1.1-SNAPSHOT</version>
+  </parent>
+  <artifactId>bonita-connector-ai-deepseek</artifactId>
+  <version>1.1.1-SNAPSHOT</version>
+  <name>Bonita AI Connectors - DeepSeekAI</name>
+  <description>Bonita connectors for interacting with DeepSeek chat models by sending prompt and documents and returning the generated output.</description>
+  <properties>
+    <license-header-file>${project.parent.basedir}/src/format/header.txt</license-header-file>
+    <!--Ask Connector -->
+    <deepseek.ask.def.id>deepseek-ask</deepseek.ask.def.id>
+    <deepseek.ask.def.version>1.0.0</deepseek.ask.def.version>
+    <deepseek.ask.impl.id>${deepseek.ask.def.id}-impl</deepseek.ask.impl.id>
+    <deepseek.ask.impl.version>${project.version}</deepseek.ask.impl.version>
+    <deepseek.ask.main-class>org.bonitasoft.connectors.ai.deepseek.DeepSeekAskConnector</deepseek.ask.main-class>
+    <!--Extract Connector -->
+    <deepseek.extract.def.id>deepseek-extract</deepseek.extract.def.id>
+    <deepseek.extract.def.version>1.0.0</deepseek.extract.def.version>
+    <deepseek.extract.impl.id>${deepseek.extract.def.id}-impl</deepseek.extract.impl.id>
+    <deepseek.extract.impl.version>${project.version}</deepseek.extract.impl.version>
+    <deepseek.extract.main-class>org.bonitasoft.connectors.ai.deepseek.DeepSeekExtractDataConnector</deepseek.extract.main-class>
+    <!-- Classify Connector -->
+    <deepseek.classify.def.id>deepseek-classify</deepseek.classify.def.id>
+    <deepseek.classify.def.version>1.0.0</deepseek.classify.def.version>
+    <deepseek.classify.impl.id>${deepseek.classify.def.id}-impl</deepseek.classify.impl.id>
+    <deepseek.classify.impl.version>${project.version}</deepseek.classify.impl.version>
+    <deepseek.classify.main-class>org.bonitasoft.connectors.ai.deepseek.DeepSeekClassifyConnector</deepseek.classify.main-class>
+  </properties>
+  <dependencies>
+    <dependency>
+      <groupId>org.bonitasoft.connectors</groupId>
+      <artifactId>bonita-connector-ai-core</artifactId>
+      <version>1.1.1-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+      <groupId>dev.langchain4j</groupId>
+      <artifactId>langchain4j-open-ai</artifactId>
+      <exclusions>
+        <exclusion>
+          <groupId>org.slf4j</groupId>
+          <artifactId>slf4j-api</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <!-- Test -->
+    <dependency>
+      <groupId>org.bonitasoft.connectors</groupId>
+      <artifactId>bonita-connector-ai-core</artifactId>
+      <version>1.1.1-SNAPSHOT</version>
+      <classifier>test</classifier>
+      <type>test-jar</type>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>net.jqwik</groupId>
+      <artifactId>jqwik</artifactId>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.codehaus.gmaven</groupId>
+        <artifactId>groovy-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <goals>
+              <goal>execute</goal>
+            </goals>
+            <phase>generate-resources</phase>
+            <configuration>
+              <source>${project.basedir}/src/script/dependencies-as-var.groovy</source>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-assembly-plugin</artifactId>
+      </plugin>
+      <plugin>
+        <groupId>org.sonatype.central</groupId>
+        <artifactId>central-publishing-maven-plugin</artifactId>
+      </plugin>
+    </plugins>
+  </build>
+</project>

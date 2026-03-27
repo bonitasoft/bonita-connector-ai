@@ -37,6 +37,9 @@
     <module>bonita-connector-ai-anthropic</module>
     <module>bonita-connector-ai-azure</module>
     <module>bonita-connector-ai-gemini</module>
+    <module>bonita-connector-ai-deepseek</module>
+    <module>bonita-connector-ai-groq</module>
+    <module>bonita-connector-ai-cohere</module>
   </modules>
   <scm child.scm.connection.inherit.append.path="false" child.scm.developerConnection.inherit.append.path="false" child.scm.url.inherit.append.path="false">
     <connection>scm:git:git@github.com:bonitasoft/bonita-connector-ai.git</connection>
