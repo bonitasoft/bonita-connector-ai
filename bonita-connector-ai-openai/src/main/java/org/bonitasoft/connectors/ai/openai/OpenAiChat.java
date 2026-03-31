@@ -37,6 +37,10 @@ public interface OpenAiChat extends AiChat<OpenAiChatModel> {
         chatModelBuilder.modelName(configuration.getChatModelName().orElse(OpenAiChatModelName.GPT_4_O.toString()));
         // Temperature
         configuration.getModelTemperature().ifPresent(chatModelBuilder::temperature);
+        // Top P
+        configuration.getTopP().ifPresent(chatModelBuilder::topP);
+        // Max output tokens
+        configuration.getMaxOutputTokens().ifPresent(chatModelBuilder::maxTokens);
         // Req timeout
         configuration
                 .getRequestTimeout()

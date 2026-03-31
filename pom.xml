@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!-- Bonita AI Connectors - Multi-provider AI integration -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.bonitasoft.connectors</groupId>
   <artifactId>bonita-connector-ai</artifactId>
-  <version>1.1.0</version>
+  <version>1.1.1</version>
   <packaging>pom</packaging>
   <name>Bonita AI Connectors</name>
   <description>Parent pom for Bonita AI Connectors</description>
@@ -33,6 +34,12 @@
     <module>bonita-connector-ai-mistral</module>
     <module>bonita-connector-ai-openai</module>
     <module>bonita-connector-ai-ollama</module>
+    <module>bonita-connector-ai-anthropic</module>
+    <module>bonita-connector-ai-azure</module>
+    <module>bonita-connector-ai-gemini</module>
+    <module>bonita-connector-ai-deepseek</module>
+    <module>bonita-connector-ai-groq</module>
+    <module>bonita-connector-ai-cohere</module>
   </modules>
   <scm child.scm.connection.inherit.append.path="false" child.scm.developerConnection.inherit.append.path="false" child.scm.url.inherit.append.path="false">
     <connection>scm:git:git@github.com:bonitasoft/bonita-connector-ai.git</connection>
@@ -61,24 +68,28 @@
     <langchain4j.version>1.8.0</langchain4j.version>
     <!-- Tests -->
     <junit-jupiter-engine.version>5.12.2</junit-jupiter-engine.version>
-    <assertj-core.version>3.27.3</assertj-core.version>
+    <assertj-core.version>3.27.7</assertj-core.version>
     <mockito-core.version>5.17.0</mockito-core.version>
     <!-- Maven plugins -->
     <maven-compiler-plugin.version>3.14.0</maven-compiler-plugin.version>
     <maven-assembly-plugin.version>3.6.0</maven-assembly-plugin.version>
     <maven-deploy-plugin.version>3.1.4</maven-deploy-plugin.version>
     <groovy-maven-plugin.version>2.1.1</groovy-maven-plugin.version>
-    <groovy-xml.version>3.0.24</groovy-xml.version>
+    <groovy-xml.version>3.0.25</groovy-xml.version>
     <maven-surefire-plugin.version>3.5.3</maven-surefire-plugin.version>
-    <maven-gpg-plugin.version>3.2.7</maven-gpg-plugin.version>
+    <maven-gpg-plugin.version>3.2.8</maven-gpg-plugin.version>
     <git-commit-id-plugin.version>4.9.10</git-commit-id-plugin.version>
     <maven-source-plugin.version>3.3.1</maven-source-plugin.version>
     <central-maven-plugin.version>0.8.0</central-maven-plugin.version>
     <maven-javadoc-plugin.version>3.11.2</maven-javadoc-plugin.version>
-    <spotless-maven-plugin.version>2.44.3</spotless-maven-plugin.version>
+    <spotless-maven-plugin.version>3.0.0</spotless-maven-plugin.version>
     <license-header-file>${project.basedir}/src/format/header.txt</license-header-file>
     <versions-maven-plugin.version>2.18.0</versions-maven-plugin.version>
     <gitflow-maven-plugin.version>1.21.0</gitflow-maven-plugin.version>
+    <!-- Mutation testing -->
+    <pitest.version>1.17.4</pitest.version>
+    <!-- Code coverage -->
+    <jacoco.version>0.8.12</jacoco.version>
   </properties>
   <dependencyManagement>
     <dependencies>
@@ -95,6 +106,97 @@
         <version>${langchain4j.version}</version>
         <type>pom</type>
         <scope>import</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.junit</groupId>
+        <artifactId>junit-bom</artifactId>
+        <version>${junit-jupiter-engine.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+      <dependency>
+        <groupId>net.jqwik</groupId>
+        <artifactId>jqwik</artifactId>
+        <version>1.8.4</version>
+        <scope>test</scope>
+      </dependency>
+      <!-- Security overrides for transitive vulnerabilities -->
+      <dependency>
+        <groupId>com.fasterxml.jackson.core</groupId>
+        <artifactId>jackson-core</artifactId>
+        <version>2.18.6</version>
+      </dependency>
+      <dependency>
+        <groupId>com.fasterxml.jackson.core</groupId>
+        <artifactId>jackson-databind</artifactId>
+        <version>2.18.6</version>
+      </dependency>
+      <dependency>
+        <groupId>com.fasterxml.jackson.core</groupId>
+        <artifactId>jackson-annotations</artifactId>
+        <version>2.18.6</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.commons</groupId>
+        <artifactId>commons-compress</artifactId>
+        <version>1.27.1</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.commons</groupId>
+        <artifactId>commons-lang3</artifactId>
+        <version>3.18.0</version>
+      </dependency>
+      <dependency>
+        <groupId>org.bouncycastle</groupId>
+        <artifactId>bcpkix-jdk18on</artifactId>
+        <version>1.80</version>
+      </dependency>
+      <dependency>
+        <groupId>org.bouncycastle</groupId>
+        <artifactId>bcprov-jdk18on</artifactId>
+        <version>1.80</version>
+      </dependency>
+      <dependency>
+        <groupId>org.bouncycastle</groupId>
+        <artifactId>bcutil-jdk18on</artifactId>
+        <version>1.80</version>
+      </dependency>
+      <dependency>
+        <groupId>com.squareup.okio</groupId>
+        <artifactId>okio</artifactId>
+        <version>3.9.1</version>
+      </dependency>
+      <dependency>
+        <groupId>com.squareup.okio</groupId>
+        <artifactId>okio-jvm</artifactId>
+        <version>3.9.1</version>
+      </dependency>
+      <dependency>
+        <groupId>io.netty</groupId>
+        <artifactId>netty-bom</artifactId>
+        <version>4.1.132.Final</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+      <dependency>
+        <groupId>com.github.junrar</groupId>
+        <artifactId>junrar</artifactId>
+        <version>7.5.8</version>
+      </dependency>
+      <dependency>
+        <groupId>io.projectreactor.netty</groupId>
+        <artifactId>reactor-netty-http</artifactId>
+        <version>1.2.8</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.logging.log4j</groupId>
+        <artifactId>log4j-core</artifactId>
+        <version>2.25.3</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.logging.log4j</groupId>
+        <artifactId>log4j-api</artifactId>
+        <version>2.25.3</version>
       </dependency>
     </dependencies>
   </dependencyManagement>
@@ -159,6 +261,12 @@
     <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter-engine</artifactId>
+      <version>${junit-jupiter-engine.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter-params</artifactId>
       <version>${junit-jupiter-engine.version}</version>
       <scope>test</scope>
     </dependency>
@@ -253,6 +361,9 @@
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-surefire-plugin</artifactId>
           <version>${maven-surefire-plugin.version}</version>
+          <configuration>
+            <excludedGroups>integration,provider-api,btt</excludedGroups>
+          </configuration>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
@@ -402,6 +513,35 @@
       <plugin>
         <groupId>org.sonatype.central</groupId>
         <artifactId>central-publishing-maven-plugin</artifactId>
+      </plugin>
+      <plugin>
+        <groupId>org.pitest</groupId>
+        <artifactId>pitest-maven</artifactId>
+        <version>${pitest.version}</version>
+        <configuration>
+          <skip>true</skip>
+          <targetClasses>
+            <param>org.bonitasoft.connectors.ai.*</param>
+          </targetClasses>
+          <targetTests>
+            <param>org.bonitasoft.connectors.ai.*</param>
+          </targetTests>
+          <mutators>
+            <mutator>DEFAULTS</mutator>
+          </mutators>
+          <outputFormats>
+            <outputFormat>HTML</outputFormat>
+            <outputFormat>CSV</outputFormat>
+          </outputFormats>
+          <timestampedReports>false</timestampedReports>
+        </configuration>
+        <dependencies>
+          <dependency>
+            <groupId>org.pitest</groupId>
+            <artifactId>pitest-junit5-plugin</artifactId>
+            <version>1.2.1</version>
+          </dependency>
+        </dependencies>
       </plugin>
     </plugins>
   </build>

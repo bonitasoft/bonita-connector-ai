@@ -16,9 +16,11 @@
  */
 package org.bonitasoft.connectors.ai.ask;
 
+import java.util.List;
 import java.util.Optional;
 import lombok.Builder;
 import lombok.Data;
+import org.bonitasoft.connectors.ai.DocumentRefUtils;
 
 @Data
 @Builder
@@ -27,6 +29,7 @@ public class AskConfiguration {
     public static final String SYSTEM_PROMPT = "systemPrompt";
     public static final String USER_PROMPT = "userPrompt";
     public static final String SOURCE_DOCUMENT_REF = "sourceDocumentRef";
+    public static final String SOURCE_DOCUMENT_REFS = "sourceDocumentRefs";
     public static final String OUTPUT_JSON_SCHEMA = "outputJsonSchema";
 
     @Builder.Default
@@ -34,6 +37,7 @@ public class AskConfiguration {
 
     private String userPrompt;
     private String sourceDocumentRef;
+    private List<String> sourceDocumentRefs;
     private String outputJsonSchema;
 
     public Optional<String> getOutputJsonSchema() {
@@ -42,5 +46,9 @@ public class AskConfiguration {
 
     public Optional<String> getSourceDocumentRef() {
         return Optional.ofNullable(sourceDocumentRef);
+    }
+
+    public List<String> getAllDocumentRefs() {
+        return DocumentRefUtils.getAllDocumentRefs(sourceDocumentRef, sourceDocumentRefs);
     }
 }

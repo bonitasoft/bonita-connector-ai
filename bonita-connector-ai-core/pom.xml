@@ -4,10 +4,10 @@
   <parent>
     <groupId>org.bonitasoft.connectors</groupId>
     <artifactId>bonita-connector-ai</artifactId>
-    <version>1.1.0</version>
+    <version>1.1.1</version>
   </parent>
   <artifactId>bonita-connector-ai-core</artifactId>
-  <version>1.1.0</version>
+  <version>1.1.1</version>
   <name>Bonita AI Connectors - Core</name>
   <description>Bonita AI Connectors core module.</description>
   <properties>
@@ -43,6 +43,13 @@
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>
       <scope>provided</scope>
+    </dependency>
+    <!-- Test dependencies for shared test toolkit -->
+    <dependency>
+      <groupId>org.bonitasoft.web</groupId>
+      <artifactId>bonita-java-client</artifactId>
+      <version>1.0.1</version>
+      <scope>test</scope>
     </dependency>
   </dependencies>
   <build>

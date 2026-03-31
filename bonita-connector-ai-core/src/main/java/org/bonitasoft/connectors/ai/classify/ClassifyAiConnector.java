@@ -16,8 +16,7 @@
  */
 package org.bonitasoft.connectors.ai.classify;
 
-import static org.bonitasoft.connectors.ai.classify.ClassifyConfiguration.CATEGORY_LIST;
-import static org.bonitasoft.connectors.ai.classify.ClassifyConfiguration.SOURCE_DOCUMENT_REF;
+import static org.bonitasoft.connectors.ai.classify.ClassifyConfiguration.*;
 
 import java.util.List;
 import org.bonitasoft.connectors.ai.AiConnector;
@@ -34,11 +33,12 @@ public class ClassifyAiConnector<T extends ClassifyChat> extends AiConnector {
         if (classifyConfiguration == null) {
             var builder = ClassifyConfiguration.builder();
             getInputValue(SOURCE_DOCUMENT_REF, String.class).ifPresent(builder::sourceDocumentRef);
+            getInputValue(SOURCE_DOCUMENT_REFS, List.class).ifPresent(builder::sourceDocumentRefs);
             getInputValue(CATEGORY_LIST, List.class).ifPresent(builder::categories);
+            getInputValue(CATEGORY_DESCRIPTIONS, String.class).ifPresent(builder::categoryDescriptions);
             classifyConfiguration = builder.build();
         }
-        if (classifyConfiguration.getSourceDocumentRef() == null
-                || classifyConfiguration.getSourceDocumentRef().isEmpty()) {
+        if (classifyConfiguration.getAllDocumentRefs().isEmpty()) {
             throw new ConnectorValidationException("Source document ref is empty");
         }
         if (classifyConfiguration.getCategories() == null
@@ -49,7 +49,29 @@ public class ClassifyAiConnector<T extends ClassifyChat> extends AiConnector {
 
     @Override
     protected Object doExecute() {
-        UserDocument userDocument = getUserDocument(classifyConfiguration.getSourceDocumentRef());
-        return chat.classify(classifyConfiguration.getCategories(), userDocument);
+        List<UserDocument> userDocuments = getUserDocuments(classifyConfiguration.getAllDocumentRefs());
+        List<String> categories = classifyConfiguration.getCategories();
+        String descriptions = classifyConfiguration.getCategoryDescriptions();
+        if (descriptions != null && !descriptions.isBlank()) {
+            // Enrich categories with descriptions for better classification
+            categories = enrichCategoriesWithDescriptions(categories, descriptions);
+        }
+        return chat.classify(categories, userDocuments);
+    }
+
+    private List<String> enrichCategoriesWithDescriptions(List<String> categories, String descriptionsJson) {
+        try {
+            var mapper = new com.fasterxml.jackson.databind.ObjectMapper();
+            var descriptionsMap = mapper.readValue(descriptionsJson, java.util.Map.class);
+            return categories.stream()
+                    .map(cat -> {
+                        Object desc = descriptionsMap.get(cat);
+                        return desc != null ? cat + " (" + desc + ")" : cat;
+                    })
+                    .collect(java.util.stream.Collectors.toList());
+        } catch (Exception e) {
+            // If parsing fails, return original categories
+            return categories;
+        }
     }
 }

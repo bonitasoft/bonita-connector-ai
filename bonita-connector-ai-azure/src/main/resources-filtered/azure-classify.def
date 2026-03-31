@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definition:ConnectorDefinition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:definition="http://www.bonitasoft.org/ns/connector/definition/6.1">
+    <id>${azure.classify.def.id}</id>
+    <version>${azure.classify.def.version}</version>
+    <icon>azure.png</icon>
+    <category id="AI" icon="AI.png" />
+    <category id="Azure AI Foundry" icon="azure.png" parentCategoryId="AI"/>
+
+    <input name="url" type="java.lang.String" mandatory="true"/>
+    <input name="apiKey" type="java.lang.String"/>
+    <input name="chatModelName" type="java.lang.String" mandatory="true"/>
+    <input name="apiVersion" type="java.lang.String" defaultValue="2024-10-21"/>
+    <input name="modelTemperature" type="java.lang.Double"/>
+    <input name="requestTimeout" type="java.lang.Integer"/>
+    <input name="enableDebugLogging" type="java.lang.Boolean" mandatory="false" defaultValue="false"/>
+    <input name="maxOutputTokens" type="java.lang.Integer"/>
+    <input name="topP" type="java.lang.Double"/>
+
+    <input name="sourceDocumentRef" type="java.lang.String" mandatory="true"/>
+    <input name="sourceDocumentRefs" type="java.util.List"/>
+    <input name="categories" type="java.util.List" mandatory="true"/>
+    <input name="categoryDescriptions" type="java.lang.String"/>
+
+    <output name="output" type="java.lang.String"/>
+
+    <page id="defaultPage">
+        <widget xsi:type="definition:Text" id="sourceDocumentRefWidget" inputName="sourceDocumentRef" showDocuments="true"/>
+        <widget xsi:type="definition:List" id="sourceDocumentRefsWidget" inputName="sourceDocumentRefs"/>
+        <widget xsi:type="definition:List" id="categoriesWidget" inputName="categories"/>
+        <widget xsi:type="definition:TextArea" id="categoryDescriptionsWidget" inputName="categoryDescriptions"/>
+    </page>
+    <page id="advancedPage">
+        <widget xsi:type="definition:Text" id="apiKeyWidget" inputName="apiKey"/>
+        <widget xsi:type="definition:Text" id="urlWidget" inputName="url"/>
+        <widget xsi:type="definition:Text" id="apiVersionWidget" inputName="apiVersion"/>
+        <widget xsi:type="definition:Text" id="requestTimeoutWidget" inputName="requestTimeout"/>
+        <widget xsi:type="definition:Text" id="chatModelNameWidget" inputName="chatModelName"/>
+        <widget xsi:type="definition:Text" id="modelTemperatureWidget" inputName="modelTemperature"/>
+        <widget xsi:type="definition:Checkbox" id="enableDebugLoggingWidget" inputName="enableDebugLogging"/>
+        <widget xsi:type="definition:Text" id="maxOutputTokensWidget" inputName="maxOutputTokens"/>
+        <widget xsi:type="definition:Text" id="topPWidget" inputName="topP"/>
+    </page>
+</definition:ConnectorDefinition>

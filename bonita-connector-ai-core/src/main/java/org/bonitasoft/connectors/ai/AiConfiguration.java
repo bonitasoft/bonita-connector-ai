@@ -31,6 +31,10 @@ public class AiConfiguration {
     public static final String AI_API_KEY = "AI_API_KEY";
     public static final String CHAT_MODEL_NAME = "chatModelName";
     public static final String MODEL_TEMPERATURE = "modelTemperature";
+    public static final String API_VERSION = "apiVersion";
+    public static final String ENABLE_DEBUG_LOGGING = "enableDebugLogging";
+    public static final String MAX_OUTPUT_TOKENS = "maxOutputTokens";
+    public static final String TOP_P = "topP";
 
     private String baseUrl;
 
@@ -41,6 +45,13 @@ public class AiConfiguration {
 
     private Double modelTemperature;
     private Integer requestTimeout;
+    private String apiVersion;
+
+    private Integer maxOutputTokens;
+    private Double topP;
+
+    @Builder.Default
+    private boolean enableDebugLogging = false;
 
     public Optional<String> getBaseUrl() {
         return Optional.ofNullable(baseUrl);
@@ -56,5 +67,17 @@ public class AiConfiguration {
 
     public Optional<Integer> getRequestTimeout() {
         return Optional.ofNullable(requestTimeout);
+    }
+
+    public Optional<String> getApiVersion() {
+        return Optional.ofNullable(apiVersion);
+    }
+
+    public Optional<Integer> getMaxOutputTokens() {
+        return Optional.ofNullable(maxOutputTokens);
+    }
+
+    public Optional<Double> getTopP() {
+        return Optional.ofNullable(topP);
     }
 }

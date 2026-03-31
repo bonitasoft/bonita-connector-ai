@@ -17,6 +17,7 @@
     <input name="requestTimeout" type="java.lang.Integer"/>
 
     <input name="sourceDocumentRef" type="java.lang.String"/>
+    <input name="sourceDocumentRefs" type="java.util.List"/>
 
     <input name="outputJsonSchema" type="java.lang.String"/>
     <input name="fieldsToExtract" type="java.lang.String"/>
@@ -36,6 +37,7 @@
         <widget xsi:type="definition:TextArea" id="userPromptWidget" inputName="userPrompt"/>
         <widget xsi:type="definition:TextArea" id="outputJsonSchemaWidget" inputName="outputJsonSchema"/>
         <widget xsi:type="definition:Text" id="sourceDocumentRefWidget" inputName="sourceDocumentRef" showDocuments="true"/>
+        <widget xsi:type="definition:List" id="sourceDocumentRefsWidget" inputName="sourceDocumentRefs"/>
     </page>
     <page id="advancedPage">
         <widget xsi:type="definition:Text" id="urlWidget" inputName="url"/>

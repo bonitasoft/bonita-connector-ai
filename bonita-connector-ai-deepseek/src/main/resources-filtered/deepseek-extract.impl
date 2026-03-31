@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<implementation:connectorImplementation xmlns:implementation="http://www.bonitasoft.org/ns/connector/implementation/6.0">
+  <implementationId>${deepseek.extract.impl.id}</implementationId> <!-- Id of the implementation -->
+  <implementationVersion>${deepseek.extract.impl.version}</implementationVersion> <!-- Version of the implementation -->
+  <definitionId>${deepseek.extract.def.id}</definitionId> <!-- Id of the definition implemented -->
+  <definitionVersion>${deepseek.extract.def.version}</definitionVersion> <!-- Version of the definition implemented -->
+  <implementationClassname>${deepseek.extract.main-class}</implementationClassname> <!-- Path to the main implementation class -->
+  <description>Default ${deepseek.extract.def.id} implementation</description>
+
+<!-- retrieved from the pom.xml at build time -->
+${connector-dependencies}
+
+</implementation:connectorImplementation>

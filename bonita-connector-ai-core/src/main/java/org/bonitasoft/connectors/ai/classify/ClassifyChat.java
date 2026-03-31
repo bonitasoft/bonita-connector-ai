@@ -21,5 +21,9 @@ import org.bonitasoft.connectors.ai.UserDocument;
 
 public interface ClassifyChat {
 
-    String classify(List<String> categories, UserDocument userDocument);
+    String classify(List<String> categories, List<UserDocument> documents);
+
+    default String classify(List<String> categories, UserDocument userDocument) {
+        return classify(categories, List.of(userDocument));
+    }
 }

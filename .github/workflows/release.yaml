@@ -18,6 +18,10 @@ on:
         type: boolean
         required: false
         default: false
+      update_marketplace:
+        description: 'Update marketplace after release'
+        type: boolean
+        default: false
 
 jobs:
   build:
@@ -25,7 +29,7 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - name: Checkout code
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
         with:
           fetch-depth: '0'
 
@@ -45,4 +49,28 @@ jobs:
 
       - name: Create Release
         run: ./mvnw -ntp -B -Dstyle.color=always gitflow:release -Dargline="-ntp -B" -Prelease -DdevelopmentVersion=${{ github.event.inputs.nextVersion }} -DreleaseVersion=${{ github.event.inputs.version }} -DskipReleaseMergeProdBranch=${{ github.event.inputs.skipMergeReleaseInMain }} -Dverbose
+
+  notify-marketplace:
+    needs: build
+    if: ${{ inputs.update_marketplace }}
+    runs-on: ubuntu-24.04
+    strategy:
+      matrix:
+        connector:
+          - bonita-connector-ai-openai
+          - bonita-connector-ai-ollama
+          - bonita-connector-ai-mistral
+    steps:
+      - name: Notify marketplace for ${{ matrix.connector }}
+        uses: peter-evans/repository-dispatch@v3
+        with:
+          token: ${{ secrets.GH_PAT }}
+          repository: bonitasoft/bonita-marketplace
+          event-type: new-connector-release
+          client-payload: >-
+            {
+              "artifactId": "${{ matrix.connector }}",
+              "version": "${{ inputs.version }}",
+              "bonitaMinVersion": "2024.3"
+            }
 

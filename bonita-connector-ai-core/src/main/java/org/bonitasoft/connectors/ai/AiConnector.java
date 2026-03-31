@@ -19,6 +19,7 @@ package org.bonitasoft.connectors.ai;
 import static org.bonitasoft.connectors.ai.AiConfiguration.*;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Optional;
 import lombok.Getter;
 import lombok.Setter;
@@ -66,6 +67,10 @@ public abstract class AiConnector extends AbstractConnector {
             getInputValue(CHAT_MODEL_NAME, String.class).ifPresent(builder::chatModelName);
             getInputValue(TIMEOUT_MS, Integer.class).ifPresent(builder::requestTimeout);
             getInputValue(MODEL_TEMPERATURE, Double.class).ifPresent(builder::modelTemperature);
+            getInputValue(API_VERSION, String.class).ifPresent(builder::apiVersion);
+            getInputValue(ENABLE_DEBUG_LOGGING, Boolean.class).ifPresent(builder::enableDebugLogging);
+            getInputValue(MAX_OUTPUT_TOKENS, Integer.class).ifPresent(builder::maxOutputTokens);
+            getInputValue(TOP_P, Double.class).ifPresent(builder::topP);
             this.configuration = builder.build();
         }
         // delegate validation to concrete classes
@@ -87,6 +92,13 @@ public abstract class AiConnector extends AbstractConnector {
     }
 
     protected abstract Object doExecute() throws ConnectorException;
+
+    protected List<UserDocument> getUserDocuments(List<String> docRefs) {
+        if (docRefs == null || docRefs.isEmpty()) {
+            return List.of();
+        }
+        return docRefs.stream().map(this::getUserDocument).toList();
+    }
 
     protected UserDocument getUserDocument(String docRef) {
         long processInstanceId = getExecutionContext().getProcessInstanceId();
