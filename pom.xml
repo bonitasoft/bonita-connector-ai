@@ -63,7 +63,7 @@
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <maven.build.timestamp.format>yyyy.MM.dd-hh.mm</maven.build.timestamp.format>
     <!-- Bonita -->
-    <bonita-runtime.version>10.2.0</bonita-runtime.version>
+    <bonita-runtime.version>10.4.5</bonita-runtime.version>
     <!-- AI -->
     <langchain4j.version>1.8.0</langchain4j.version>
     <!-- Tests -->
