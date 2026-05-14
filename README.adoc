@@ -19,14 +19,14 @@
 :uri-repo: {uri-org}/{project-artifact-id}
 :short-bonita-version: 10.2
 :year-bonita-version: 2024.3
-:doc-url: https://documentation.bonitasoft.com/bonita/{short-bonita-version}
+:doc-url: https://documentation.ofelia.com/bonita/{short-bonita-version}
 :java-version: 17
 :uri-rel-file-base: {uri-repo}/blob/master
 :uri-license: {uri-rel-file-base}/LICENSE
 
 = {project-artifact-id}
 
-image:bonitasoft-community.png[Bonitasoft,link="https://www.bonitasoft.com",width=250px]
+image:bonitasoft-community.png[Bonitasoft,link="https://www.ofelia.com",width=250px]
 image:./openai@2x.png[OpenAI,link="https://openai.com"] image:./mistralai@2x.png[MistralAI,link="https://mistral.ai"] image:https://ollama.com/public/ollama.png[Ollama,link="https://ollama.com",width=100px]
 
 image:{uri-repo}/actions/workflows/build.yaml/badge.svg[Build,link="{uri-repo}/actions?query=build"]
@@ -35,7 +35,7 @@ image:https://img.shields.io/maven-central/v/{project-group-id}/{project-artifac
 image:https://sonarcloud.io/api/project_badges/measure?project={orga}_{project-artifact-id}&metric=alert_status[Sonar,link=https://sonarcloud.io/dashboard?id={orga}_{project-artifact-id}]
 image:https://img.shields.io/badge/License-GPL%20v2-yellow.svg[License,link="{uri-license}"]
 
-Multi-provider AI connectors for the https://www.bonitasoft.com[Bonita] platform. Interact with OpenAI, Anthropic (Claude), Google Gemini, Mistral AI, Azure AI Foundry, and Ollama (local LLMs) chat models by sending prompts and documents and returning structured output.
+Multi-provider AI connectors for the https://www.ofelia.com[Bonita] platform. Interact with OpenAI, Anthropic (Claude), Google Gemini, Mistral AI, Azure AI Foundry, and Ollama (local LLMs) chat models by sending prompts and documents and returning structured output.
 
 The Bonita AI Connectors are available for **Bonita {short-bonita-version} Community ({year-bonita-version})** version and above.
 
