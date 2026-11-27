@@ -4,10 +4,10 @@
   <parent>
     <groupId>org.bonitasoft.connectors</groupId>
     <artifactId>bonita-connector-ai</artifactId>
-    <version>1.2.0-SNAPSHOT</version>
+    <version>2.0.0-SNAPSHOT</version>
   </parent>
   <artifactId>bonita-connector-ai-openai</artifactId>
-  <version>1.2.0-SNAPSHOT</version>
+  <version>2.0.0-SNAPSHOT</version>
   <name>Bonita AI Connectors - OpenAI</name>
   <description>Bonita connectors for interacting with OpenAI chat models by sending prompt and documents and returning the generated output.</description>
   <properties>
@@ -35,7 +35,7 @@
     <dependency>
       <groupId>org.bonitasoft.connectors</groupId>
       <artifactId>bonita-connector-ai-core</artifactId>
-      <version>1.2.0-SNAPSHOT</version>
+      <version>2.0.0-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>dev.langchain4j</groupId>
@@ -45,13 +45,22 @@
           <groupId>org.slf4j</groupId>
           <artifactId>slf4j-api</artifactId>
         </exclusion>
+        <!-- Provided (see the parent pom): not bundled -->
+        <exclusion>
+          <groupId>org.apache.logging.log4j</groupId>
+          <artifactId>log4j-api</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.jspecify</groupId>
+          <artifactId>jspecify</artifactId>
+        </exclusion>
       </exclusions>
     </dependency>
     <!-- Test -->
     <dependency>
       <groupId>org.bonitasoft.connectors</groupId>
       <artifactId>bonita-connector-ai-core</artifactId>
-      <version>1.2.0-SNAPSHOT</version>
+      <version>2.0.0-SNAPSHOT</version>
       <classifier>test</classifier>
       <type>test-jar</type>
       <scope>test</scope>
@@ -60,8 +69,8 @@
   <build>
     <plugins>
       <plugin>
-        <groupId>org.codehaus.gmaven</groupId>
-        <artifactId>groovy-maven-plugin</artifactId>
+        <groupId>org.codehaus.gmavenplus</groupId>
+        <artifactId>gmavenplus-plugin</artifactId>
         <executions>
           <execution>
             <goals>
@@ -69,7 +78,9 @@
             </goals>
             <phase>generate-resources</phase>
             <configuration>
-              <source>${project.basedir}/src/script/dependencies-as-var.groovy</source>
+              <scripts>
+                <script>${project.basedir}/src/script/dependencies-as-var.groovy</script>
+              </scripts>
             </configuration>
           </execution>
         </executions>
