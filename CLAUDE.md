@@ -9,7 +9,7 @@ This repository contains AI connectors for the Bonita BPM platform, enabling int
 **Technology Stack:**
 - Java 17
 - Maven (multi-module project)
-- Bonita Runtime 10.2.0
+- Bonita Runtime 12.0 (version 2.x, `2.0.0-SNAPSHOT`; Bonita 10.2 - 11.x use the 1.x versions)
 - LangChain4j 1.7+
 - Lombok for code generation
 

@@ -12,7 +12,7 @@ on:
       - "**/README.adoc"
       - "CONTRIBUTING.adoc"
       - ".github/**"
-      - "!.github/workflows/build-pr.yml"
+      - "!.github/workflows/build-pr.yaml"
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -24,30 +24,35 @@ permissions:
 jobs:
   build-pr:
     runs-on: ubuntu-24.04
+    env:
+      # the secrets context is not allowed in a step `if` (the workflow was rejected as invalid): evaluate it here
+      HAS_KSM: ${{ secrets.KSM_CONFIG != '' }}
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       - name: Setup Java
-        uses: actions/setup-java@v5
+        uses: actions/setup-java@dd06d9cba3e5552c54d9f8ea23572deb30010f7c # v6.0.0
         with:
           distribution: "temurin"
           java-version: 17
           cache: "maven"
 
       - name: Configure Maven Settings
-        if: ${{ secrets.KSM_CONFIG != '' }}
+        if: env.HAS_KSM == 'true'
         uses: bonitasoft/maven-settings-action@v1
         with:
           keeper-secret-config: ${{ secrets.KSM_CONFIG }}
 
       - name: Build (with JFrog credentials)
-        if: ${{ secrets.KSM_CONFIG != '' }}
+        if: env.HAS_KSM == 'true'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: ./mvnw -B -ntp clean verify
 
+      # TODO Bonita 12.0 GA: until then, this build cannot resolve the Bonita 12.0-SNAPSHOT runtime BOM
+      # (Bonitasoft Artifactory only), so it fails for every module
       - name: Build (without JFrog - fork PRs)
-        if: ${{ secrets.KSM_CONFIG == '' }}
+        if: env.HAS_KSM != 'true'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: ./mvnw -B -ntp clean verify -pl '!bonita-connector-ai-anthropic,!bonita-connector-ai-azure'

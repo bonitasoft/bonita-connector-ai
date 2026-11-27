@@ -54,7 +54,7 @@ import org.testcontainers.utility.DockerImageName;
  * Requires:
  * - Docker running
  * - ANTHROPIC_API_KEY environment variable set
- * - bonita.version system property set (e.g. -Dbonita.version=2025.1)
+ * - bonita.image system property set (set by the btt profile of the pom)
  */
 @Slf4j
 @Tag("btt")
@@ -68,12 +68,12 @@ class AnthropicConnectorToolkitIT {
     private static final String ARTIFACT_ID = "bonita-connector-ai-anthropic";
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AnthropicConnectorToolkitIT.class);
-    private static final String BONITA_VERSION =
-            System.getProperty("bonita.version", Objects.requireNonNullElse(System.getenv("BONITA_VERSION"), "2025.2"));
+    /** Bonita Docker image, set by the pom (bonita.image property of the btt profile). */
+    private static final String BONITA_IMAGE =
+            Objects.requireNonNull(System.getProperty("bonita.image"), "bonita.image system property not defined");
 
     @Container
-    static GenericContainer<?> BONITA_CONTAINER = new GenericContainer<>(
-                    DockerImageName.parse(String.format("bonita:%s", BONITA_VERSION)))
+    static GenericContainer<?> BONITA_CONTAINER = new GenericContainer<>(DockerImageName.parse(BONITA_IMAGE))
             .withExposedPorts(8080)
             .waitingFor(Wait.forHttp("/bonita"))
             .withLogConsumer(new Slf4jLogConsumer(LOGGER));

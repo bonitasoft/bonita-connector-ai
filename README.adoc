@@ -37,7 +37,24 @@ image:https://img.shields.io/badge/License-GPL%20v2-yellow.svg[License,link="{ur
 
 Multi-provider AI connectors for the https://www.ofelia.com[Bonita] platform. Interact with OpenAI, Anthropic (Claude), Google Gemini, Mistral AI, Azure AI Foundry, and Ollama (local LLMs) chat models by sending prompts and documents and returning structured output.
 
-The Bonita AI Connectors are available for **Bonita {short-bonita-version} Community ({year-bonita-version})** version and above.
+== Compatibility
+
+[cols="1,1,1",options="header"]
+|===
+|Connectors |Bonita |Java
+
+|2.x (`develop`)
+|12.0 and later
+|17 and later
+
+|1.x (up to 1.1.1)
+|{short-bonita-version} Community ({year-bonita-version}) to 11.x
+|17 and later
+|===
+
+The connector definitions and their inputs/outputs are unchanged: on Bonita 12, processes using a 1.x implementation
+must switch to a 2.x implementation. The 2.x connectors bundle Jackson, commons-io and commons-lang3 instead of relying
+on the versions the runtime provides.
 
 '''
 
